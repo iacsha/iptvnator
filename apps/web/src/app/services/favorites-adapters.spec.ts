@@ -67,7 +67,10 @@ describe('favorite provider references and projections', () => {
             } as unknown as StalkerPortalItem;
             const source = { ...playlist([item]), macAddress: 'synthetic-mac' };
             const adapter = new FavoritesPlaylistAdapter(
-                { entries: async () => [] } as unknown as FavoritesSyncClient,
+                {
+                    scope: 'shared',
+                    entries: async () => [],
+                } as unknown as FavoritesSyncClient,
                 () => true,
                 undefined,
                 {
@@ -90,7 +93,10 @@ describe('favorite provider references and projections', () => {
         } as unknown as StalkerPortalItem;
         const source = { ...playlist([item]), macAddress: 'synthetic-mac' };
         const adapter = new FavoritesPlaylistAdapter(
-            { entries: async () => [] } as unknown as FavoritesSyncClient,
+            {
+                scope: 'shared',
+                entries: async () => [],
+            } as unknown as FavoritesSyncClient,
             () => true,
             undefined,
             { read: () => ['local-order'] } as unknown as FavoritesLocalOrder
@@ -148,7 +154,10 @@ describe('favorite provider references and projections', () => {
                 read: () => ['existing-order'],
             } as unknown as FavoritesLocalOrder;
             const adapter = new FavoritesPlaylistAdapter(
-                { entries: async () => [] } as unknown as FavoritesSyncClient,
+                {
+                    scope: 'shared',
+                    entries: async () => [],
+                } as unknown as FavoritesSyncClient,
                 () => true,
                 undefined,
                 order
@@ -170,6 +179,7 @@ describe('favorite provider references and projections', () => {
     it('preserves requested identity when a sparse Xtream favorite has no catalog row', async () => {
         const set = jest.fn(async () => undefined);
         const client = {
+            scope: 'shared',
             contexts: new Map(),
             options: { consent: () => 'consent' },
             entries: async () => [],
@@ -206,6 +216,7 @@ describe('favorite provider references and projections', () => {
         async (provider) => {
             const set = jest.fn();
             const client = {
+                scope: 'shared',
                 contexts: new Map([['source', { sourceIncarnation: 'first' }]]),
                 options: { consent: () => 'consent' },
                 entries: async () => [],
@@ -287,6 +298,7 @@ describe('favorite provider references and projections', () => {
         } as unknown as IXtreamDataSource;
         const set = jest.fn(async () => undefined);
         const client = {
+            scope: 'shared',
             contexts: new Map(),
             options: { consent: () => 'consent' },
             entries: async () => [],
@@ -410,6 +422,7 @@ describe('favorite provider references and projections', () => {
             },
         };
         const client = {
+            scope: 'shared',
             entries: async () => [entry],
         } as unknown as FavoritesSyncClient;
         const projected = await new FavoritesPlaylistAdapter(
@@ -444,6 +457,7 @@ describe('favorite provider references and projections', () => {
             },
         };
         const client = {
+            scope: 'shared',
             contexts: new Map(),
             options: { consent: () => 'consent' },
             entries: async () => [entry],
