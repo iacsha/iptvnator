@@ -6,10 +6,12 @@ import {
     UrlTree,
     provideRouter,
 } from '@angular/router';
+import { ParentalLockService } from '@iptvnator/services';
 import { prepareSourceConnection } from '@iptvnator/services/source-sync/connection';
 import { DEFAULT_PROFILE_ID } from '@iptvnator/shared/interfaces/profiles';
 import {
     writeActiveProfileId,
+    writeKidsLast,
     writeProfilesStart,
 } from '../services/profiles-preferences';
 import { ProfilesRuntime } from '../services/profiles-runtime';
@@ -41,11 +43,13 @@ async function connect(instanceId: string | null): Promise<void> {
         );
     await prepareSourceConnection();
 }
+const setForced = jest.fn();
 function setup(uiEnabled: boolean, fake = fakeRuntime()) {
     TestBed.configureTestingModule({
         providers: [
             provideRouter([]),
             { provide: PROFILES_UI_ENABLED_TOKEN, useValue: uiEnabled },
+            { provide: ParentalLockService, useValue: { setForced } },
             { provide: ProfilesRuntime, useValue: fake.runtime },
         ],
     });
@@ -64,6 +68,7 @@ function setup(uiEnabled: boolean, fake = fakeRuntime()) {
 
 describe('profilePickerGuard', () => {
     beforeEach(async () => {
+        setForced.mockClear();
         await connect(NAS);
         resetProfilePickedForTests();
     });
@@ -73,6 +78,19 @@ describe('profilePickerGuard', () => {
         const { run, fake } = setup(false);
         await expect(run()).resolves.toBe(true);
         expect(fake.runtime.refresh).not.toHaveBeenCalled();
+    });
+
+    it('holds the parental lock on from the first moment when the last profile was kids', async () => {
+        writeKidsLast(NAS, true);
+        const { run, fake } = setup(true);
+        fake.state.set('offline');
+        await expect(run()).resolves.toBe(true);
+        expect(setForced).toHaveBeenCalledWith(true);
+        // Even when the picker was already answered this session.
+        setForced.mockClear();
+        markProfilePicked();
+        await expect(run()).resolves.toBe(true);
+        expect(setForced).toHaveBeenCalledWith(true);
     });
 
     it('does not block without a source server or after the picker was answered', async () => {

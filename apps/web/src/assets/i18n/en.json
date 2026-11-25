@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Parental lock enabled",
             "DISABLED_TOAST": "Parental lock disabled",
             "PIN_CHANGED_TOAST": "PIN changed",
-            "LOCKED_TOAST": "Locked"
+            "LOCKED_TOAST": "Locked",
+            "FORCED_NOTE": "The lock is on because a kids profile is active. Leave the kids profile to change it."
         },
         "AGE_RATING_COUNTRY_LABEL": "Age rating country",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Choose the country used for age classifications. Missing local ratings may use US or provider data.",

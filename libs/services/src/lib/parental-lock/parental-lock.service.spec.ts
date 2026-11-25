@@ -499,6 +499,77 @@ describe('ParentalLockService', () => {
         expect(service.lockedGroupTitles('p-1')).toEqual(['Adult']);
     });
 
+    describe('forced by a kids profile', () => {
+        it('turns the lock on whatever the setting says, locks an unlocked session and tells the worker', async () => {
+            storage.pinHash = await hashParentalLockPin('1234');
+            parentalLockEnabled.set(true);
+            prompt.requestPin.mockResolvedValueOnce('1234');
+            const service = await createService();
+            await service.requestUnlock();
+            TestBed.flushEffects();
+            expect(service.active()).toBe(false);
+
+            service.setForced(true);
+            TestBed.flushEffects();
+            expect(service.forced()).toBe(true);
+            expect(service.active()).toBe(true);
+            expect(setParentalLockState).toHaveBeenLastCalledWith(true);
+
+            // Never persisted or mirrored.
+            expect(updateSettings).not.toHaveBeenCalled();
+            expect(updateBridgeSettings).not.toHaveBeenCalled();
+        });
+
+        it('enables the lock while the setting is off, and releases it again', async () => {
+            storage.pinHash = await hashParentalLockPin('1234');
+            const service = await createService();
+            expect(service.enabled()).toBe(false);
+
+            service.setForced(true);
+            TestBed.flushEffects();
+            expect(service.enabled()).toBe(true);
+            expect(service.active()).toBe(true);
+            expect(parentalLockEnabled()).toBe(false);
+
+            service.setForced(false);
+            TestBed.flushEffects();
+            expect(service.enabled()).toBe(false);
+            expect(service.active()).toBe(false);
+        });
+
+        it('tells the worker before the settings have loaded', () => {
+            const service = TestBed.inject(ParentalLockService);
+            service.setForced(true);
+            TestBed.flushEffects();
+            expect(setParentalLockState).toHaveBeenCalledWith(true);
+            expect(service.active()).toBe(true);
+        });
+
+        it('keeps asking for the PIN to turn the lock off', async () => {
+            storage.pinHash = await hashParentalLockPin('1234');
+            parentalLockEnabled.set(true);
+            const service = await createService();
+            service.setForced(true);
+            prompt.requestPin.mockResolvedValue(null);
+
+            await expect(service.disable()).resolves.toBe(false);
+            expect(prompt.requestPin).toHaveBeenCalledTimes(1);
+            expect(parentalLockEnabled()).toBe(true);
+        });
+
+        it('asks the parental PIN to confirm an action while the setting is off', async () => {
+            storage.pinHash = await hashParentalLockPin('1234');
+            const service = await createService();
+            await expect(service.confirmPin()).resolves.toBe(true);
+            expect(prompt.requestPin).not.toHaveBeenCalled();
+
+            service.setForced(true);
+            prompt.requestPin.mockResolvedValueOnce(null);
+            await expect(service.confirmPin()).resolves.toBe(false);
+            expect(prompt.requestPin).toHaveBeenCalledTimes(1);
+        });
+    });
+
     it('arms the idle timer for the session that just enabled the feature', async () => {
         jest.useFakeTimers();
         try {

@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Kindersicherung aktiviert",
             "DISABLED_TOAST": "Kindersicherung deaktiviert",
             "PIN_CHANGED_TOAST": "PIN geändert",
-            "LOCKED_TOAST": "Gesperrt"
+            "LOCKED_TOAST": "Gesperrt",
+            "FORCED_NOTE": "Die Sperre ist an, weil ein Kinderprofil aktiv ist. Verlasse das Kinderprofil, um sie zu ändern."
         },
         "AGE_RATING_COUNTRY_LABEL": "Land der Altersfreigabe",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Wählen Sie das Land der Altersfreigabe. Fehlende lokale Angaben werden durch US- oder Anbieterdaten ergänzt.",

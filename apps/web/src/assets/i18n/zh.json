@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "家长控制已启用",
             "DISABLED_TOAST": "家长控制已禁用",
             "PIN_CHANGED_TOAST": "PIN 码已更改",
-            "LOCKED_TOAST": "已锁定"
+            "LOCKED_TOAST": "已锁定",
+            "FORCED_NOTE": "由于儿童个人资料处于活动状态,锁定已开启。退出儿童个人资料后才能更改。"
         },
         "AGE_RATING_COUNTRY_LABEL": "年龄分级国家",
         "AGE_RATING_COUNTRY_DESCRIPTION": "选择年龄分级使用的国家。缺少本地分级时，可能使用美国或提供商的数据。",
