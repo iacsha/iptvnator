@@ -1,5 +1,10 @@
 import { InjectionToken } from '@angular/core';
 import type { Playlist } from '@iptvnator/shared/interfaces';
+import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
+import {
+    activePersonalScope,
+    ProfileStateUnavailableError,
+} from './lib/profiles/active-scope';
 /** App composition supplies the optional domain; ordinary source/legacy writes never enqueue. */
 export interface FavoritesPlaylistBridge {
     active(): boolean;
@@ -34,10 +39,20 @@ export async function mutateFavoritePlaylist(
     persist: (playlist: Playlist) => Promise<Playlist>
 ): Promise<Playlist> {
     if (!playlist) throw new Error('Favorite source unavailable');
-    return (
-        (await bridge.mutate(playlist, transform, async (favorites) => {
+    // The playlist document is the household's: a profile never writes through it.
+    const household = activePersonalScope() === DEFAULT_PERSONAL_SCOPE;
+    const mutated = await bridge.mutate(
+        playlist,
+        transform,
+        async (favorites) => {
+            if (!household) throw new ProfileStateUnavailableError();
             await persist({ ...playlist, favorites });
-        })) ??
-        persist({ ...playlist, favorites: transform(playlist.favorites ?? []) })
+        }
     );
+    if (mutated) return mutated;
+    if (!household) throw new ProfileStateUnavailableError();
+    return persist({
+        ...playlist,
+        favorites: transform(playlist.favorites ?? []),
+    });
 }
