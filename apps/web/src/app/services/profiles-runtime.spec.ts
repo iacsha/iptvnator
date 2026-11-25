@@ -1,4 +1,5 @@
 import { EnvironmentInjector } from '@angular/core';
+import { ParentalLockService } from '@iptvnator/services';
 import { TestBed } from '@angular/core/testing';
 import { setActivePersonalScope } from '@iptvnator/services/profiles';
 import { prepareSourceConnection } from '@iptvnator/services/source-sync/connection';
@@ -23,10 +24,6 @@ import {
     ProfilesRuntime,
 } from './profiles-runtime';
 import { loadProfilesRuntime } from './profiles-runtime.providers';
-import {
-    PROFILES_UI_ENABLED,
-    PROFILES_UI_ENABLED_TOKEN,
-} from './profiles-ui-enabled';
 
 const NAS = 'synthetic-nas';
 const ADULT = '11111111-1111-4111-8111-111111111111';
@@ -102,18 +99,14 @@ describe('ProfilesRuntime', () => {
     const originalElectron = window.electron;
     let fake: ReturnType<typeof fakeServer>;
 
-    async function start(uiEnabled?: boolean): Promise<ProfilesRuntime> {
+    async function start(): Promise<ProfilesRuntime> {
         TestBed.configureTestingModule({
             providers: [
                 { provide: PROFILES_REQUEST, useValue: fake.request },
-                ...(uiEnabled === undefined
-                    ? []
-                    : [
-                          {
-                              provide: PROFILES_UI_ENABLED_TOKEN,
-                              useValue: uiEnabled,
-                          },
-                      ]),
+                {
+                    provide: ParentalLockService,
+                    useValue: { setForced: jest.fn() },
+                },
             ],
         });
         const runtime = TestBed.inject(ProfilesRuntime);
@@ -139,13 +132,6 @@ describe('ProfilesRuntime', () => {
         localStorage.clear();
         await prepareSourceConnection();
         window.electron = originalElectron;
-    });
-
-    it('keeps the UI hidden by default and lets tests flip the token', async () => {
-        expect(PROFILES_UI_ENABLED).toBe(false);
-        expect((await start()).uiEnabled).toBe(false);
-        TestBed.resetTestingModule();
-        expect((await start(true)).uiEnabled).toBe(true);
     });
 
     it('lazy-loads the root runtime', async () => {
@@ -232,21 +218,18 @@ describe('ProfilesRuntime', () => {
         expect(runtime.active()?.id).toBe(ADULT);
     });
 
-    it('names the personal scope of the active profile only while the UI is on', async () => {
+    it('names the personal scope of the active profile', async () => {
         writeActiveProfileId(NAS, ADULT);
-        const hidden = await start();
-        expect(hidden.activeId()).toBe(ADULT);
-        expect(hidden.scope()).toBe('shared');
-        TestBed.resetTestingModule();
-        const visible = await start(true);
-        expect(visible.scope()).toBe(`profile:${ADULT}`);
-        expect(visible.select(DEFAULT_PROFILE_ID)).toBe(true);
-        expect(visible.scope()).toBe('shared');
+        const runtime = await start();
+        expect(runtime.activeId()).toBe(ADULT);
+        expect(runtime.scope()).toBe(`profile:${ADULT}`);
+        expect(runtime.select(DEFAULT_PROFILE_ID)).toBe(true);
+        expect(runtime.scope()).toBe('shared');
     });
 
     it('exposes whether start-up holds Default', async () => {
         writeActiveProfileId(NAS, ADULT);
-        const runtime = await start(true);
+        const runtime = await start();
         expect(runtime.held()).toBe(false);
         runtime.holdDefault();
         expect(runtime.held()).toBe(true);

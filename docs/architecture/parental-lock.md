@@ -686,3 +686,15 @@ predicate is `ParentalLockService.is*Locked`.
 - Electron: `apps/electron-backend/src/app/database/parental-lock-state.ts`,
   `services/parental-lock-state.ts`, `events/parental-lock.events.ts`,
   `database/operations/category.operations.ts` (`setCategoryLocks`).
+
+## Forced by a kids profile
+
+With household profiles on a self-hosted server, `ParentalLockService.setForced(true)`
+holds the lock on while a kids profile is active, whatever the Settings switch says (see
+[Household profiles](pwa-self-hosted.md#household-profiles)). It is memory only: never
+persisted, never mirrored into electron-conf. Going on locks the session at once and tells
+the Electron worker straight away, before the settings have loaded, so the first catalog
+read is already filtered. While it is on, the Settings switch is disabled with an
+explanation, turning the lock off or replacing the PIN still asks for the PIN, and leaving
+the kids profile asks for it too. A device whose last profile was a kids profile keeps it
+forced from start-up until the profiles runtime answers.

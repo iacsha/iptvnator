@@ -4,5 +4,6 @@ area: server
 ---
 
 The self-hosted server can now keep separate favorites, recently watched and
-watch history for each person in a household. There is no profile picker in
-the apps yet; until it ships, everything stays in the Default profile as before.
+watch history for each person in a household. The apps choose a profile with
+the start-up picker and the rail switcher; devices on an older version keep
+using the Default profile as before.

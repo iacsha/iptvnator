@@ -32,7 +32,6 @@ import {
 } from './profiles-preferences';
 import { PROFILES_REQUEST } from './profiles-request.token';
 import { resolveActiveProfileId } from './profiles-start';
-import { PROFILES_UI_ENABLED_TOKEN } from './profiles-ui-enabled';
 
 export const PROFILES_POLL_MS = 30_000;
 /** A server without profiles may be upgraded later: ask again after this long. */
@@ -70,7 +69,6 @@ export class ProfilesRuntime {
     private deletions = 0;
     private profilesClient?: ProfilesClient;
 
-    readonly uiEnabled = inject(PROFILES_UI_ENABLED_TOKEN);
     readonly capable: Signal<boolean> = this.capableState.asReadonly();
     /** Start-up gave up waiting and stays on Default for this session. */
     readonly held: Signal<boolean> = this.heldState.asReadonly();
@@ -88,11 +86,9 @@ export class ProfilesRuntime {
             null
         );
     });
-    /** Whose personal state this device uses; the Default's `'shared'` while the UI is off. */
-    readonly scope: Signal<PersonalScope> = computed(() =>
-        this.uiEnabled
-            ? (this.active()?.scope ?? DEFAULT_PERSONAL_SCOPE)
-            : DEFAULT_PERSONAL_SCOPE
+    /** Whose personal state this device uses; the Default's `'shared'` until a profile is chosen. */
+    readonly scope: Signal<PersonalScope> = computed(
+        () => this.active()?.scope ?? DEFAULT_PERSONAL_SCOPE
     );
     readonly enabled: Signal<boolean> = computed(
         () => this.listState()?.enabled ?? false
