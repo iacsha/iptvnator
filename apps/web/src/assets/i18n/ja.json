@@ -831,7 +831,8 @@
             "ENABLED_TOAST": "ペアレンタルロックを有効にしました",
             "DISABLED_TOAST": "ペアレンタルロックを無効にしました",
             "PIN_CHANGED_TOAST": "PIN を変更しました",
-            "LOCKED_TOAST": "ロックしました"
+            "LOCKED_TOAST": "ロックしました",
+            "FORCED_NOTE": "キッズプロフィールが有効なためロックがオンです。変更するにはキッズプロフィールを終了してください。"
         },
         "AGE_RATING_COUNTRY_LABEL": "年齢区分の国",
         "AGE_RATING_COUNTRY_DESCRIPTION": "年齢区分に使用する国を選択します。現地の情報がない場合は米国またはプロバイダーの情報を使用します。",

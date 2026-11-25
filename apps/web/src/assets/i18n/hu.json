@@ -831,7 +831,8 @@
             "ENABLED_TOAST": "Szülői felügyelet bekapcsolva",
             "DISABLED_TOAST": "Szülői felügyelet kikapcsolva",
             "PIN_CHANGED_TOAST": "PIN-kód módosítva",
-            "LOCKED_TOAST": "Zárolva"
+            "LOCKED_TOAST": "Zárolva",
+            "FORCED_NOTE": "A zár be van kapcsolva, mert gyerekprofil az aktív. Lépj ki a gyerekprofilból a módosításhoz."
         },
         "AGE_RATING_COUNTRY_LABEL": "Korhatár-besorolás országa",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Válassza ki, melyik ország korhatár-besorolását szeretné látni. Ha ehhez az országhoz nincs adat, az amerikai vagy a szolgáltató által megadott besorolás jelenhet meg.",

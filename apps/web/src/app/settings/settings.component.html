@@ -140,6 +140,7 @@
                     @case ('parental') {
                         <app-settings-parental-lock-section
                             [enabled]="parentalLock.enabled()"
+                            [forced]="parentalLock.forced()"
                             [unlocked]="parentalLock.unlocked()"
                             [hasPin]="parentalLock.hasPin()"
                             [relockMinutes]="parentalLock.relockMinutes()"

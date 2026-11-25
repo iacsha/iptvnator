@@ -831,7 +831,8 @@
             "ENABLED_TOAST": "Ebeveyn kilidi etkinleştirildi",
             "DISABLED_TOAST": "Ebeveyn kilidi devre dışı bırakıldı",
             "PIN_CHANGED_TOAST": "PIN değiştirildi",
-            "LOCKED_TOAST": "Kilitlendi"
+            "LOCKED_TOAST": "Kilitlendi",
+            "FORCED_NOTE": "Çocuk profili etkin olduğu için kilit açık. Değiştirmek için çocuk profilinden çıkın."
         },
         "AGE_RATING_COUNTRY_LABEL": "Yaş sınıflandırması ülkesi",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Sınıflandırma ülkesini seçin. Yerel veri yoksa ABD veya sağlayıcı verileri kullanılabilir.",

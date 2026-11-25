@@ -831,7 +831,8 @@
             "ENABLED_TOAST": "Control parental activado",
             "DISABLED_TOAST": "Control parental desactivado",
             "PIN_CHANGED_TOAST": "PIN cambiado",
-            "LOCKED_TOAST": "Bloqueado"
+            "LOCKED_TOAST": "Bloqueado",
+            "FORCED_NOTE": "El bloqueo está activado porque hay un perfil infantil activo. Sal del perfil infantil para cambiarlo."
         },
         "AGE_RATING_COUNTRY_LABEL": "País de clasificación por edad",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Elige el país de clasificación. Si faltan datos locales, se pueden usar los de EE. UU. o del proveedor.",

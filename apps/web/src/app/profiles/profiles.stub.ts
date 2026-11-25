@@ -69,6 +69,7 @@ export function fakeRuntime(
         state,
         activeId,
         capable: signal(true),
+        held: signal(false),
         scope: signal<PersonalScope>('shared'),
         enabled: computed(() => list()?.enabled ?? false),
         active: computed(

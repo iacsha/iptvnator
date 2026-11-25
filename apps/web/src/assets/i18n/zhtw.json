@@ -831,7 +831,8 @@
             "ENABLED_TOAST": "已啟用家長監護",
             "DISABLED_TOAST": "已停用家長監護",
             "PIN_CHANGED_TOAST": "已變更 PIN 碼",
-            "LOCKED_TOAST": "已鎖定"
+            "LOCKED_TOAST": "已鎖定",
+            "FORCED_NOTE": "因為兒童個人檔案正在使用,鎖定已開啟。離開兒童個人檔案後才能變更。"
         },
         "AGE_RATING_COUNTRY_LABEL": "年齡分級國家",
         "AGE_RATING_COUNTRY_DESCRIPTION": "選擇年齡分級使用的國家。缺少當地分級時，可能使用美國或供應商的資料。",

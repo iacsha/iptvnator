@@ -12,12 +12,17 @@
                     <p>
                         {{ 'SETTINGS.PARENTAL_LOCK.ENABLE_DESCRIPTION' | translate }}
                     </p>
+                    @if (forced()) {
+                        <p data-test-id="parental-lock-forced">
+                            {{ 'SETTINGS.PARENTAL_LOCK.FORCED_NOTE' | translate }}
+                        </p>
+                    }
                 </div>
                 <div class="setting-item__control setting-item__toggle">
                     <mat-slide-toggle
                         data-test-id="parental-lock-enabled"
                         [checked]="enabled()"
-                        [disabled]="busy()"
+                        [disabled]="busy() || forced()"
                         (change)="onToggleEnabled($event)"
                         [aria-label]="
                             'SETTINGS.PARENTAL_LOCK.ENABLE' | translate

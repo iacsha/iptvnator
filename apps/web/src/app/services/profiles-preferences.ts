@@ -17,6 +17,30 @@ export function activeProfileKey(instanceId: string | null | undefined) {
         : null;
 }
 
+/** Whether this device's last profile was a kids profile (per server instance, never synced). */
+export function kidsLastKey(instanceId: string | null | undefined) {
+    return instanceId ? `iptvnator-server:${instanceId}:kids-last-v1` : null;
+}
+
+export function readKidsLast(instanceId: string | null | undefined): boolean {
+    return read(kidsLastKey(instanceId)) === '1';
+}
+
+export function writeKidsLast(
+    instanceId: string | null | undefined,
+    kids: boolean
+): boolean {
+    const key = kidsLastKey(instanceId);
+    if (!key) return false;
+    if (kids) return write(key, '1');
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 export function readProfilesStart(
     instanceId: string | null | undefined
 ): ProfilesStartPreference {
