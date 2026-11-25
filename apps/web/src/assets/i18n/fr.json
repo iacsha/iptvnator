@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "Code PIN de {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Modifier ou supprimer le code PIN de {{name}} nécessite son code PIN actuel.",
             "PARENTAL_TITLE": "Code PIN parental requis",
-            "PARENTAL_DESCRIPTION": "Ce profil enfant est protégé par le contrôle parental."
+            "PARENTAL_DESCRIPTION": "Ce profil enfant est protégé par le contrôle parental.",
+            "SEPARATION_TITLE": "Séparé pour chaque profil",
+            "CONSENT_TITLE": "Séparer les données de chaque profil ?",
+            "CONSENT_BODY": "Les favoris, les vus récemment et la progression de lecture ne sont conservés par profil que tant que leur synchronisation est activée sur cet appareil. Activer les trois maintenant ?",
+            "CONSENT_ACCEPT": "Activer les trois",
+            "CONSENT_SKIP": "Pas maintenant",
+            "CONSENT_FAILED": "Une synchronisation n'a pas pu être activée. Vérifiez la connexion au serveur et réessayez.",
+            "PART_FAVORITES": "Favoris",
+            "PART_HISTORY": "Vus récemment",
+            "PART_ACTIVITY": "Progression de lecture",
+            "PART_SEPARATE": "Séparé",
+            "PART_SHARED": "Commun (synchronisation désactivée)",
+            "HOUSEHOLD_NOTE": "Les listes de lecture, les sources et les paramètres sont communs à tous.",
+            "KIDS_PARENTAL_NOTE": "Un code PIN de contrôle parental est défini à l'enregistrement du premier profil enfant, si cet appareil n'en a pas."
         }
     },
     "SERVER_STORAGE": {
@@ -2881,6 +2894,12 @@
             "OFFLINE_DESCRIPTION": "Vous pouvez continuer avec le profil par défaut.",
             "LEAVE_KIDS_TITLE": "Quitter le profil enfant",
             "LEAVE_KIDS_DESCRIPTION": "Saisissez le code PIN parental pour passer à un autre profil."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Les favoris, l'historique et la progression de ce profil ne restent séparés que si la synchronisation est activée.",
+            "ACTION": "Activer la synchronisation",
+            "DONE": "La synchronisation est activée. Ce profil a désormais ses propres données.",
+            "FAILED": "Impossible d'activer la synchronisation. Vérifiez les paramètres."
         }
     }
 }

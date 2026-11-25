@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "{{name}} için PIN",
             "PIN_CHANGE_DESCRIPTION": "{{name}} profilinin PIN'ini değiştirmek veya kaldırmak için mevcut PIN gerekir.",
             "PARENTAL_TITLE": "Ebeveyn PIN'i gerekli",
-            "PARENTAL_DESCRIPTION": "Bu çocuk profili ebeveyn kilidiyle korunuyor."
+            "PARENTAL_DESCRIPTION": "Bu çocuk profili ebeveyn kilidiyle korunuyor.",
+            "SEPARATION_TITLE": "Her profil için ayrı",
+            "CONSENT_TITLE": "Her profilin verileri ayrı tutulsun mu?",
+            "CONSENT_BODY": "Favoriler, son izlenenler ve oynatma ilerlemesi yalnızca bu cihazda eşitlemeleri açıkken profil başına tutulur. Üçü de şimdi açılsın mı?",
+            "CONSENT_ACCEPT": "Üçünü de aç",
+            "CONSENT_SKIP": "Şimdi değil",
+            "CONSENT_FAILED": "Bir eşitleme açılamadı. Sunucu bağlantısını kontrol edip tekrar deneyin.",
+            "PART_FAVORITES": "Favoriler",
+            "PART_HISTORY": "Son izlenenler",
+            "PART_ACTIVITY": "Oynatma ilerlemesi",
+            "PART_SEPARATE": "Ayrı",
+            "PART_SHARED": "Ortak (eşitleme kapalı)",
+            "HOUSEHOLD_NOTE": "Oynatma listeleri, kaynaklar ve ayarlar herkes için ortaktır.",
+            "KIDS_PARENTAL_NOTE": "Bu cihazda PIN yoksa, ebeveyn kilidi PIN'i ilk çocuk profili kaydedilirken belirlenir."
         }
     },
     "SERVER_STORAGE": {
@@ -2881,6 +2894,12 @@
             "OFFLINE_DESCRIPTION": "Varsayılan profille devam edebilirsiniz.",
             "LEAVE_KIDS_TITLE": "Çocuk profilinden çık",
             "LEAVE_KIDS_DESCRIPTION": "Başka bir profile geçmek için ebeveyn PIN'ini girin."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Bu profilin favorileri, geçmişi ve ilerlemesi yalnızca eşitleme açıkken ayrı tutulabilir.",
+            "ACTION": "Eşitlemeyi aç",
+            "DONE": "Eşitleme açık. Bu profil artık kendi verilerini tutuyor.",
+            "FAILED": "Eşitleme açılamadı. Ayarları kontrol edin."
         }
     }
 }

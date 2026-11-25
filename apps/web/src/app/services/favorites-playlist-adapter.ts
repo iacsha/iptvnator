@@ -6,7 +6,7 @@ import {
     m3uFavoriteReference,
     type FavoriteEntry,
 } from '@iptvnator/shared/interfaces/favorites-sync';
-import { ProfileStateUnavailableError } from '@iptvnator/services/profiles';
+import { refuseProfileState } from '@iptvnator/services/profiles';
 import {
     captureFavoriteOwner,
     FavoriteSupersededError,
@@ -224,7 +224,7 @@ export class FavoritesPlaylistAdapter {
         if (JSON.stringify(unknownBefore) !== JSON.stringify(unknownAfter)) {
             // Unresolved legacy entries live in the household's playlist document.
             if (this.client.scope !== DEFAULT_PERSONAL_SCOPE)
-                throw new ProfileStateUnavailableError();
+                throw refuseProfileState();
             if (!persistLocal)
                 throw new Error('Local favorite persistence unavailable');
             const favorites = [

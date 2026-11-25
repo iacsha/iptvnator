@@ -14,7 +14,7 @@ import { removePortalFavorite } from './playlist-favorites';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import {
     activePersonalScope,
-    ProfileStateUnavailableError,
+    refuseProfileState,
 } from './profiles/active-scope';
 
 function normalizePortalRecentIdentity(value: unknown): string {
@@ -88,7 +88,7 @@ export async function mutatePlaylistHistory(
     }
     // The playlist archive is the household's: a profile never writes through it.
     if (activePersonalScope() !== DEFAULT_PERSONAL_SCOPE)
-        throw new ProfileStateUnavailableError();
+        throw refuseProfileState();
     let recentlyViewed: PlaylistRecentlyViewedItem[] | undefined;
     switch (action.kind) {
         case 'touch': {

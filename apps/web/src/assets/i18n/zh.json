@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "{{name}} 的 PIN 码",
             "PIN_CHANGE_DESCRIPTION": "更改或移除 {{name}} 的 PIN 码需要输入当前 PIN 码。",
             "PARENTAL_TITLE": "需要家长 PIN 码",
-            "PARENTAL_DESCRIPTION": "此儿童个人资料受家长控制保护。"
+            "PARENTAL_DESCRIPTION": "此儿童个人资料受家长控制保护。",
+            "SEPARATION_TITLE": "每个个人资料各自独立",
+            "CONSENT_TITLE": "将每个个人资料的数据分开保存?",
+            "CONSENT_BODY": "只有在此设备上开启各自的同步时,收藏、最近观看和播放进度才会按个人资料分别保存。现在全部开启吗?",
+            "CONSENT_ACCEPT": "全部开启",
+            "CONSENT_SKIP": "暂不",
+            "CONSENT_FAILED": "有一项同步无法开启。请检查服务器连接后重试。",
+            "PART_FAVORITES": "收藏",
+            "PART_HISTORY": "最近观看",
+            "PART_ACTIVITY": "播放进度",
+            "PART_SEPARATE": "独立",
+            "PART_SHARED": "共用(同步已关闭)",
+            "HOUSEHOLD_NOTE": "播放列表、来源和设置由所有人共用。",
+            "KIDS_PARENTAL_NOTE": "如果此设备还没有 PIN,将在保存第一个儿童个人资料时设置家长控制 PIN。"
         }
     },
     "SERVER_STORAGE": {
@@ -2881,6 +2894,12 @@
             "OFFLINE_DESCRIPTION": "你可以继续使用默认个人资料。",
             "LEAVE_KIDS_TITLE": "退出儿童个人资料",
             "LEAVE_KIDS_DESCRIPTION": "输入家长 PIN 码以切换到其他个人资料。"
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "只有开启同步,此个人资料的收藏、历史记录和播放进度才能单独保存。",
+            "ACTION": "开启同步",
+            "DONE": "同步已开启。此个人资料现在拥有自己的数据。",
+            "FAILED": "无法开启同步。请检查设置。"
         }
     }
 }

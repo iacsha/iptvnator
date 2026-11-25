@@ -49,6 +49,40 @@
     font-size: var(--app-text-sm);
 }
 
+.profiles-parts {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+}
+
+.profiles-part {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 6px 8px;
+}
+
+.profiles-part[data-separate='false'] .profiles-badge {
+    background: transparent;
+    outline: 1px solid var(--mat-sys-outline-variant);
+}
+
+.profiles-note {
+    margin: 0;
+    padding: 0 16px 16px;
+    font-size: var(--app-text-sm);
+}
+
+.profiles-offer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .profiles-error {
     margin: 0 16px 8px;
     color: var(--app-danger-text);
@@ -89,6 +123,10 @@ button {
             min-width: 44px;
             min-height: 44px;
         }
+    }
+
+    .profiles-offer button {
+        min-height: 44px;
     }
 
     .profiles-add {
