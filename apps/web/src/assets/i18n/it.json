@@ -2883,7 +2883,8 @@
             "INVALID_PIN": "Un PIN è composto da 4 a 8 cifre.",
             "UNAVAILABLE": "Questo server non supporta i profili.",
             "OFFLINE": "Il server non risponde. Riprova.",
-            "GENERIC": "Qualcosa è andato storto. Riprova."
+            "GENERIC": "Qualcosa è andato storto. Riprova.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Un genitore deve prima impostare un PIN di controllo parentale su questo dispositivo. Apri Impostazioni > Controllo parentale."
         },
         "PICKER": {
             "TITLE": "Chi sta guardando?",
@@ -2900,6 +2901,10 @@
             "ACTION": "Attiva la sincronizzazione",
             "DONE": "La sincronizzazione è attiva. Questo profilo ora ha i suoi dati.",
             "FAILED": "Impossibile attivare la sincronizzazione. Controlla le impostazioni."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profilo: {{name}}. Cambia profilo",
+            "MANAGE": "Gestisci profili"
         }
     }
 }

@@ -2883,7 +2883,8 @@
             "INVALID_PIN": "Un code PIN comporte de 4 à 8 chiffres.",
             "UNAVAILABLE": "Ce serveur ne prend pas en charge les profils.",
             "OFFLINE": "Le serveur ne répond pas. Réessayez.",
-            "GENERIC": "Une erreur s'est produite. Réessayez."
+            "GENERIC": "Une erreur s'est produite. Réessayez.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Un parent doit d'abord définir un code PIN de contrôle parental sur cet appareil. Ouvrez Paramètres > Contrôle parental."
         },
         "PICKER": {
             "TITLE": "Qui regarde ?",
@@ -2900,6 +2901,10 @@
             "ACTION": "Activer la synchronisation",
             "DONE": "La synchronisation est activée. Ce profil a désormais ses propres données.",
             "FAILED": "Impossible d'activer la synchronisation. Vérifiez les paramètres."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil : {{name}}. Changer de profil",
+            "MANAGE": "Gérer les profils"
         }
     }
 }

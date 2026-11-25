@@ -2883,7 +2883,8 @@
             "INVALID_PIN": "Eine PIN hat 4 bis 8 Ziffern.",
             "UNAVAILABLE": "Dieser Server unterstützt keine Profile.",
             "OFFLINE": "Der Server antwortet nicht. Versuche es erneut.",
-            "GENERIC": "Etwas ist schiefgelaufen. Versuche es erneut."
+            "GENERIC": "Etwas ist schiefgelaufen. Versuche es erneut.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Ein Elternteil muss zuerst eine PIN für die Kindersicherung auf diesem Gerät festlegen. Öffne Einstellungen > Kindersicherung."
         },
         "PICKER": {
             "TITLE": "Wer schaut zu?",
@@ -2900,6 +2901,10 @@
             "ACTION": "Synchronisierung einschalten",
             "DONE": "Die Synchronisierung ist an. Dieses Profil hat jetzt eigene Daten.",
             "FAILED": "Die Synchronisierung ließ sich nicht einschalten. Prüfe die Einstellungen."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil: {{name}}. Profil wechseln",
+            "MANAGE": "Profile verwalten"
         }
     }
 }
