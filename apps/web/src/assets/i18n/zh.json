@@ -2918,7 +2918,8 @@
             "UNAVAILABLE": "此服务器不支持个人资料。",
             "OFFLINE": "服务器无响应。请重试。",
             "GENERIC": "出了点问题。请重试。",
-            "KIDS_NEEDS_PARENTAL_PIN": "需要先由家长在此设备上设置家长控制 PIN。请打开设置 > 家长控制。"
+            "KIDS_NEEDS_PARENTAL_PIN": "需要先由家长在此设备上设置家长控制 PIN。请打开设置 > 家长控制。",
+            "PARENTAL_PIN_UNREADABLE": "无法读取此设备上的家长控制 PIN。不会替换它。请重试,或打开设置 > 家长控制。"
         },
         "PICKER": {
             "TITLE": "谁在观看？",

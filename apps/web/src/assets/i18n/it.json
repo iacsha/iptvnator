@@ -2918,7 +2918,8 @@
             "UNAVAILABLE": "Questo server non supporta i profili.",
             "OFFLINE": "Il server non risponde. Riprova.",
             "GENERIC": "Qualcosa è andato storto. Riprova.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Un genitore deve prima impostare un PIN di controllo parentale su questo dispositivo. Apri Impostazioni > Controllo parentale."
+            "KIDS_NEEDS_PARENTAL_PIN": "Un genitore deve prima impostare un PIN di controllo parentale su questo dispositivo. Apri Impostazioni > Controllo parentale.",
+            "PARENTAL_PIN_UNREADABLE": "Impossibile leggere il PIN di controllo parentale di questo dispositivo. Non verrà sostituito. Riprova o apri Impostazioni > Controllo parentale."
         },
         "PICKER": {
             "TITLE": "Chi sta guardando?",

@@ -2918,7 +2918,8 @@
             "UNAVAILABLE": "This server does not support profiles.",
             "OFFLINE": "The server is not answering. Try again.",
             "GENERIC": "Something went wrong. Try again.",
-            "KIDS_NEEDS_PARENTAL_PIN": "A parent needs to set a parental PIN on this device first. Open Settings > Parental lock."
+            "KIDS_NEEDS_PARENTAL_PIN": "A parent needs to set a parental PIN on this device first. Open Settings > Parental lock.",
+            "PARENTAL_PIN_UNREADABLE": "The parental PIN on this device could not be read. It will not be replaced. Try again or open Settings > Parental lock."
         },
         "PICKER": {
             "TITLE": "Who's watching?",

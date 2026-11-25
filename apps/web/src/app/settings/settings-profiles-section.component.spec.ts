@@ -30,6 +30,8 @@ async function setup(
         profiles?: ReturnType<typeof syntheticProfile>[];
         parental?: boolean;
         hasPin?: boolean;
+        unreadable?: boolean;
+        forced?: boolean;
         setupPin?: boolean;
         syncs?: { activity: boolean; favorites: boolean; history: boolean };
     } = {}
@@ -71,6 +73,13 @@ async function setup(
                     confirmPin,
                     initialize: async () => undefined,
                     hasPin: () => options.hasPin ?? true,
+                    pinState: async () =>
+                        options.unreadable
+                            ? 'unreadable'
+                            : (options.hasPin ?? true)
+                              ? 'set'
+                              : 'none',
+                    forced: () => options.forced ?? false,
                     setupPin,
                     setForced: jest.fn(),
                 },
@@ -211,6 +220,33 @@ describe('SettingsProfilesSectionComponent', () => {
         expect(fake.runtime.refresh).toHaveBeenCalled();
     });
 
+    describe('turning profiles off', () => {
+        it('asks the parental PIN while the kids lock is forced, and stays on when it is refused', async () => {
+            const { fake, fixture, confirmPin } = await setup({
+                forced: true,
+                parental: false,
+            });
+            fake.client.setEnabled.mockResolvedValue(ok({}));
+            await fixture.componentInstance.facade.setEnabled(false);
+            expect(confirmPin).toHaveBeenCalledTimes(1);
+            expect(fake.client.setEnabled).not.toHaveBeenCalled();
+        });
+
+        it('turns them off once the parental PIN is accepted, and without a prompt when no lock is forced', async () => {
+            const forced = await setup({ forced: true, parental: true });
+            forced.fake.client.setEnabled.mockResolvedValue(ok({}));
+            await forced.fixture.componentInstance.facade.setEnabled(false);
+            expect(forced.fake.client.setEnabled).toHaveBeenCalledWith(false);
+            TestBed.resetTestingModule();
+
+            const plain = await setup();
+            plain.fake.client.setEnabled.mockResolvedValue(ok({}));
+            await plain.fixture.componentInstance.facade.setEnabled(false);
+            expect(plain.confirmPin).not.toHaveBeenCalled();
+            expect(plain.fake.client.setEnabled).toHaveBeenCalledWith(false);
+        });
+    });
+
     describe('the parental PIN of a kids profile', () => {
         const kidsForm = {
             name: 'Kai',
@@ -240,6 +276,19 @@ describe('SettingsProfilesSectionComponent', () => {
             await click('profile-add');
             expect(setupPin).toHaveBeenCalledTimes(1);
             expect(fake.client.create).toHaveBeenCalled();
+        });
+
+        it('never replaces a PIN that only failed to read', async () => {
+            const { fake, click, answerDialog, setupPin, q } = await setup({
+                unreadable: true,
+            });
+            answerDialog(kidsForm);
+            await click('profile-add');
+            expect(setupPin).not.toHaveBeenCalled();
+            expect(fake.client.create).not.toHaveBeenCalled();
+            expect(q('profiles-error')?.textContent).toContain(
+                'PROFILES.ERRORS.PARENTAL_PIN_UNREADABLE'
+            );
         });
 
         it('is not asked for again when a PIN exists, nor for an adult profile', async () => {
