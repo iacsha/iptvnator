@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import {
     createParentalLockPinThrottle,
-    hashParentalLockPin,
     normalizeParentalLockRelockMinutes,
     ParentalLockPlaylistLocks,
     ParentalLockStalkerCategoryType,
@@ -38,7 +37,10 @@ import {
     type PromptTexts,
     unlockPinRequest,
 } from './parental-lock-prompt-requests';
-import { applyParentalLockPinRead } from './parental-lock-pin-read';
+import {
+    applyParentalLockPinRead,
+    storeParentalLockPin,
+} from './parental-lock-pin-read';
 import { ParentalLockStorageService } from './parental-lock-storage';
 
 /**
@@ -244,15 +246,11 @@ export class ParentalLockService {
         // `enabled` is false until the settings have loaded; deciding "not
         // active" before that would open a gate during a slow startup.
         await this.initialize();
-        if (!this.active()) {
-            return true;
-        }
+        if (!this.active()) return true;
         // A store that failed to read at startup may read now; do not send
         // the user through the PIN for categories that are not locked.
         await this.locks.ensureReadable();
-        if (this.pendingUnlock) {
-            return this.pendingUnlock;
-        }
+        if (this.pendingUnlock) return this.pendingUnlock;
         this.pendingUnlock = this.promptForUnlock(options).finally(() => {
             this.pendingUnlock = null;
         });
@@ -262,15 +260,11 @@ export class ParentalLockService {
     private async promptForUnlock(options: PromptTexts): Promise<boolean> {
         await this.ensurePin();
         const hash = this.pinHash();
-        if (!this.prompt || !hash) {
-            return false;
-        }
+        if (!this.prompt || !hash) return false;
         const pin = await this.prompt.requestPin(
             unlockPinRequest(hash, this.pinThrottle, options)
         );
-        if (pin === null) {
-            return false;
-        }
+        if (pin === null) return false;
         this.unlockedState.set(true);
         return true;
     }
@@ -301,9 +295,8 @@ export class ParentalLockService {
      */
     async setupPin(): Promise<boolean> {
         await this.initialize();
-        if (!this.prompt || !(await this.ensureSettingsReadable())) {
+        if (!this.prompt || !(await this.ensureSettingsReadable()))
             return false;
-        }
         // Decided BEFORE the PIN is stored: with the settings switch
         // unknown, `enabled` follows `hasPin`, and would read as on the
         // moment the PIN lands — skipping the persistence the next launch
@@ -311,12 +304,8 @@ export class ParentalLockService {
         const needsPersist =
             this.settingsStore.parentalLockEnabled?.() !== true;
         const pin = await this.prompt.requestPin(NEW_PIN_REQUEST);
-        if (pin === null) {
-            return false;
-        }
-        if (!(await this.storePin(pin))) {
-            return false;
-        }
+        if (pin === null) return false;
+        if (!(await this.storePin(pin))) return false;
         this.unlockedState.set(true);
         if (needsPersist && !(await this.persistEnabled(true))) {
             this.unlockedState.set(false);
@@ -333,34 +322,35 @@ export class ParentalLockService {
         return ensureParentalLockSettingsReadable(this.settingsStore);
     }
 
+    /**
+     * Whether a parental PIN exists, after retrying a read that failed: a PIN
+     * that cannot be read is not an absent one, and must not be replaced.
+     */
+    async pinState(): Promise<'set' | 'none' | 'unreadable'> {
+        await this.initialize();
+        await this.ensurePin();
+        if (this.pinUnreadable()) return 'unreadable';
+        return this.hasPin() ? 'set' : 'none';
+    }
+
     /** Verifies the current PIN, then replaces it. */
     async changePin(): Promise<boolean> {
         await this.initialize();
         await this.ensurePin();
-        if (!this.prompt || !this.hasPin()) {
+        if (!this.prompt || !this.hasPin()) return false;
+        if (!(await this.verifyCurrentPin(PARENTAL_LOCK_SUBMIT_KEYS.confirm)))
             return false;
-        }
-        if (!(await this.verifyCurrentPin(PARENTAL_LOCK_SUBMIT_KEYS.confirm))) {
-            return false;
-        }
         const pin = await this.prompt.requestPin(NEW_PIN_REQUEST);
-        if (pin === null) {
-            return false;
-        }
+        if (pin === null) return false;
         return this.storePin(pin);
     }
 
     /** Turns the feature off after the PIN was entered; locks are kept. */
     async disable(): Promise<boolean> {
-        if (!this.enabled()) {
-            return true;
-        }
-        if (!(await this.verifyCurrentPin(PARENTAL_LOCK_SUBMIT_KEYS.turnOff))) {
+        if (!this.enabled()) return true;
+        if (!(await this.verifyCurrentPin(PARENTAL_LOCK_SUBMIT_KEYS.turnOff)))
             return false;
-        }
-        if (!(await this.persistEnabled(false))) {
-            return false;
-        }
+        if (!(await this.persistEnabled(false))) return false;
         this.unlockedState.set(false);
         return true;
     }
@@ -378,9 +368,7 @@ export class ParentalLockService {
         await this.initialize();
         await this.ensurePin();
         const hash = this.pinHash();
-        if (!this.prompt || !hash) {
-            return false;
-        }
+        if (!this.prompt || !hash) return false;
         const pin = await this.prompt.requestPin(
             confirmPinRequest(hash, this.pinThrottle, submitKey, labels)
         );
@@ -395,9 +383,7 @@ export class ParentalLockService {
     async setRelockMinutes(minutes: number): Promise<boolean> {
         // A locked session must not lengthen or switch off its own relock
         // timer (Settings disables the selector until the PIN is entered).
-        if (this.active()) {
-            return false;
-        }
+        if (this.active()) return false;
         return persistParentalLockRelockMinutes(
             this.settingsStore,
             minutes,
@@ -449,17 +435,11 @@ export class ParentalLockService {
         categoryType: ParentalLockStalkerCategoryType,
         categoryId: string | number | null | undefined
     ): boolean {
-        if (!this.active()) {
-            return false;
-        }
+        if (!this.active()) return false;
         // Fail-closed mode withholds rows without a genre too: "unknown
         // genre" is not "no locked genre" while the locks are unknown.
-        if (this.withholdsEverything()) {
-            return true;
-        }
-        if (categoryId === null || categoryId === undefined) {
-            return false;
-        }
+        if (this.withholdsEverything()) return true;
+        if (categoryId === null || categoryId === undefined) return false;
         return this.lockedStalkerIds(playlistId, categoryType).includes(
             String(categoryId)
         );
@@ -558,18 +538,12 @@ export class ParentalLockService {
         );
     }
 
-    private async storePin(pin: string): Promise<boolean> {
-        try {
-            const hash = await hashParentalLockPin(pin);
-            if (!(await this.storage.writePinHash(hash))) {
-                return false;
-            }
-            this.pinHash.set(hash);
-            this.pinUnreadable.set(false);
-            return true;
-        } catch (error) {
-            console.error('Failed to store the parental lock PIN.', error);
-            return false;
-        }
+    private storePin(pin: string): Promise<boolean> {
+        return storeParentalLockPin(
+            this.storage,
+            pin,
+            this.pinHash,
+            this.pinUnreadable
+        );
     }
 }

@@ -2884,7 +2884,8 @@
             "UNAVAILABLE": "Ten serwer nie obsługuje profili.",
             "OFFLINE": "Serwer nie odpowiada. Spróbuj ponownie.",
             "GENERIC": "Coś poszło nie tak. Spróbuj ponownie.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Najpierw rodzic musi ustawić na tym urządzeniu kod PIN kontroli rodzicielskiej. Otwórz Ustawienia > Kontrola rodzicielska."
+            "KIDS_NEEDS_PARENTAL_PIN": "Najpierw rodzic musi ustawić na tym urządzeniu kod PIN kontroli rodzicielskiej. Otwórz Ustawienia > Kontrola rodzicielska.",
+            "PARENTAL_PIN_UNREADABLE": "Nie udało się odczytać kodu PIN kontroli rodzicielskiej na tym urządzeniu. Nie zostanie zastąpiony. Spróbuj ponownie lub otwórz Ustawienia > Kontrola rodzicielska."
         },
         "PICKER": {
             "TITLE": "Kto ogląda?",

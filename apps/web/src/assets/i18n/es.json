@@ -2884,7 +2884,8 @@
             "UNAVAILABLE": "Este servidor no admite perfiles.",
             "OFFLINE": "El servidor no responde. Inténtalo de nuevo.",
             "GENERIC": "Algo salió mal. Inténtalo de nuevo.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Un adulto debe definir primero un PIN de control parental en este dispositivo. Abre Ajustes > Control parental."
+            "KIDS_NEEDS_PARENTAL_PIN": "Un adulto debe definir primero un PIN de control parental en este dispositivo. Abre Ajustes > Control parental.",
+            "PARENTAL_PIN_UNREADABLE": "No se pudo leer el PIN de control parental de este dispositivo. No se reemplazará. Inténtalo de nuevo o abre Ajustes > Control parental."
         },
         "PICKER": {
             "TITLE": "¿Quién está viendo?",

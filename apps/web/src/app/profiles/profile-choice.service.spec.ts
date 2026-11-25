@@ -14,7 +14,9 @@ import {
     syntheticProfile,
 } from './profiles.stub';
 
-function setup(options: { hasPin?: boolean; leave?: boolean } = {}) {
+function setup(
+    options: { hasPin?: boolean; leave?: boolean; forced?: boolean } = {}
+) {
     const fake = fakeRuntime();
     const confirmPin = jest.fn(async () => options.leave ?? true);
     const setupPin = jest.fn(async () => true);
@@ -30,6 +32,7 @@ function setup(options: { hasPin?: boolean; leave?: boolean } = {}) {
                     confirmPin,
                     initialize: async () => undefined,
                     hasPin: () => options.hasPin ?? true,
+                    forced: () => options.forced ?? false,
                     setupPin,
                 },
             },
@@ -87,6 +90,23 @@ describe('ProfileChoiceService', () => {
         );
         expect(confirmPin).toHaveBeenCalledTimes(1);
         expect(fake.runtime.select).not.toHaveBeenCalled();
+    });
+
+    it('asks the parental PIN to leave the Default a slow start held while the lock is forced', async () => {
+        const { service, confirmPin, fake, profile } = setup({
+            forced: true,
+            leave: false,
+        });
+        await expect(service.choose(profile(ADULT_ID))).resolves.toBe(
+            'cancelled'
+        );
+        expect(confirmPin).toHaveBeenCalledTimes(1);
+        expect(fake.runtime.select).not.toHaveBeenCalled();
+
+        confirmPin.mockResolvedValueOnce(true);
+        await expect(service.choose(profile(ADULT_ID))).resolves.toBe(
+            'selected'
+        );
     });
 
     it('does not ask to stay on the kids profile it is on', async () => {

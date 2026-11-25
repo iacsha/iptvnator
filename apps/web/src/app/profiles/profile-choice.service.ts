@@ -40,9 +40,12 @@ export class ProfileChoiceService {
         this.busy.set(true);
         try {
             const current = this.runtime.active();
+            // Leaving a kids profile, or a Default that a slow start held while
+            // this device's last profile was kids (the lock is still forced).
+            const onKids = current?.kids === true && current.id === profile.id;
             if (
-                current?.kids &&
-                current.id !== profile.id &&
+                (current?.kids || this.parentalLock.forced()) &&
+                !onKids &&
                 !(await this.parentalLock.confirmPin({
                     titleKey: 'PROFILES.PICKER.LEAVE_KIDS_TITLE',
                     descriptionKey: 'PROFILES.PICKER.LEAVE_KIDS_DESCRIPTION',

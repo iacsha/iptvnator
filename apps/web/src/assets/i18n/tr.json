@@ -2884,7 +2884,8 @@
             "UNAVAILABLE": "Bu sunucu profilleri desteklemiyor.",
             "OFFLINE": "Sunucu yanıt vermiyor. Tekrar deneyin.",
             "GENERIC": "Bir şeyler ters gitti. Tekrar deneyin.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Önce bir ebeveynin bu cihazda ebeveyn kilidi PIN'i belirlemesi gerekir. Ayarlar > Ebeveyn kilidi'ni açın."
+            "KIDS_NEEDS_PARENTAL_PIN": "Önce bir ebeveynin bu cihazda ebeveyn kilidi PIN'i belirlemesi gerekir. Ayarlar > Ebeveyn kilidi'ni açın.",
+            "PARENTAL_PIN_UNREADABLE": "Bu cihazdaki ebeveyn kilidi PIN'i okunamadı. Değiştirilmeyecek. Tekrar deneyin veya Ayarlar > Ebeveyn kilidi'ni açın."
         },
         "PICKER": {
             "TITLE": "Kim izliyor?",
