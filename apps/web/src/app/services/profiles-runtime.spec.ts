@@ -244,6 +244,16 @@ describe('ProfilesRuntime', () => {
         expect(visible.scope()).toBe('shared');
     });
 
+    it('exposes whether start-up holds Default', async () => {
+        writeActiveProfileId(NAS, ADULT);
+        const runtime = await start(true);
+        expect(runtime.held()).toBe(false);
+        runtime.holdDefault();
+        expect(runtime.held()).toBe(true);
+        expect(runtime.select(ADULT)).toBe(true);
+        expect(runtime.held()).toBe(false);
+    });
+
     it('falls back to Default and forgets a stale stored profile', async () => {
         writeActiveProfileId(NAS, STALE);
         const runtime = await start();

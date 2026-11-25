@@ -55,7 +55,7 @@ export class ProfilesRuntime {
     /** This session's choice, kept when storage cannot hold it. */
     private sessionChoice: string | null = null;
     /** Start-up gave up waiting: stay on Default for this session. */
-    private heldOnDefault = false;
+    private readonly heldState = signal(false);
     private startupRead = false;
     /** This session's choice came from the picker, so its PIN was asked. */
     private choiceUnlocked = false;
@@ -72,6 +72,8 @@ export class ProfilesRuntime {
 
     readonly uiEnabled = inject(PROFILES_UI_ENABLED_TOKEN);
     readonly capable: Signal<boolean> = this.capableState.asReadonly();
+    /** Start-up gave up waiting and stays on Default for this session. */
+    readonly held: Signal<boolean> = this.heldState.asReadonly();
     readonly list: Signal<ServerProfileList | null> =
         this.listState.asReadonly();
     readonly state: Signal<
@@ -219,7 +221,7 @@ export class ProfilesRuntime {
         writeActiveProfileId(this.currentInstanceId, id);
         this.sessionChoice = id;
         this.choiceUnlocked = true;
-        this.heldOnDefault = false;
+        this.heldState.set(false);
         this.activeIdValue.set(id);
         return true;
     }
@@ -230,7 +232,7 @@ export class ProfilesRuntime {
      * saved choice stays for the next launch.
      */
     holdDefault(): void {
-        this.heldOnDefault = true;
+        this.heldState.set(true);
         this.setActive(DEFAULT_PROFILE_ID, true);
     }
 
@@ -354,7 +356,7 @@ export class ProfilesRuntime {
     }
 
     private reconcile(instanceId: string | null): void {
-        if (this.heldOnDefault) return;
+        if (this.heldState()) return;
         const list = this.listState();
         // The saved id is read once, at start-up; after that each tab keeps
         // its own choice. A saved PIN profile is never adopted without its PIN.
@@ -406,7 +408,7 @@ export class ProfilesRuntime {
         this.sessionChoice = null;
         this.choiceUnlocked = false;
         this.startupRead = false;
-        this.heldOnDefault = false;
+        this.heldState.set(false);
         this.capableState.set(false);
         this.listState.set(null);
         this.setActive(DEFAULT_PROFILE_ID, true);

@@ -1,8 +1,10 @@
 import { EnvironmentInjector, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { ParentalLockService } from '@iptvnator/services';
 import { sourceConnection } from '@iptvnator/services/source-sync/connection';
 import {
     readActiveProfileId,
+    readKidsLast,
     readProfilesStart,
 } from '../services/profiles-preferences';
 import {
@@ -30,7 +32,11 @@ export const PROFILES_GUARD_TIMEOUT_MS = 1500;
 export const profilePickerGuard: CanActivateFn = async (_route, state) => {
     if (!inject(PROFILES_UI_ENABLED_TOKEN)) return true;
     const instanceId = sourceConnection()?.instanceId;
-    if (!instanceId || profilePickedThisSession()) return true;
+    if (!instanceId) return true;
+    // The last profile of this device was a kids profile: hold the lock on
+    // from the first moment, until the runtime has answered who is watching.
+    if (readKidsLast(instanceId)) inject(ParentalLockService).setForced(true);
+    if (profilePickedThisSession()) return true;
     const injector = inject(EnvironmentInjector);
     const router = inject(Router);
     const ask = await withTimeout(

@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Ouderlijk toezicht ingeschakeld",
             "DISABLED_TOAST": "Ouderlijk toezicht uitgeschakeld",
             "PIN_CHANGED_TOAST": "Pincode gewijzigd",
-            "LOCKED_TOAST": "Vergrendeld"
+            "LOCKED_TOAST": "Vergrendeld",
+            "FORCED_NOTE": "De vergrendeling staat aan omdat een kinderprofiel actief is. Verlaat het kinderprofiel om dit te wijzigen."
         },
         "AGE_RATING_COUNTRY_LABEL": "Land voor leeftijdsclassificatie",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Kies het land voor de leeftijdsclassificatie. Ontbrekende lokale gegevens kunnen worden aangevuld met Amerikaanse of aanbiedergegevens.",

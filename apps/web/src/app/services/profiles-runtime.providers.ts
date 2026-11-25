@@ -10,10 +10,18 @@ export async function loadProfileSwitch(
     return injector.get(ProfileSwitchService);
 }
 
-/** Keeps the runtime and its transport out of the initial bundle. */
+/**
+ * Keeps the runtime and its transport out of the initial bundle. The kids
+ * lock comes with it: it must exist wherever a profile can be active.
+ */
 export async function loadProfilesRuntime(
     injector: EnvironmentInjector
 ): Promise<ProfilesRuntime> {
-    const { ProfilesRuntime } = await import('./profiles-runtime');
-    return injector.get(ProfilesRuntime);
+    const [{ ProfilesRuntime }, { ProfilesKidsLock }] = await Promise.all([
+        import('./profiles-runtime'),
+        import('./profiles-kids-lock'),
+    ]);
+    const runtime = injector.get(ProfilesRuntime);
+    injector.get(ProfilesKidsLock);
+    return runtime;
 }

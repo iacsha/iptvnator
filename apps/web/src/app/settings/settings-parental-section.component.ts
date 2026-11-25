@@ -34,6 +34,8 @@ export class SettingsParentalLockSectionComponent {
     readonly relockOptions =
         input.required<readonly ParentalLockRelockMinutes[]>();
     readonly busy = input(false);
+    /** A kids profile holds the lock on: the switch is off limits until it is left. */
+    readonly forced = input(false);
 
     readonly toggleEnabled = output<boolean>();
     readonly changePin = output<void>();

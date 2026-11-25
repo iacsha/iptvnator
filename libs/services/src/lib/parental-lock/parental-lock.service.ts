@@ -38,6 +38,7 @@ import {
     type PromptTexts,
     unlockPinRequest,
 } from './parental-lock-prompt-requests';
+import { applyParentalLockPinRead } from './parental-lock-pin-read';
 import { ParentalLockStorageService } from './parental-lock-storage';
 
 /**
@@ -71,6 +72,12 @@ export class ParentalLockService {
     );
 
     private readonly unlockedState = signal(false);
+    /**
+     * A kids profile (or a start-up that cannot yet tell) holds the lock on,
+     * whatever the setting says. Memory only: never persisted, never mirrored
+     * into the settings or the main process's electron-conf.
+     */
+    private readonly forcedState = signal(false);
     /** Shared by every unlock prompt: a reopened dialog keeps the cooldown. */
     private readonly pinThrottle = createParentalLockPinThrottle();
     private readonly pinHash = signal<string | null>(null);
@@ -104,11 +111,15 @@ export class ParentalLockService {
      * toward "off" would expose every locked category precisely during a
      * storage failure.
      */
-    readonly enabled = computed(() =>
-        this.switchUnknown()
-            ? this.pinHash() !== null || this.pinUnreadable()
-            : this.settingsStore.parentalLockEnabled?.() === true
+    readonly enabled = computed(
+        () =>
+            this.forcedState() ||
+            (this.switchUnknown()
+                ? this.pinHash() !== null || this.pinUnreadable()
+                : this.settingsStore.parentalLockEnabled?.() === true)
     );
+    /** The lock is held on by a kids profile; Settings cannot turn it off meanwhile. */
+    readonly forced = this.forcedState.asReadonly();
     /** Feature on and the PIN has been entered this session. */
     readonly unlocked = computed(() => this.enabled() && this.unlockedState());
     /** Locked categories must currently be withheld. */
@@ -150,7 +161,10 @@ export class ParentalLockService {
         this.locks.setRemovalGate(() => !this.active());
         effect(() => {
             const active = this.active();
-            if (!this.settingsReady()) {
+            const forced = this.forcedState();
+            // A forced lock is told to the worker at once: it must not wait
+            // for the settings, or the first catalog read would be unfiltered.
+            if (!this.settingsReady() && !forced) {
                 return;
             }
             untracked(() => {
@@ -158,7 +172,7 @@ export class ParentalLockService {
                 // Unknown switch and no PIN to stand in for it: the main
                 // process keeps its mirrored (locked) default rather than
                 // being told "unlocked" on the strength of default settings.
-                if (!this.switchUnknown() || this.hasPin()) {
+                if (forced || !this.switchUnknown() || this.hasPin()) {
                     void this.workerSync.sync(active, () => this.active());
                 }
             });
@@ -179,6 +193,15 @@ export class ParentalLockService {
         });
     }
 
+    /**
+     * Holds the lock on (or releases it). Going on locks the session at once:
+     * a PIN entered earlier does not carry into a kids profile.
+     */
+    setForced(forced: boolean): void {
+        if (forced && !this.forcedState()) this.unlockedState.set(false);
+        this.forcedState.set(forced);
+    }
+
     /** Loads the persisted PIN hash and lock store once. */
     initialize(): Promise<void> {
         if (!this.initialization) {
@@ -188,7 +211,11 @@ export class ParentalLockService {
                     this.locks.load(),
                     this.settingsStore.loadSettings(),
                 ]);
-                this.applyPinRead(pinRead);
+                applyParentalLockPinRead(
+                    pinRead,
+                    this.pinHash,
+                    this.pinUnreadable
+                );
                 this.versionState.update((value) => value + 1);
                 this.settingsReady.set(true);
             })().catch((error) => {
@@ -514,16 +541,6 @@ export class ParentalLockService {
         return this.locks.stampXtreamLocks(playlistId, categoryTypes);
     }
 
-    private applyPinRead(read: { hash: string | null } | null): void {
-        if (read === null) {
-            console.error('The parental lock PIN could not be read.');
-            this.pinUnreadable.set(true);
-            return;
-        }
-        this.pinHash.set(read.hash);
-        this.pinUnreadable.set(false);
-    }
-
     /**
      * Retries a PIN read that failed at startup. A failed read is not an
      * absent PIN: the session stays locked (`enabled` treats it as set),
@@ -534,7 +551,11 @@ export class ParentalLockService {
         if (!this.pinUnreadable()) {
             return;
         }
-        this.applyPinRead(await this.storage.readPinHash());
+        applyParentalLockPinRead(
+            await this.storage.readPinHash(),
+            this.pinHash,
+            this.pinUnreadable
+        );
     }
 
     private async storePin(pin: string): Promise<boolean> {

@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Kontrola rodzicielska włączona",
             "DISABLED_TOAST": "Kontrola rodzicielska wyłączona",
             "PIN_CHANGED_TOAST": "Kod PIN zmieniony",
-            "LOCKED_TOAST": "Zablokowano"
+            "LOCKED_TOAST": "Zablokowano",
+            "FORCED_NOTE": "Blokada jest włączona, bo aktywny jest profil dziecka. Wyjdź z profilu dziecka, aby ją zmienić."
         },
         "AGE_RATING_COUNTRY_LABEL": "Kraj klasyfikacji wiekowej",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Wybierz kraj klasyfikacji. Jeśli brakuje danych lokalnych, mogą zostać użyte dane z USA lub od dostawcy.",
