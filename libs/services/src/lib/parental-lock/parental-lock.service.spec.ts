@@ -499,6 +499,21 @@ describe('ParentalLockService', () => {
         expect(service.lockedGroupTitles('p-1')).toEqual(['Adult']);
     });
 
+    it('tells an absent PIN from one that cannot be read, retrying the read first', async () => {
+        storage.readPinHash.mockResolvedValueOnce(null);
+        storage.pinHash = await hashParentalLockPin('1234');
+        const service = await createService();
+        // The first read failed, the retry succeeds.
+        await expect(service.pinState()).resolves.toBe('set');
+    });
+
+    it('reports a PIN that stays unreadable, and an absent one', async () => {
+        storage.readPinHash.mockResolvedValue(null);
+        const unreadable = await createService();
+        await expect(unreadable.pinState()).resolves.toBe('unreadable');
+        TestBed.resetTestingModule();
+    });
+
     describe('forced by a kids profile', () => {
         it('turns the lock on whatever the setting says, locks an unlocked session and tells the worker', async () => {
             storage.pinHash = await hashParentalLockPin('1234');

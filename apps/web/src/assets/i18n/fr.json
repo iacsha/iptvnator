@@ -2878,7 +2878,8 @@
             "UNAVAILABLE": "Ce serveur ne prend pas en charge les profils.",
             "OFFLINE": "Le serveur ne répond pas. Réessayez.",
             "GENERIC": "Une erreur s'est produite. Réessayez.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Un parent doit d'abord définir un code PIN de contrôle parental sur cet appareil. Ouvrez Paramètres > Contrôle parental."
+            "KIDS_NEEDS_PARENTAL_PIN": "Un parent doit d'abord définir un code PIN de contrôle parental sur cet appareil. Ouvrez Paramètres > Contrôle parental.",
+            "PARENTAL_PIN_UNREADABLE": "Le code PIN de contrôle parental de cet appareil n'a pas pu être lu. Il ne sera pas remplacé. Réessayez ou ouvrez Paramètres > Contrôle parental."
         },
         "PICKER": {
             "TITLE": "Qui regarde ?",

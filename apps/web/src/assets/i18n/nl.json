@@ -2878,7 +2878,8 @@
             "UNAVAILABLE": "Deze server ondersteunt geen profielen.",
             "OFFLINE": "De server reageert niet. Probeer het opnieuw.",
             "GENERIC": "Er is iets misgegaan. Probeer het opnieuw.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Eerst moet een ouder op dit apparaat een pincode voor ouderlijk toezicht instellen. Open Instellingen > Ouderlijk toezicht."
+            "KIDS_NEEDS_PARENTAL_PIN": "Eerst moet een ouder op dit apparaat een pincode voor ouderlijk toezicht instellen. Open Instellingen > Ouderlijk toezicht.",
+            "PARENTAL_PIN_UNREADABLE": "De pincode voor ouderlijk toezicht op dit apparaat kon niet worden gelezen. Hij wordt niet vervangen. Probeer het opnieuw of open Instellingen > Ouderlijk toezicht."
         },
         "PICKER": {
             "TITLE": "Wie kijkt er?",

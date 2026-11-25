@@ -66,6 +66,7 @@ async function setup(
                     confirmPin,
                     initialize: async () => undefined,
                     hasPin: () => options.hasPin ?? true,
+                    forced: () => false,
                 },
             },
             { provide: ProfileSwitchService, useValue: { apply } },

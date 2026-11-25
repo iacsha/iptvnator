@@ -61,7 +61,11 @@ export class SettingsProfilesFacade {
         writeProfilesStart(instanceId, value);
     }
 
-    setEnabled(enabled: boolean): Promise<void> {
+    async setEnabled(enabled: boolean): Promise<void> {
+        // Turning profiles off ends the kids lock: it asks for the parental PIN
+        // while the lock is held, like leaving the kids profile does.
+        if (!enabled && this.parentalLock.forced() && !(await this.unlock()))
+            return;
         return this.run(() => this.runtime.client().setEnabled(enabled));
     }
 
@@ -258,10 +262,14 @@ export class SettingsProfilesFacade {
      * the create or edit.
      */
     private async ensureParentalPin(): Promise<boolean> {
-        await this.parentalLock.initialize();
-        return (
-            this.parentalLock.hasPin() || (await this.parentalLock.setupPin())
-        );
+        const state = await this.parentalLock.pinState();
+        if (state === 'set') return true;
+        if (state === 'unreadable') {
+            // Never replace a PIN that only failed to read.
+            this.error.set({ key: 'PROFILES.ERRORS.PARENTAL_PIN_UNREADABLE' });
+            return false;
+        }
+        return this.parentalLock.setupPin();
     }
 
     private unlock(): Promise<boolean> {

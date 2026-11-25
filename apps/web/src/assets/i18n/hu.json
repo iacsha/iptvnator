@@ -2878,7 +2878,8 @@
             "UNAVAILABLE": "Ez a kiszolgáló nem támogatja a profilokat.",
             "OFFLINE": "A kiszolgáló nem válaszol. Próbálja újra.",
             "GENERIC": "Valami hiba történt. Próbálja újra.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Először egy szülőnek be kell állítania a szülői felügyelet PIN-kódját ezen az eszközön. Nyisd meg: Beállítások > Szülői felügyelet."
+            "KIDS_NEEDS_PARENTAL_PIN": "Először egy szülőnek be kell állítania a szülői felügyelet PIN-kódját ezen az eszközön. Nyisd meg: Beállítások > Szülői felügyelet.",
+            "PARENTAL_PIN_UNREADABLE": "Az eszköz szülői felügyeleti PIN-kódját nem sikerült beolvasni. Nem lesz lecserélve. Próbáld újra, vagy nyisd meg: Beállítások > Szülői felügyelet."
         },
         "PICKER": {
             "TITLE": "Ki nézi?",
