@@ -40,6 +40,7 @@ import { provideXtreamDataSource } from '@iptvnator/portal/xtream/data-access';
 import {
     provideParentalLockPlaylistCleanup,
     DataService,
+    PROFILE_SWITCHER,
     SETTINGS_PROFILES_AVAILABLE,
 } from '@iptvnator/services';
 import { dbConfig } from '@iptvnator/shared/interfaces';
@@ -54,6 +55,7 @@ import {
     activityDataSourceFactory,
     activityEventsFactory,
 } from './services/activity-sync.providers';
+import { profileSwitcherFactory } from './services/profile-switcher';
 import { profilesAvailabilityFactory } from './services/profiles-availability';
 import { providePortalPlaybackPositions } from './services/portal-playback-positions.service';
 import { provideAndroidPlaybackCheckpoint } from './services/android-playback-checkpoint.providers';
@@ -180,6 +182,10 @@ export const appConfig: ApplicationConfig = {
         {
             provide: SETTINGS_PROFILES_AVAILABLE,
             useFactory: profilesAvailabilityFactory,
+        },
+        {
+            provide: PROFILE_SWITCHER,
+            useFactory: profileSwitcherFactory,
         },
     ],
 };

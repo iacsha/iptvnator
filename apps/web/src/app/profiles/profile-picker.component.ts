@@ -2,29 +2,24 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EnvironmentInjector,
     computed,
     effect,
     inject,
     signal,
     viewChildren,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
-import { ParentalLockService } from '@iptvnator/services';
 import {
     DEFAULT_PROFILE_ID,
     type ServerProfile,
 } from '@iptvnator/shared/interfaces/profiles';
 import { StateViewComponent } from '@iptvnator/ui/state';
 import { ProfilesRuntime } from '../services/profiles-runtime';
-import { loadProfileSwitch } from '../services/profiles-runtime.providers';
+import { ProfileChoiceService } from './profile-choice.service';
 import { ProfileAvatarComponent } from './profile-avatar.component';
 import { markProfilePicked, sanitizeReturnUrl } from './profile-picker-route';
-import { ProfilePinDialogComponent } from './profile-pin-dialog.component';
 
 type Direction = 'left' | 'right' | 'up' | 'down' | 'first' | 'last';
 
@@ -58,9 +53,7 @@ const KEY_DIRECTION: Readonly<Record<string, Direction>> = {
 export class ProfilePickerComponent {
     private readonly runtime = inject(ProfilesRuntime);
     private readonly router = inject(Router);
-    private readonly injector = inject(EnvironmentInjector);
-    private readonly dialog = inject(MatDialog);
-    private readonly parentalLock = inject(ParentalLockService);
+    private readonly choice = inject(ProfileChoiceService);
     private readonly returnUrl = sanitizeReturnUrl(
         inject(ActivatedRoute).snapshot.queryParamMap.get('returnUrl')
     );
@@ -134,63 +127,17 @@ export class ProfilePickerComponent {
         this.busy.set(true);
         this.error.set(null);
         try {
-            const current = this.runtime.active();
-            if (
-                current?.kids &&
-                current.id !== profile.id &&
-                !(await this.parentalLock.confirmPin({
-                    titleKey: 'PROFILES.PICKER.LEAVE_KIDS_TITLE',
-                    descriptionKey: 'PROFILES.PICKER.LEAVE_KIDS_DESCRIPTION',
-                }))
-            )
-                return;
-            if (profile.hasPin && !(await this.askPin(profile))) return;
-            // The workspace opens on the chosen profile's state, never the
-            // old one's, and the shown profile changes only once it has moved.
-            const profileSwitch = await loadProfileSwitch(this.injector);
-            const switched = await this.runtime.switchTo(
-                profile.id,
-                (scope, moved) => profileSwitch.apply(scope, moved)
-            );
-            if (!switched) {
+            const result = await this.choice.choose(profile);
+            if (result === 'selected') {
+                markProfilePicked();
+                await this.router.navigateByUrl(this.returnUrl);
+            } else if (result === 'needs-parental-pin')
+                this.error.set('PROFILES.ERRORS.KIDS_NEEDS_PARENTAL_PIN');
+            else if (result === 'unavailable')
                 this.error.set('PROFILES.ERRORS.GENERIC');
-                return;
-            }
-            markProfilePicked();
-            await this.router.navigateByUrl(this.returnUrl);
         } finally {
             this.busy.set(false);
         }
-    }
-
-    /** A failed request clears the browser's server check: redo it before the next PIN try. */
-    private offlineBefore = false;
-
-    private async askPin(profile: ServerProfile): Promise<boolean> {
-        const ref = ProfilePinDialogComponent.open(this.dialog, {
-            titleKey: 'PROFILES.PIN_DIALOG.UNLOCK_TITLE',
-            titleParams: { name: profile.name },
-            descriptionKey: 'PROFILES.PIN_DIALOG.UNLOCK_DESCRIPTION',
-            submitKey: 'PROFILES.PIN_DIALOG.UNLOCK',
-            submit: async (pin) => {
-                if (this.offlineBefore) {
-                    this.offlineBefore = false;
-                    await this.runtime.recheck();
-                }
-                const result = await this.runtime
-                    .client()
-                    .unlock(profile.id, pin);
-                if (!result.ok && result.error.code === 'offline')
-                    this.offlineBefore = true;
-                if (!result.ok)
-                    this.runtime.handleProfileError(
-                        result.error.code,
-                        profile.id
-                    );
-                return result;
-            },
-        });
-        return (await firstValueFrom(ref.afterClosed())) === true;
     }
 
     /** The tile in `direction` from `index`, or null at the edge of the grid. */

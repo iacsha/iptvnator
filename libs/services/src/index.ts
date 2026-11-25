@@ -42,3 +42,4 @@ export * from './lib/server-storage-status.service';
 export * from './lib/server-access-token';
 export * from './lib/server-slow-start';
 export * from './lib/settings-profiles-available.token';
+export * from './lib/profile-switcher.token';

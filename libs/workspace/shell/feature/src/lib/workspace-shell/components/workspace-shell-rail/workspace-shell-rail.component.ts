@@ -6,6 +6,7 @@ import {
     input,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,6 +15,7 @@ import {
     PortalRailSection,
 } from '@iptvnator/portal/shared/util';
 import {
+    PROFILE_SWITCHER,
     type ServerConnectionState,
     ServerStorageStatusService,
 } from '@iptvnator/services';
@@ -23,6 +25,9 @@ import { WorkspaceShellRailLinksComponent } from '../workspace-shell-rail-links/
     selector: 'app-workspace-shell-rail',
     imports: [
         MatIcon,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
         MatTooltip,
         RouterLink,
         TranslatePipe,
@@ -45,6 +50,8 @@ export class WorkspaceShellRailComponent {
 
     /** Self-hosted server storage: hidden while `inactive`. */
     readonly serverState = inject(ServerStorageStatusService).state;
+    /** The household profile switcher; the app provides it, other hosts have none. */
+    readonly switcher = inject(PROFILE_SWITCHER);
     readonly serverIcon = computed(() => SERVER_ICONS[this.serverState()]);
     readonly serverLabelKey = computed(
         () => SERVER_LABEL_KEYS[this.serverState()]

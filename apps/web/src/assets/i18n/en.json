@@ -2917,7 +2917,8 @@
             "INVALID_PIN": "A PIN has 4 to 8 digits.",
             "UNAVAILABLE": "This server does not support profiles.",
             "OFFLINE": "The server is not answering. Try again.",
-            "GENERIC": "Something went wrong. Try again."
+            "GENERIC": "Something went wrong. Try again.",
+            "KIDS_NEEDS_PARENTAL_PIN": "A parent needs to set a parental PIN on this device first. Open Settings > Parental lock."
         },
         "PICKER": {
             "TITLE": "Who's watching?",
@@ -2934,6 +2935,10 @@
             "ACTION": "Turn on sync",
             "DONE": "Sync is on. This profile now keeps its own data.",
             "FAILED": "Sync could not be turned on. Check Settings."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profile: {{name}}. Switch profile",
+            "MANAGE": "Manage profiles"
         }
     }
 }

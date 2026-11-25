@@ -2917,7 +2917,8 @@
             "INVALID_PIN": "A PIN-kódnak 4–8 számjegyből kell állnia.",
             "UNAVAILABLE": "Ez a kiszolgáló nem támogatja a profilokat.",
             "OFFLINE": "A kiszolgáló nem válaszol. Próbálja újra.",
-            "GENERIC": "Hiba történt. Próbálja újra."
+            "GENERIC": "Hiba történt. Próbálja újra.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Először egy szülőnek be kell állítania a szülői felügyelet PIN-kódját ezen az eszközön. Nyisd meg: Beállítások > Szülői felügyelet."
         },
         "PICKER": {
             "TITLE": "Ki használja az alkalmazást?",
@@ -2934,6 +2935,10 @@
             "ACTION": "Szinkronizálás bekapcsolása",
             "DONE": "A szinkronizálás be van kapcsolva. Ennek a profilnak mostantól saját adatai vannak.",
             "FAILED": "A szinkronizálást nem sikerült bekapcsolni. Ellenőrizd a beállításokat."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil: {{name}}. Profilváltás",
+            "MANAGE": "Profilok kezelése"
         }
     }
 }
