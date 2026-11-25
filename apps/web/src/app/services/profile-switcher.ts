@@ -14,7 +14,6 @@ import {
 } from '../profiles/profile-appearance';
 import type { ProfilesRuntime } from './profiles-runtime';
 import { loadProfilesRuntime } from './profiles-runtime.providers';
-import { PROFILES_UI_ENABLED_TOKEN } from './profiles-ui-enabled';
 
 export { PROFILE_SWITCHER };
 
@@ -38,7 +37,7 @@ export function profileSwitcherFactory(): ProfileSwitcher {
     const injector = inject(EnvironmentInjector);
     const router = inject(Router);
     const runtime = signal<ProfilesRuntime | null>(null);
-    if (inject(PROFILES_UI_ENABLED_TOKEN) && sourceConnection())
+    if (sourceConnection())
         void loadProfilesRuntime(injector)
             .then((loaded) => runtime.set(loaded))
             .catch(() => undefined);

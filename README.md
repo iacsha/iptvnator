@@ -71,7 +71,9 @@ docker compose -f docker/docker-compose.yml up --build -d
 Open <http://localhost:4333>. No separate backend container is needed. You can
 also [run a server from the desktop app](docker/README.md#run-the-server-from-the-desktop-app).
 Connected clients can share sources. Favorites, Recently Viewed and supported
-watch progress each have their own synchronization opt-in.
+watch progress each have their own synchronization opt-in. A household can add
+profiles, so each person keeps their own favorites, history and progress; a kids
+profile keeps the parental lock on.
 
 The PWA does not include M3U XMLTV, Embedded MPV, managed external-player
 launching, the download manager or Electron remote-control features.

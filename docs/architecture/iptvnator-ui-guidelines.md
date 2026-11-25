@@ -989,6 +989,12 @@ remain local when the meaning is explicit.
   screen, so its own header toggle beside the content switch stays the owner.
   At the phone breakpoint (≤640px) the header toggle is hidden: the rail is a
   bottom drawer there with its own toggle and the header has no spare width.
+- The workspace rail's footer holds the household profile switcher on a
+  self-hosted server with profiles on: a 44px `nav-item` button, `app-region:
+  no-drag`, showing the active profile's avatar, named by `aria-label`, that
+  opens a `mat-menu` of the other profiles and "Manage profiles". It sits in
+  the server-storage block, so a host without server storage renders no extra
+  DOM.
 - While the rail is collapsed and nothing is playing, every live host renders
   `app-channel-list-hidden-state` (`@iptvnator/portal/shared/ui`) instead of
   the "select a channel" empty state: a title that says the list is hidden, a
@@ -1815,8 +1821,10 @@ but the component has not.
   it has to opt into the row direction — a nested list that keeps
   `flex-direction: column` stacks its links out of the bar and over the header.
   The bar scrolls sideways once a portal contributes its sections, and the
-  settings link is `position: sticky` so it never scrolls out of reach. In
-  standalone mode, the inset for the status bar sits above the 52px scroller.
+  settings link is `position: sticky` so it never scrolls out of reach, with
+  the server status and profile switcher buttons beside it (all 44px, 375px
+  fits). In standalone mode, the inset for the status bar sits above the 52px
+  scroller.
 - In narrow catalog panes, Refine shares a row with the category title and
   count. Sort and filter chips wrap below when present.
 - The shell context panel (categories, filters, settings sections) is an
