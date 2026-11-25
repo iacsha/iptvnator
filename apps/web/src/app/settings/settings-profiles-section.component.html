@@ -103,6 +103,99 @@
             </div>
         </section>
 
+        @if (enabled()) {
+            <section
+                class="settings-section"
+                data-test-id="profiles-separation"
+            >
+                <div class="settings-section__header">
+                    <h3>
+                        {{ 'SETTINGS.PROFILES.SEPARATION_TITLE' | translate }}
+                    </h3>
+                </div>
+                <div class="settings-card">
+                    @if (showOffer()) {
+                        <div
+                            class="setting-item"
+                            data-test-id="profiles-consent-offer"
+                        >
+                            <div class="setting-item__meta">
+                                <h4>
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_TITLE'
+                                            | translate
+                                    }}
+                                </h4>
+                                <p>
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_BODY'
+                                            | translate
+                                    }}
+                                </p>
+                            </div>
+                            <div class="setting-item__control profiles-offer">
+                                <button
+                                    mat-flat-button
+                                    type="button"
+                                    data-test-id="profiles-consent-accept"
+                                    [disabled]="separation.busy()"
+                                    (click)="turnOnSyncs()"
+                                >
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_ACCEPT'
+                                            | translate
+                                    }}
+                                </button>
+                                <button
+                                    mat-button
+                                    type="button"
+                                    data-test-id="profiles-consent-skip"
+                                    [disabled]="separation.busy()"
+                                    (click)="offerDismissed.set(true)"
+                                >
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_SKIP'
+                                            | translate
+                                    }}
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    @if (consentFailed()) {
+                        <p
+                            class="profiles-error"
+                            role="alert"
+                            data-test-id="profiles-consent-failed"
+                        >
+                            {{ 'SETTINGS.PROFILES.CONSENT_FAILED' | translate }}
+                        </p>
+                    }
+                    <ul class="profiles-parts" data-test-id="profiles-parts">
+                        @for (part of parts(); track part.id) {
+                            <li
+                                class="profiles-part"
+                                [attr.data-test-id]="'profiles-part-' + part.id"
+                                [attr.data-separate]="part.separate"
+                            >
+                                <span class="profiles-part__name">{{
+                                    part.labelKey | translate
+                                }}</span>
+                                <span class="profiles-badge">{{
+                                    (part.separate
+                                        ? 'SETTINGS.PROFILES.PART_SEPARATE'
+                                        : 'SETTINGS.PROFILES.PART_SHARED'
+                                    ) | translate
+                                }}</span>
+                            </li>
+                        }
+                    </ul>
+                    <p class="profiles-note">
+                        {{ 'SETTINGS.PROFILES.HOUSEHOLD_NOTE' | translate }}
+                    </p>
+                </div>
+            </section>
+        }
+
         <section class="settings-section">
             <div class="settings-section__header">
                 <h3>{{ 'SETTINGS.PROFILES.LIST_TITLE' | translate }}</h3>

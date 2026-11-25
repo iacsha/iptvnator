@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "Pincode voor {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Voor het wijzigen of verwijderen van de pincode van {{name}} is de huidige pincode nodig.",
             "PARENTAL_TITLE": "Ouderpincode nodig",
-            "PARENTAL_DESCRIPTION": "Dit kinderprofiel wordt beschermd door het ouderlijk toezicht."
+            "PARENTAL_DESCRIPTION": "Dit kinderprofiel wordt beschermd door het ouderlijk toezicht.",
+            "SEPARATION_TITLE": "Gescheiden per profiel",
+            "CONSENT_TITLE": "Gegevens per profiel gescheiden houden?",
+            "CONSENT_BODY": "Favorieten, recent bekeken en afspeelvoortgang worden alleen per profiel bijgehouden zolang hun synchronisatie op dit apparaat aanstaat. Alle drie nu inschakelen?",
+            "CONSENT_ACCEPT": "Alle drie inschakelen",
+            "CONSENT_SKIP": "Niet nu",
+            "CONSENT_FAILED": "Een synchronisatie kon niet worden ingeschakeld. Controleer de serververbinding en probeer het opnieuw.",
+            "PART_FAVORITES": "Favorieten",
+            "PART_HISTORY": "Recent bekeken",
+            "PART_ACTIVITY": "Afspeelvoortgang",
+            "PART_SEPARATE": "Gescheiden",
+            "PART_SHARED": "Gedeeld (synchronisatie uit)",
+            "HOUSEHOLD_NOTE": "Afspeellijsten, bronnen en instellingen worden door iedereen gedeeld.",
+            "KIDS_PARENTAL_NOTE": "Een pincode voor ouderlijk toezicht wordt ingesteld bij het opslaan van het eerste kinderprofiel, als dit apparaat er nog geen heeft."
         }
     },
     "SERVER_STORAGE": {
@@ -2915,6 +2928,12 @@
             "OFFLINE_DESCRIPTION": "Je kunt doorgaan met het standaardprofiel.",
             "LEAVE_KIDS_TITLE": "Kinderprofiel verlaten",
             "LEAVE_KIDS_DESCRIPTION": "Voer de ouderpincode in om naar een ander profiel te wisselen."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Favorieten, geschiedenis en voortgang van dit profiel blijven alleen gescheiden als synchronisatie aanstaat.",
+            "ACTION": "Synchronisatie inschakelen",
+            "DONE": "Synchronisatie staat aan. Dit profiel heeft nu eigen gegevens.",
+            "FAILED": "Synchronisatie kon niet worden ingeschakeld. Controleer de instellingen."
         }
     }
 }

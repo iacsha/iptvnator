@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "PIN for {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Changing or removing the PIN of {{name}} needs its current PIN.",
             "PARENTAL_TITLE": "Parental PIN needed",
-            "PARENTAL_DESCRIPTION": "This kids profile is protected by the parental lock."
+            "PARENTAL_DESCRIPTION": "This kids profile is protected by the parental lock.",
+            "SEPARATION_TITLE": "Separate for each profile",
+            "CONSENT_TITLE": "Keep each profile's data separate?",
+            "CONSENT_BODY": "Favorites, recently watched and playback progress are kept per profile only while their sync is on for this device. Turn on all three now?",
+            "CONSENT_ACCEPT": "Turn on all three",
+            "CONSENT_SKIP": "Not now",
+            "CONSENT_FAILED": "A sync could not be turned on. Check the server connection and try again.",
+            "PART_FAVORITES": "Favorites",
+            "PART_HISTORY": "Recently watched",
+            "PART_ACTIVITY": "Playback progress",
+            "PART_SEPARATE": "Separate",
+            "PART_SHARED": "Shared (sync is off)",
+            "HOUSEHOLD_NOTE": "Playlists, sources and settings are shared by everyone.",
+            "KIDS_PARENTAL_NOTE": "A parental PIN is set up when you save the first kids profile, if this device has none."
         }
     },
     "SERVER_STORAGE": {
@@ -2915,6 +2928,12 @@
             "OFFLINE_DESCRIPTION": "You can continue with the Default profile.",
             "LEAVE_KIDS_TITLE": "Leave the kids profile",
             "LEAVE_KIDS_DESCRIPTION": "Enter the parental PIN to switch to another profile."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "This profile's favorites, history and progress can only be kept separate with sync turned on.",
+            "ACTION": "Turn on sync",
+            "DONE": "Sync is on. This profile now keeps its own data.",
+            "FAILED": "Sync could not be turned on. Check Settings."
         }
     }
 }

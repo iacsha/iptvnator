@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "{{name}}의 PIN",
             "PIN_CHANGE_DESCRIPTION": "{{name}}의 PIN을 변경하거나 삭제하려면 현재 PIN이 필요합니다.",
             "PARENTAL_TITLE": "보호자 PIN 필요",
-            "PARENTAL_DESCRIPTION": "이 어린이 프로필은 보호자 잠금으로 보호되어 있습니다."
+            "PARENTAL_DESCRIPTION": "이 어린이 프로필은 보호자 잠금으로 보호되어 있습니다.",
+            "SEPARATION_TITLE": "프로필별로 분리",
+            "CONSENT_TITLE": "프로필별로 데이터를 분리할까요?",
+            "CONSENT_BODY": "즐겨찾기, 최근 시청, 재생 진행 상황은 이 기기에서 각각의 동기화가 켜져 있을 때만 프로필별로 보관됩니다. 세 가지를 지금 모두 켤까요?",
+            "CONSENT_ACCEPT": "세 가지 모두 켜기",
+            "CONSENT_SKIP": "나중에",
+            "CONSENT_FAILED": "동기화 하나를 켜지 못했습니다. 서버 연결을 확인하고 다시 시도하세요.",
+            "PART_FAVORITES": "즐겨찾기",
+            "PART_HISTORY": "최근 시청",
+            "PART_ACTIVITY": "재생 진행 상황",
+            "PART_SEPARATE": "분리됨",
+            "PART_SHARED": "공유됨(동기화 꺼짐)",
+            "HOUSEHOLD_NOTE": "재생목록, 소스, 설정은 모두가 함께 사용합니다.",
+            "KIDS_PARENTAL_NOTE": "이 기기에 PIN이 없으면 첫 어린이 프로필을 저장할 때 자녀 보호 PIN을 설정합니다."
         }
     },
     "SERVER_STORAGE": {
@@ -2915,6 +2928,12 @@
             "OFFLINE_DESCRIPTION": "기본 프로필로 계속할 수 있습니다.",
             "LEAVE_KIDS_TITLE": "어린이 프로필 나가기",
             "LEAVE_KIDS_DESCRIPTION": "다른 프로필로 전환하려면 보호자 PIN을 입력하세요."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "이 프로필의 즐겨찾기, 기록, 재생 진행 상황은 동기화를 켜야만 따로 보관됩니다.",
+            "ACTION": "동기화 켜기",
+            "DONE": "동기화가 켜졌습니다. 이제 이 프로필은 자체 데이터를 가집니다.",
+            "FAILED": "동기화를 켜지 못했습니다. 설정을 확인하세요."
         }
     }
 }

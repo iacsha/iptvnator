@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import {
     activePersonalScope,
-    ProfileStateUnavailableError,
+    refuseProfileState,
 } from './lib/profiles/active-scope';
 
 export type ChangedFavoriteChannel = {
@@ -69,12 +69,12 @@ export async function mutateFavoritePlaylist(
         playlist,
         transform,
         async (favorites) => {
-            if (!household) throw new ProfileStateUnavailableError();
+            if (!household) throw refuseProfileState();
             await persist({ ...playlist, favorites });
         }
     );
     if (mutated) return mutated;
-    if (!household) throw new ProfileStateUnavailableError();
+    if (!household) throw refuseProfileState();
     return persist({
         ...playlist,
         favorites: transform(playlist.favorites ?? []),

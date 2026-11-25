@@ -899,7 +899,20 @@
             "PIN_CHANGE_TITLE": "PIN de {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Alterar ou remover o PIN de {{name}} requer o PIN atual.",
             "PARENTAL_TITLE": "PIN parental necessário",
-            "PARENTAL_DESCRIPTION": "Este perfil infantil está protegido pelo bloqueio parental."
+            "PARENTAL_DESCRIPTION": "Este perfil infantil está protegido pelo bloqueio parental.",
+            "SEPARATION_TITLE": "Separado para cada perfil",
+            "CONSENT_TITLE": "Manter separados os dados de cada perfil?",
+            "CONSENT_BODY": "Os favoritos, os vistos recentemente e o progresso de reprodução ficam por perfil apenas enquanto a respetiva sincronização estiver ativada neste dispositivo. Ativar as três agora?",
+            "CONSENT_ACCEPT": "Ativar as três",
+            "CONSENT_SKIP": "Agora não",
+            "CONSENT_FAILED": "Não foi possível ativar uma sincronização. Verifique a ligação ao servidor e tente novamente.",
+            "PART_FAVORITES": "Favoritos",
+            "PART_HISTORY": "Vistos recentemente",
+            "PART_ACTIVITY": "Progresso de reprodução",
+            "PART_SEPARATE": "Separado",
+            "PART_SHARED": "Partilhado (sincronização desativada)",
+            "HOUSEHOLD_NOTE": "As listas de reprodução, as fontes e as definições são partilhadas por todos.",
+            "KIDS_PARENTAL_NOTE": "O PIN de controlo parental é definido ao guardar o primeiro perfil infantil, se este dispositivo ainda não tiver um."
         }
     },
     "SERVER_STORAGE": {
@@ -2915,6 +2928,12 @@
             "OFFLINE_DESCRIPTION": "Podes continuar com o perfil Predefinido.",
             "LEAVE_KIDS_TITLE": "Sair do perfil infantil",
             "LEAVE_KIDS_DESCRIPTION": "Introduz o PIN parental para mudar para outro perfil."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Os favoritos, o histórico e o progresso deste perfil só ficam separados com a sincronização ativada.",
+            "ACTION": "Ativar sincronização",
+            "DONE": "A sincronização está ativada. Este perfil tem agora os seus próprios dados.",
+            "FAILED": "Não foi possível ativar a sincronização. Verifique as definições."
         }
     }
 }

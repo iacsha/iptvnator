@@ -7,7 +7,7 @@ import type {
     XtreamPlayedContent,
 } from '@iptvnator/portal/xtream/data-access';
 import type { HistorySyncClient } from '@iptvnator/services/history-sync';
-import { ProfileStateUnavailableError } from '@iptvnator/services/profiles';
+import { refuseProfileState } from '@iptvnator/services/profiles';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { favoriteReferenceKey } from '@iptvnator/shared/interfaces/favorites-sync';
 import {
@@ -280,7 +280,7 @@ export class HistoryXtreamAdapter {
             this.client.current();
             // An unverified source falls back to the household's table, never for a profile.
             if (this.client.personalScope !== DEFAULT_PERSONAL_SCOPE)
-                throw new ProfileStateUnavailableError();
+                throw refuseProfileState();
             return Reflect.get(raw, method).apply(raw, args);
         }
         if (method === 'clearRecentItems')
