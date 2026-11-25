@@ -22,7 +22,11 @@ import {
 } from './profiles.stub';
 
 async function setup(
-    options: { returnUrl?: string | null; parental?: boolean } = {}
+    options: {
+        returnUrl?: string | null;
+        parental?: boolean;
+        hasPin?: boolean;
+    } = {}
 ) {
     const fake = fakeRuntime();
     const navigateByUrl = jest.fn(async () => true);
@@ -56,7 +60,14 @@ async function setup(
                 },
             },
             { provide: MatDialog, useValue: { open: dialogOpen } },
-            { provide: ParentalLockService, useValue: { confirmPin } },
+            {
+                provide: ParentalLockService,
+                useValue: {
+                    confirmPin,
+                    initialize: async () => undefined,
+                    hasPin: () => options.hasPin ?? true,
+                },
+            },
             { provide: ProfileSwitchService, useValue: { apply } },
         ],
     });
@@ -219,6 +230,18 @@ describe('ProfilePickerComponent', () => {
         release();
         await new Promise((resolve) => setTimeout(resolve, 20));
         expect(navigateByUrl).toHaveBeenCalled();
+    });
+
+    it('says a parent must set a parental PIN first, and stays on the picker', async () => {
+        const { choose, el, navigateByUrl, fake } = await setup({
+            hasPin: false,
+        });
+        await choose(KIDS_ID);
+        expect(fake.runtime.select).not.toHaveBeenCalled();
+        expect(navigateByUrl).not.toHaveBeenCalled();
+        expect(el.querySelector('[role="alert"]')?.textContent).toContain(
+            'PROFILES.ERRORS.KIDS_NEEDS_PARENTAL_PIN'
+        );
     });
 
     it('selects a plain profile and goes to the return url', async () => {

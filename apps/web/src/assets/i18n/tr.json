@@ -2877,7 +2877,8 @@
             "INVALID_PIN": "PIN 4 ile 8 basamaktan oluşur.",
             "UNAVAILABLE": "Bu sunucu profilleri desteklemiyor.",
             "OFFLINE": "Sunucu yanıt vermiyor. Tekrar deneyin.",
-            "GENERIC": "Bir şeyler ters gitti. Tekrar deneyin."
+            "GENERIC": "Bir şeyler ters gitti. Tekrar deneyin.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Önce bir ebeveynin bu cihazda ebeveyn kilidi PIN'i belirlemesi gerekir. Ayarlar > Ebeveyn kilidi'ni açın."
         },
         "PICKER": {
             "TITLE": "Kim izliyor?",
@@ -2894,6 +2895,10 @@
             "ACTION": "Eşitlemeyi aç",
             "DONE": "Eşitleme açık. Bu profil artık kendi verilerini tutuyor.",
             "FAILED": "Eşitleme açılamadı. Ayarları kontrol edin."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil: {{name}}. Profil değiştir",
+            "MANAGE": "Profilleri yönet"
         }
     }
 }

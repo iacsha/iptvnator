@@ -2877,7 +2877,8 @@
             "INVALID_PIN": "Een pincode bestaat uit 4 tot 8 cijfers.",
             "UNAVAILABLE": "Deze server ondersteunt geen profielen.",
             "OFFLINE": "De server reageert niet. Probeer het opnieuw.",
-            "GENERIC": "Er is iets misgegaan. Probeer het opnieuw."
+            "GENERIC": "Er is iets misgegaan. Probeer het opnieuw.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Eerst moet een ouder op dit apparaat een pincode voor ouderlijk toezicht instellen. Open Instellingen > Ouderlijk toezicht."
         },
         "PICKER": {
             "TITLE": "Wie kijkt er?",
@@ -2894,6 +2895,10 @@
             "ACTION": "Synchronisatie inschakelen",
             "DONE": "Synchronisatie staat aan. Dit profiel heeft nu eigen gegevens.",
             "FAILED": "Synchronisatie kon niet worden ingeschakeld. Controleer de instellingen."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profiel: {{name}}. Van profiel wisselen",
+            "MANAGE": "Profielen beheren"
         }
     }
 }

@@ -2877,7 +2877,8 @@
             "INVALID_PIN": "Um PIN tem de 4 a 8 dígitos.",
             "UNAVAILABLE": "Este servidor não oferece suporte a perfis.",
             "OFFLINE": "O servidor não está respondendo. Tente novamente.",
-            "GENERIC": "Algo deu errado. Tente novamente."
+            "GENERIC": "Algo deu errado. Tente novamente.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Primeiro, um responsável precisa definir um PIN de controle parental neste dispositivo. Abra Configurações > Controle parental."
         },
         "PICKER": {
             "TITLE": "Quem está assistindo?",
@@ -2894,6 +2895,10 @@
             "ACTION": "Ativar sincronização",
             "DONE": "A sincronização está ativada. Este perfil agora tem seus próprios dados.",
             "FAILED": "Não foi possível ativar a sincronização. Confira as configurações."
+        },
+        "SWITCHER": {
+            "BUTTON": "Perfil: {{name}}. Trocar de perfil",
+            "MANAGE": "Gerenciar perfis"
         }
     }
 }
