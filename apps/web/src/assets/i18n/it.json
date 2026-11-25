@@ -898,7 +898,20 @@
             "PIN_CHANGE_TITLE": "PIN di {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Per modificare o rimuovere il PIN di {{name}} serve il PIN attuale.",
             "PARENTAL_TITLE": "PIN parentale richiesto",
-            "PARENTAL_DESCRIPTION": "Questo profilo bambini è protetto dal controllo parentale."
+            "PARENTAL_DESCRIPTION": "Questo profilo bambini è protetto dal controllo parentale.",
+            "SEPARATION_TITLE": "Separato per ogni profilo",
+            "CONSENT_TITLE": "Tenere separati i dati di ogni profilo?",
+            "CONSENT_BODY": "Preferiti, visti di recente e avanzamento della riproduzione sono tenuti per profilo solo finché la loro sincronizzazione è attiva su questo dispositivo. Attivarle tutte e tre ora?",
+            "CONSENT_ACCEPT": "Attiva tutte e tre",
+            "CONSENT_SKIP": "Non ora",
+            "CONSENT_FAILED": "Impossibile attivare una sincronizzazione. Controlla la connessione al server e riprova.",
+            "PART_FAVORITES": "Preferiti",
+            "PART_HISTORY": "Visti di recente",
+            "PART_ACTIVITY": "Avanzamento della riproduzione",
+            "PART_SEPARATE": "Separato",
+            "PART_SHARED": "Condiviso (sincronizzazione disattivata)",
+            "HOUSEHOLD_NOTE": "Playlist, sorgenti e impostazioni sono condivise da tutti.",
+            "KIDS_PARENTAL_NOTE": "Il PIN di controllo parentale viene impostato al salvataggio del primo profilo bambini, se questo dispositivo non ne ha uno."
         }
     },
     "SERVER_STORAGE": {
@@ -2875,6 +2888,12 @@
             "OFFLINE_DESCRIPTION": "Puoi continuare con il profilo predefinito.",
             "LEAVE_KIDS_TITLE": "Esci dal profilo bambini",
             "LEAVE_KIDS_DESCRIPTION": "Inserisci il PIN parentale per passare a un altro profilo."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Preferiti, cronologia e avanzamento di questo profilo restano separati solo con la sincronizzazione attiva.",
+            "ACTION": "Attiva la sincronizzazione",
+            "DONE": "La sincronizzazione è attiva. Questo profilo ora ha i suoi dati.",
+            "FAILED": "Impossibile attivare la sincronizzazione. Controlla le impostazioni."
         }
     }
 }

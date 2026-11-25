@@ -898,7 +898,20 @@
             "PIN_CHANGE_TITLE": "{{name}} PIN-kódja",
             "PIN_CHANGE_DESCRIPTION": "{{name}} PIN-kódjának módosításához vagy eltávolításához a jelenlegi PIN-kód szükséges.",
             "PARENTAL_TITLE": "Szülői PIN-kód szükséges",
-            "PARENTAL_DESCRIPTION": "Ezt a gyerekprofilt a szülői felügyelet védi."
+            "PARENTAL_DESCRIPTION": "Ezt a gyerekprofilt a szülői felügyelet védi.",
+            "SEPARATION_TITLE": "Profilonként külön",
+            "CONSENT_TITLE": "Külön tartod az egyes profilok adatait?",
+            "CONSENT_BODY": "A kedvencek, a nemrég megnézettek és a lejátszási haladás csak akkor profilonkénti, ha a szinkronizálásuk be van kapcsolva ezen az eszközön. Bekapcsolod most mind a hármat?",
+            "CONSENT_ACCEPT": "Mindhárom bekapcsolása",
+            "CONSENT_SKIP": "Most nem",
+            "CONSENT_FAILED": "Egy szinkronizálást nem sikerült bekapcsolni. Ellenőrizd a szerverkapcsolatot, és próbáld újra.",
+            "PART_FAVORITES": "Kedvencek",
+            "PART_HISTORY": "Nemrég megnézett",
+            "PART_ACTIVITY": "Lejátszási haladás",
+            "PART_SEPARATE": "Külön",
+            "PART_SHARED": "Közös (a szinkronizálás ki van kapcsolva)",
+            "HOUSEHOLD_NOTE": "A lejátszási listák, a források és a beállítások mindenkinek közösek.",
+            "KIDS_PARENTAL_NOTE": "A szülői felügyelet PIN-kódja az első gyerekprofil mentésekor kerül beállításra, ha az eszközön még nincs."
         }
     },
     "SERVER_STORAGE": {
@@ -2875,6 +2888,12 @@
             "OFFLINE_DESCRIPTION": "Folytathatja az alapértelmezett profillal.",
             "LEAVE_KIDS_TITLE": "Kilépés a gyerekprofilból",
             "LEAVE_KIDS_DESCRIPTION": "Adja meg a szülői PIN-kódot, hogy másik profilra váltson."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "A profil kedvencei, előzményei és haladása csak bekapcsolt szinkronizálással maradhatnak külön.",
+            "ACTION": "Szinkronizálás bekapcsolása",
+            "DONE": "A szinkronizálás be van kapcsolva. Ennek a profilnak mostantól saját adatai vannak.",
+            "FAILED": "A szinkronizálást nem sikerült bekapcsolni. Ellenőrizd a beállításokat."
         }
     }
 }

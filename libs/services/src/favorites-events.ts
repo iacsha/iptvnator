@@ -3,7 +3,7 @@ import type { Playlist } from '@iptvnator/shared/interfaces';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import {
     activePersonalScope,
-    ProfileStateUnavailableError,
+    refuseProfileState,
 } from './lib/profiles/active-scope';
 /** App composition supplies the optional domain; ordinary source/legacy writes never enqueue. */
 export interface FavoritesPlaylistBridge {
@@ -45,12 +45,12 @@ export async function mutateFavoritePlaylist(
         playlist,
         transform,
         async (favorites) => {
-            if (!household) throw new ProfileStateUnavailableError();
+            if (!household) throw refuseProfileState();
             await persist({ ...playlist, favorites });
         }
     );
     if (mutated) return mutated;
-    if (!household) throw new ProfileStateUnavailableError();
+    if (!household) throw refuseProfileState();
     return persist({
         ...playlist,
         favorites: transform(playlist.favorites ?? []),

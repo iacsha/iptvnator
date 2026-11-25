@@ -898,7 +898,20 @@
             "PIN_CHANGE_TITLE": "{{name}} 的 PIN 碼",
             "PIN_CHANGE_DESCRIPTION": "變更或移除 {{name}} 的 PIN 碼需要輸入目前的 PIN 碼。",
             "PARENTAL_TITLE": "需要家長 PIN 碼",
-            "PARENTAL_DESCRIPTION": "此兒童個人檔案受家長控制保護。"
+            "PARENTAL_DESCRIPTION": "此兒童個人檔案受家長控制保護。",
+            "SEPARATION_TITLE": "每個個人檔案各自獨立",
+            "CONSENT_TITLE": "將每個個人檔案的資料分開保存?",
+            "CONSENT_BODY": "只有在此裝置上開啟各自的同步時,我的最愛、最近觀看和播放進度才會依個人檔案分別保存。現在全部開啟嗎?",
+            "CONSENT_ACCEPT": "全部開啟",
+            "CONSENT_SKIP": "暫不",
+            "CONSENT_FAILED": "有一項同步無法開啟。請檢查伺服器連線後再試一次。",
+            "PART_FAVORITES": "我的最愛",
+            "PART_HISTORY": "最近觀看",
+            "PART_ACTIVITY": "播放進度",
+            "PART_SEPARATE": "獨立",
+            "PART_SHARED": "共用(同步已關閉)",
+            "HOUSEHOLD_NOTE": "播放清單、來源和設定由所有人共用。",
+            "KIDS_PARENTAL_NOTE": "如果此裝置還沒有 PIN,會在儲存第一個兒童個人檔案時設定家長監護 PIN。"
         }
     },
     "SERVER_STORAGE": {
@@ -2875,6 +2888,12 @@
             "OFFLINE_DESCRIPTION": "你可以繼續使用預設個人檔案。",
             "LEAVE_KIDS_TITLE": "退出兒童個人檔案",
             "LEAVE_KIDS_DESCRIPTION": "輸入家長 PIN 碼以切換至其他個人檔案。"
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "只有開啟同步,此個人檔案的我的最愛、記錄和播放進度才能分開保存。",
+            "ACTION": "開啟同步",
+            "DONE": "同步已開啟。此個人檔案現在擁有自己的資料。",
+            "FAILED": "無法開啟同步。請檢查設定。"
         }
     }
 }

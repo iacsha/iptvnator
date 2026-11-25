@@ -70,6 +70,9 @@ export class SettingsProfilesFacade {
             this.runtime.list()?.profiles.map((profile) => profile.colour)
         );
         await this.askForm(undefined, taken, async (form) => {
+            // The parental PIN is set up here, never when a profile is chosen.
+            if (form.kids && !(await this.ensureParentalPin()))
+                return 'cancelled';
             await this.verified();
             const request: CreateServerProfileRequest = {
                 name: form.name,
@@ -87,6 +90,8 @@ export class SettingsProfilesFacade {
             await this.verified();
             const changes = this.changesOf(profile, form);
             if (!changes) return null;
+            if (changes.kids === true && !(await this.ensureParentalPin()))
+                return 'cancelled';
             // Parental PIN first: an adult profile in a kids' hands must not
             // lose its kids flag by a plain click.
             if (
@@ -245,6 +250,18 @@ export class SettingsProfilesFacade {
             },
         });
         return (await firstValueFrom(ref.afterClosed())) === true;
+    }
+
+    /**
+     * A kids profile needs a parental PIN on this device. When there is none,
+     * set one up now (the existing parental lock prompt). Cancelling it aborts
+     * the create or edit.
+     */
+    private async ensureParentalPin(): Promise<boolean> {
+        await this.parentalLock.initialize();
+        return (
+            this.parentalLock.hasPin() || (await this.parentalLock.setupPin())
+        );
     }
 
     private unlock(): Promise<boolean> {

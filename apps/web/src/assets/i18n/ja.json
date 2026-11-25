@@ -898,7 +898,20 @@
             "PIN_CHANGE_TITLE": "{{name}} の PIN",
             "PIN_CHANGE_DESCRIPTION": "{{name}} の PIN を変更または削除するには、現在の PIN が必要です。",
             "PARENTAL_TITLE": "ペアレンタル PIN が必要です",
-            "PARENTAL_DESCRIPTION": "このキッズプロフィールはペアレンタルロックで保護されています。"
+            "PARENTAL_DESCRIPTION": "このキッズプロフィールはペアレンタルロックで保護されています。",
+            "SEPARATION_TITLE": "プロフィールごとに分離",
+            "CONSENT_TITLE": "プロフィールごとにデータを分けますか?",
+            "CONSENT_BODY": "お気に入り、最近視聴したもの、再生の進行状況は、この端末でそれぞれの同期がオンの間だけプロフィールごとに保存されます。3つともオンにしますか?",
+            "CONSENT_ACCEPT": "3つともオンにする",
+            "CONSENT_SKIP": "今はしない",
+            "CONSENT_FAILED": "同期のひとつをオンにできませんでした。サーバーへの接続を確認して、もう一度お試しください。",
+            "PART_FAVORITES": "お気に入り",
+            "PART_HISTORY": "最近視聴したもの",
+            "PART_ACTIVITY": "再生の進行状況",
+            "PART_SEPARATE": "分離",
+            "PART_SHARED": "共有(同期オフ)",
+            "HOUSEHOLD_NOTE": "プレイリスト、ソース、設定は全員で共有されます。",
+            "KIDS_PARENTAL_NOTE": "この端末にPINがない場合、最初のキッズプロフィールを保存するときにペアレンタルロックのPINを設定します。"
         }
     },
     "SERVER_STORAGE": {
@@ -2875,6 +2888,12 @@
             "OFFLINE_DESCRIPTION": "デフォルトのプロフィールで続行できます。",
             "LEAVE_KIDS_TITLE": "キッズプロフィールを終了",
             "LEAVE_KIDS_DESCRIPTION": "別のプロフィールに切り替えるには、ペアレンタル PIN を入力してください。"
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "このプロフィールのお気に入り、履歴、再生の進行状況は、同期をオンにした場合のみ分けて保存できます。",
+            "ACTION": "同期をオンにする",
+            "DONE": "同期をオンにしました。このプロフィールは自分のデータを持ちます。",
+            "FAILED": "同期をオンにできませんでした。設定を確認してください。"
         }
     }
 }

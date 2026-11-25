@@ -898,7 +898,20 @@
             "PIN_CHANGE_TITLE": "Kod PIN profilu {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Zmiana lub usunięcie kodu PIN profilu {{name}} wymaga jego obecnego kodu PIN.",
             "PARENTAL_TITLE": "Wymagany rodzicielski kod PIN",
-            "PARENTAL_DESCRIPTION": "Ten profil dziecka jest chroniony blokadą rodzicielską."
+            "PARENTAL_DESCRIPTION": "Ten profil dziecka jest chroniony blokadą rodzicielską.",
+            "SEPARATION_TITLE": "Osobno dla każdego profilu",
+            "CONSENT_TITLE": "Rozdzielić dane każdego profilu?",
+            "CONSENT_BODY": "Ulubione, ostatnio oglądane i postęp odtwarzania są trzymane osobno dla profili tylko wtedy, gdy ich synchronizacja jest włączona na tym urządzeniu. Włączyć wszystkie trzy teraz?",
+            "CONSENT_ACCEPT": "Włącz wszystkie trzy",
+            "CONSENT_SKIP": "Nie teraz",
+            "CONSENT_FAILED": "Nie udało się włączyć jednej synchronizacji. Sprawdź połączenie z serwerem i spróbuj ponownie.",
+            "PART_FAVORITES": "Ulubione",
+            "PART_HISTORY": "Ostatnio oglądane",
+            "PART_ACTIVITY": "Postęp odtwarzania",
+            "PART_SEPARATE": "Osobno",
+            "PART_SHARED": "Wspólne (synchronizacja wyłączona)",
+            "HOUSEHOLD_NOTE": "Playlisty, źródła i ustawienia są wspólne dla wszystkich.",
+            "KIDS_PARENTAL_NOTE": "Kod PIN kontroli rodzicielskiej jest ustawiany przy zapisie pierwszego profilu dziecka, jeśli urządzenie jeszcze go nie ma."
         }
     },
     "SERVER_STORAGE": {
@@ -2875,6 +2888,12 @@
             "OFFLINE_DESCRIPTION": "Możesz kontynuować z profilem domyślnym.",
             "LEAVE_KIDS_TITLE": "Wyjdź z profilu dziecka",
             "LEAVE_KIDS_DESCRIPTION": "Wpisz rodzicielski kod PIN, aby przełączyć się na inny profil."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Ulubione, historia i postęp tego profilu pozostają osobne tylko przy włączonej synchronizacji.",
+            "ACTION": "Włącz synchronizację",
+            "DONE": "Synchronizacja jest włączona. Ten profil ma teraz własne dane.",
+            "FAILED": "Nie udało się włączyć synchronizacji. Sprawdź ustawienia."
         }
     }
 }

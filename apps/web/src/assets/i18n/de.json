@@ -898,7 +898,20 @@
             "PIN_CHANGE_TITLE": "PIN für {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Zum Ändern oder Entfernen der PIN von {{name}} wird die aktuelle PIN benötigt.",
             "PARENTAL_TITLE": "Kindersicherungs-PIN erforderlich",
-            "PARENTAL_DESCRIPTION": "Dieses Kinderprofil ist durch die Kindersicherung geschützt."
+            "PARENTAL_DESCRIPTION": "Dieses Kinderprofil ist durch die Kindersicherung geschützt.",
+            "SEPARATION_TITLE": "Getrennt für jedes Profil",
+            "CONSENT_TITLE": "Daten jedes Profils getrennt halten?",
+            "CONSENT_BODY": "Favoriten, zuletzt Gesehenes und Wiedergabefortschritt werden nur dann pro Profil geführt, wenn die jeweilige Synchronisierung auf diesem Gerät eingeschaltet ist. Alle drei jetzt einschalten?",
+            "CONSENT_ACCEPT": "Alle drei einschalten",
+            "CONSENT_SKIP": "Nicht jetzt",
+            "CONSENT_FAILED": "Eine Synchronisierung ließ sich nicht einschalten. Prüfe die Serververbindung und versuche es erneut.",
+            "PART_FAVORITES": "Favoriten",
+            "PART_HISTORY": "Zuletzt gesehen",
+            "PART_ACTIVITY": "Wiedergabefortschritt",
+            "PART_SEPARATE": "Getrennt",
+            "PART_SHARED": "Gemeinsam (Synchronisierung aus)",
+            "HOUSEHOLD_NOTE": "Playlists, Quellen und Einstellungen teilen sich alle.",
+            "KIDS_PARENTAL_NOTE": "Eine PIN für die Kindersicherung wird beim Speichern des ersten Kinderprofils festgelegt, falls dieses Gerät noch keine hat."
         }
     },
     "SERVER_STORAGE": {
@@ -2875,6 +2888,12 @@
             "OFFLINE_DESCRIPTION": "Du kannst mit dem Standardprofil fortfahren.",
             "LEAVE_KIDS_TITLE": "Kinderprofil verlassen",
             "LEAVE_KIDS_DESCRIPTION": "Gib die Kindersicherungs-PIN ein, um zu einem anderen Profil zu wechseln."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Favoriten, Verlauf und Fortschritt dieses Profils lassen sich nur mit eingeschalteter Synchronisierung getrennt halten.",
+            "ACTION": "Synchronisierung einschalten",
+            "DONE": "Die Synchronisierung ist an. Dieses Profil hat jetzt eigene Daten.",
+            "FAILED": "Die Synchronisierung ließ sich nicht einschalten. Prüfe die Einstellungen."
         }
     }
 }
