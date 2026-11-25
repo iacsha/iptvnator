@@ -133,7 +133,11 @@ The shell is intentionally split into four persistent regions:
     3. Settings remains a persistent footer shortcut in the rail. In
        [server storage mode](pwa-self-hosted.md#server-storage-mode) a server
        status shortcut sits above it: its dot shows online, offline or
-       sign-in needed, and it opens Settings → Server.
+       sign-in needed, and it opens Settings → Server. With household
+       profiles on, a profile switcher button (the active profile's avatar,
+       a `mat-menu` of the others and "Manage profiles") sits between the
+       two; the app provides it through `PROFILE_SWITCHER`, and other hosts
+       render nothing.
     4. No brand mark: it only repeated the first workspace link (Dashboard,
        or Sources when the dashboard is off).
 2. Top header:

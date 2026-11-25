@@ -1749,8 +1749,9 @@ IDB, native CAS and populated historical SQLite schemas have focused regressions
 ## Household profiles
 
 `profiles-v1` adds people to a household (#2224). Playlists and sources stay
-shared; personal state is scoped per profile. Phase 1 is the server contract only,
-with no client UI yet.
+shared; personal state is scoped per profile. Phase 1 is the server contract; the
+clients choose a profile with the start-up picker and the rail switcher (phase 2,
+below).
 
 The activity and favorites addresses carry `scope`, and history scopes carry an
 optional `personalScope`: `'shared'` is the Default profile and `profile:<uuid>`
@@ -1839,7 +1840,7 @@ so that no part of the app quietly stays shared.
 Phase 2 adds the Angular client (web, PWA, Electron, Android `tv-shell/`; the React
 `apps/tv` client is out of scope). The first slice, PR A, is Settings > Profiles
 and the "Who's watching?" picker. It does not yet scope any per-profile state, so
-the whole UI is hidden (see "Hidden switch" below).
+the profile state itself arrived in PR B1 (below).
 
 **Transport.** `SourceServerRequest` is a closed union, so a caller cannot supply
 a path or header. The operations are `profiles-list` (its `revision` becomes
@@ -1864,10 +1865,12 @@ down from it. The server lists `Retry-After` in `Access-Control-Expose-Headers`
 on `/v1/profiles`, so a browser on another origin can read it. A `204` (delete)
 has no body and is a success, not a broken response. `5xx` and network errors map to `offline`.
 
-**Per-device preferences.** Two `localStorage` keys per server instance, never
+**Per-device preferences.** `localStorage` keys per server instance, never
 synced and removed with the site data:
 `iptvnator-server:<instanceId>:profiles-start-v1` (`'ask'` or `'last'`, default
-`'ask'`) and `iptvnator-server:<instanceId>:active-profile-v1` (a profile id).
+`'ask'`) and `iptvnator-server:<instanceId>:active-profile-v1` (a profile id). B2 adds
+a third, `iptvnator-server:<instanceId>:kids-last-v1` (`'1'` while this device's last
+profile was a kids profile; see "Slow start" below).
 A stored id that is not in the current list, or any id while profiles are off,
 resolves to Default. Blocked storage costs only the next launch's last profile: a
 choice still applies for the session.
@@ -1875,25 +1878,24 @@ choice still applies for the session.
 **Start-up guard.** `profilePickerGuard` runs on `workspace` after
 `serverAccessGuard`. The source connection is restored in `main.ts` before
 Angular bootstraps, so it is known when the guard runs. The guard routes to
-`/profile-picker?returnUrl=...` only when `needsPicker` is true: the UI switch is
-on, a server is connected, the server has `profiles-v1`, profiles are enabled,
+`/profile-picker?returnUrl=...` only when `needsPicker` is true: a server is connected, the server has `profiles-v1`, profiles are enabled,
 there is more than one profile, and the device is on `'ask'` (or on `'last'` with
 no valid last profile, or a last profile that has a PIN). It asks once per session.
 It never blocks: an error, an offline server or no answer within 1.5 seconds
 (`PROFILES_GUARD_TIMEOUT_MS`) lets the user in as Default. The runtime loads lazily
-and only when the switch is on, so the static code on the start-up path stays
-small. `/profile-picker` itself needs a connected server, and a server that has
+and only for a device with a connected server, so the static code on the start-up
+path stays small. `/profile-picker` itself needs a connected server, and a server that has
 no profiles shows the picker's "continue" state rather than a spinner.
 Settings > Profiles waits for the server's answer before a direct visit to its
 URL can be redirected away: the section counts as available while a connected
 server has not answered.
 
-**Hidden switch.** `PROFILES_UI_ENABLED` (`profiles-ui-enabled.ts`) is `false`.
-While it is, there is no Profiles section, no search entry, no command palette
-entry, no picker route and no `/v1/profiles` request at start-up. Tests flip
-`PROFILES_UI_ENABLED_TOKEN`, never the constant. PR B (per-profile client state)
-removes the constant and the token. `web-e2e/src/profiles-hidden.e2e.ts` pins the
-hidden state against a server that has profiles turned on, and
+**No switch.** The profiles UI has no feature flag any more (B2 removed
+`PROFILES_UI_ENABLED` and its token). Availability is still lazy and gated on a
+connected source server (`sourceConnection()`): without one nothing loads and no
+`/v1/profiles` request is made.
+`web-e2e/src/profiles.e2e.ts` runs the picker, the switcher, per-profile favorites and
+the kids rules against a real server, and
 `electron-backend-e2e/src/profiles-ipc.e2e.ts` drives every operation through the
 desktop IPC route.
 
@@ -1901,8 +1903,8 @@ desktop IPC route.
 for the parental PIN. In Settings, clearing the kids flag and deleting a kids
 profile ask for it too, before the request is sent. The PIN is asked even when a
 parent has already unlocked the app (`ParentalLockService.confirmPin`), and the
-unlock state stays as it was. Forcing the parental lock on
-while a kids profile is active belongs to PR B, because it is per-profile state.
+unlock state stays as it was. Forcing the parental lock on while a kids profile is
+active is PR B2 (below).
 
 **The PIN is a light lock.** A profile PIN is checked by the server before it is
 changed or removed and before the profile is deleted, and the picker asks for it
@@ -1913,15 +1915,15 @@ read every scope. The copy in Settings says so.
 ### Client contract (phase 2, PR B1: per-profile state)
 
 PR B1 scopes the client's activity, favorites and history to the active profile.
-The UI is still hidden (`PROFILES_UI_ENABLED` is `false`), so every device stays on
-`'shared'` and behaves as before: the same keys, no extra request, no extra DOM.
-Tests flip the token, or set the scope with `setActivePersonalScope`.
+A device on the Default profile, or without a connected server, stays on `'shared'`
+and behaves as before: the same keys, no extra request, no extra DOM. Tests set the
+scope with `setActivePersonalScope`.
 
 **Active scope.** `activePersonalScope()` and `setActivePersonalScope()`
 (`@iptvnator/services/profiles`, `active-scope.ts`) hold the scope as one module
 value, like `sourceConnection()`, so the sync libraries can read it without
 importing the app. `ProfilesRuntime.scope()` derives it from the active profile and
-is `'shared'` while the UI switch is off. `ProfileSwitchService` is the only caller
+is `'shared'` for the Default profile. `ProfileSwitchService` is the only caller
 that moves it.
 
 **Transport.** `SourceServerRequest.scope` is sent as `?scope=` (with `cursor`) on
@@ -1995,6 +1997,66 @@ the Default.
 **Without sync consent.** A profile's separation needs each domain's sync turned on
 on that device: without consent the data sources read and write the household's raw
 stores, which a profile must not touch. B1 therefore refuses those writes with
-`ProfileStateUnavailableError` and returns empty reads for the Xtream favorites,
-rather than showing the household's. PR B2 adds the one-click offer that turns the
-three syncs on when profiles are turned on.
+`ProfileStateUnavailableError` and returns empty reads for the Xtream favorites and the
+playback positions, rather than showing the household's. PR B2 adds the one-click
+offer that turns the three syncs on, and a prompt when a write is refused.
+
+### Client contract (phase 2, PR B2: switcher, kids lock, consent offer)
+
+B2 makes the profiles UI visible.
+
+**Switcher.** A rail-footer avatar button with a `mat-menu`, inside the existing
+`serverState() !== 'inactive'` block of `WorkspaceShellRailComponent`, so a host
+without server storage renders no extra DOM (`launch/renderer.domMutationsToFirstCard`
+has no slack). It shows only when profiles are enabled and the server supports them. It
+is a `nav-item` button of 44 px with an `aria-label` naming the active profile and
+`app-region: no-drag`; the phone's sticky footer fits it at 375 px. The menu lists
+the other profiles and "Manage profiles" (Settings > Profiles). The shell library
+cannot import the app, so the app provides `PROFILE_SWITCHER`
+(`@iptvnator/services`, `profile-switcher.token.ts`) from
+`profile-switcher.ts`; without a provider the token is `null` and the rail renders
+nothing. The menu is a `mat-menu`, so Arrow keys, Enter and Back (Escape) work with the
+Android TV shell's D-pad; the rail's order does not change while profiles are off.
+
+**One way to choose.** `ProfileChoiceService` (`profiles/profile-choice.service.ts`)
+holds what `ProfilePickerComponent.choose()` used to do: the parental PIN to leave a
+kids profile, the profile's own PIN, the kids rule below, `ProfilesRuntime.select()`,
+and `ProfileSwitchService.apply()`, awaited before it reports `selected`. The picker
+and the switcher both call it, so leaving a kids profile from the switcher asks for
+the parental PIN exactly as the picker does.
+
+**Kids PIN rule.** A parental PIN is set up only in Settings, when creating a kids
+profile or editing one to kids, with the existing `ParentalLockService.setupPin()`.
+Cancelling it aborts the create or edit. Entering a kids profile (picker or switcher)
+on a device with no parental PIN is blocked with "a parent needs to set a parental PIN
+on this device first". PIN setup never runs at profile-choice time: whoever sets the
+first PIN owns the lock, and a child choosing a profile must not become that person
+(the only recovery is resetting the app's data, see [Parental lock](parental-lock.md)).
+This does not change a pre-existing gap: anyone can set the first PIN in Settings >
+Parental lock.
+
+**Forced lock.** `ParentalLockService.setForced(boolean)` is a signal-backed input that
+`enabled` ORs in. Going on calls `lock()` and, in Electron, reports the locked state to
+the worker at once, before the settings have loaded (the first catalog read is filtered).
+It is never persisted and never mirrored into the settings or electron-conf. While it is
+on, Settings > Parental lock disables the switch with an explanation, replacing the PIN
+needs the current one (`setupPin` verifies it), and turning the lock off still needs the
+PIN. `ProfilesKidsLock` (`services/profiles-kids-lock.ts`) drives it: forced while the
+active profile is kids, or while the device cannot tell yet.
+
+**Slow start.** The device remembers per server instance that the last profile was kids
+(`kids-last-v1`). `profilePickerGuard` forces the lock from that flag before it awaits
+anything, including after the picker was answered this session. The lock stays forced
+until the runtime has an answer (`ready` or `unsupported`) and start-up has not given up:
+that covers the guard's 1.5 s timeout and its `holdDefault()` path, so a kid cannot get
+Default's library by waiting. A choice in the picker or switcher ends the hold. Offline
+keeps the lock forced, never lifts it.
+
+**Consent offer.** Settings > Profiles shows which parts are separate per profile
+(favorites, recently watched, playback progress), from each sync's consent on this
+device, and while any is off it offers one button that turns on the three syncs through
+their existing `setEnabled(true)` functions. It never runs by itself. In a profile other
+than Default, a write refused for lack of its sync (`refuseProfileState()`, which throws
+`ProfileStateUnavailableError`) shows a translated prompt with a "Turn on sync" action,
+at most one per 15 seconds.
+

@@ -21,7 +21,6 @@ const household = [
 ];
 
 const base: ProfilesStartInput = {
-    uiEnabled: true,
     connected: true,
     capable: true,
     enabled: true,
@@ -32,8 +31,7 @@ const base: ProfilesStartInput = {
 
 /** Written independently of the implementation, as a truth table. */
 function expected(input: ProfilesStartInput): boolean {
-    const gate =
-        input.uiEnabled && input.connected && input.capable && input.enabled;
+    const gate = input.connected && input.capable && input.enabled;
     if (!gate) return false;
     // A lone Default skips the picker unless it has a PIN to ask.
     if (input.profiles.length < 2) return input.profiles[0]?.hasPin === true;
@@ -51,41 +49,37 @@ function expected(input: ProfilesStartInput): boolean {
 describe('needsPicker', () => {
     const flags = [true, false];
     const cases: ProfilesStartInput[] = [];
-    for (const uiEnabled of flags)
-        for (const connected of flags)
-            for (const capable of flags)
-                for (const enabled of flags)
-                    for (const startPref of ['ask', 'last'] as const)
-                        for (const lastId of [
-                            null,
-                            DEFAULT_PROFILE_ID,
-                            ADULT,
-                            PIN_ADULT,
-                            STALE,
+    for (const connected of flags)
+        for (const capable of flags)
+            for (const enabled of flags)
+                for (const startPref of ['ask', 'last'] as const)
+                    for (const lastId of [
+                        null,
+                        DEFAULT_PROFILE_ID,
+                        ADULT,
+                        PIN_ADULT,
+                        STALE,
+                    ])
+                        for (const profiles of [
+                            onlyDefault,
+                            onlyDefaultPin,
+                            household,
                         ])
-                            for (const profiles of [onlyDefault, onlyDefaultPin, household])
-                                cases.push({
-                                    uiEnabled,
-                                    connected,
-                                    capable,
-                                    enabled,
-                                    startPref,
-                                    lastId,
-                                    profiles,
-                                });
+                            cases.push({
+                                connected,
+                                capable,
+                                enabled,
+                                startPref,
+                                lastId,
+                                profiles,
+                            });
 
     it('covers the whole input space', () => {
-        expect(cases).toHaveLength(2 * 2 * 2 * 2 * 2 * 5 * 3);
+        expect(cases).toHaveLength(2 * 2 * 2 * 2 * 5 * 3);
     });
 
     it.each(cases)('matches the truth table for %j', (input) => {
         expect(needsPicker(input)).toBe(expected(input));
-    });
-
-    it('never asks while the UI constant is off', () => {
-        expect(
-            needsPicker({ ...base, uiEnabled: false, startPref: 'ask' })
-        ).toBe(false);
     });
 
     it('never blocks start-up without a connected, capable server', () => {

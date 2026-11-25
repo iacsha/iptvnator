@@ -5,7 +5,6 @@ import {
 } from '@iptvnator/shared/interfaces/profiles';
 
 export interface ProfilesStartInput {
-    readonly uiEnabled: boolean;
     readonly connected: boolean;
     readonly capable: boolean;
     readonly enabled: boolean;
@@ -16,7 +15,6 @@ export interface ProfilesStartInput {
 
 export function needsPicker(input: ProfilesStartInput): boolean {
     if (
-        !input.uiEnabled ||
         !input.connected ||
         !input.capable ||
         !input.enabled ||
