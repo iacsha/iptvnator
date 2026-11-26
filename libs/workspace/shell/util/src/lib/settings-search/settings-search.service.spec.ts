@@ -212,8 +212,8 @@ describe('SettingsSearchService', () => {
         expect(entries).not.toContain('embedded-mpv-frame-copy');
         // Connecting a server is available before any connection exists.
         expect(entries).toContain('source-server');
-        // The two Profiles rows stay out until profiles are available.
-        expect(entries.length).toBe(SETTINGS_SEARCH_ENTRIES.length - 8);
+        // The three Profiles rows stay out until profiles are available.
+        expect(entries.length).toBe(SETTINGS_SEARCH_ENTRIES.length - 9);
     });
 
     it('indexes Android settings when the handheld shell can open them', () => {
