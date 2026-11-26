@@ -347,6 +347,14 @@ export const SETTINGS_SEARCH_ENTRIES: readonly SettingsSearchEntry[] = [
         requires: ['profiles'],
     },
     {
+        id: 'profiles-consent',
+        section: 'profiles',
+        labelKey: 'SETTINGS.PROFILES.CONSENT_TITLE',
+        descriptionKey: 'SETTINGS.PROFILES.CONSENT_BODY',
+        keywords: ['profiles', 'sync', 'favorites', 'history', 'separate'],
+        requires: ['profiles'],
+    },
+    {
         id: 'source-server',
         section: 'server',
         labelKey: 'SOURCE_SYNC.TITLE',
