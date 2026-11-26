@@ -36,68 +36,69 @@
                 <mat-icon aria-hidden="true">{{ serverIcon() }}</mat-icon>
                 <span class="rail-server__dot" aria-hidden="true"></span>
             </a>
-            @if (switcher?.available() && switcher?.active(); as current) {
-                <button
-                    type="button"
-                    class="rail-shortcut nav-item rail-profile"
-                    [matMenuTriggerFor]="profileMenu"
-                    [matTooltip]="
-                        'PROFILES.SWITCHER.BUTTON'
-                            | translate: { name: current.name }
-                    "
-                    [matTooltipPosition]="'right'"
-                    [attr.aria-label]="
-                        'PROFILES.SWITCHER.BUTTON'
-                            | translate: { name: current.name }
-                    "
-                    data-test-id="rail-profile-switcher"
+        }
+        <!-- Profiles come from the source server connection, not from the server-storage mode above. -->
+        @if (switcher?.available() && switcher?.active(); as current) {
+            <button
+                type="button"
+                class="rail-shortcut nav-item rail-profile"
+                [matMenuTriggerFor]="profileMenu"
+                [matTooltip]="
+                    'PROFILES.SWITCHER.BUTTON'
+                        | translate: { name: current.name }
+                "
+                [matTooltipPosition]="'right'"
+                [attr.aria-label]="
+                    'PROFILES.SWITCHER.BUTTON'
+                        | translate: { name: current.name }
+                "
+                data-test-id="rail-profile-switcher"
+            >
+                <span
+                    class="rail-profile__avatar"
+                    aria-hidden="true"
+                    [style.background-color]="current.colour"
+                    [style.color]="current.textColour"
+                    >{{ current.glyph }}</span
                 >
-                    <span
-                        class="rail-profile__avatar"
-                        aria-hidden="true"
-                        [style.background-color]="current.colour"
-                        [style.color]="current.textColour"
-                        >{{ current.glyph }}</span
-                    >
-                </button>
-                <mat-menu
-                    #profileMenu="matMenu"
-                    xPosition="after"
-                    [attr.data-test-id]="'rail-profile-menu'"
-                >
-                    @for (
-                        profile of switcher?.others() ?? [];
-                        track profile.id
-                    ) {
-                        <button
-                            type="button"
-                            mat-menu-item
-                            [attr.data-test-id]="'rail-profile-' + profile.id"
-                            (click)="switcher?.choose(profile.id)"
-                        >
-                            <span
-                                class="rail-profile__avatar rail-profile__avatar--menu"
-                                aria-hidden="true"
-                                [style.background-color]="profile.colour"
-                                [style.color]="profile.textColour"
-                                >{{ profile.glyph }}</span
-                            >
-                            <span>{{ profile.name }}</span>
-                        </button>
-                    }
+            </button>
+            <mat-menu
+                #profileMenu="matMenu"
+                xPosition="after"
+                [attr.data-test-id]="'rail-profile-menu'"
+            >
+                @for (
+                    profile of switcher?.others() ?? [];
+                    track profile.id
+                ) {
                     <button
                         type="button"
                         mat-menu-item
-                        data-test-id="rail-profile-manage"
-                        (click)="switcher?.manage()"
+                        [attr.data-test-id]="'rail-profile-' + profile.id"
+                        (click)="switcher?.choose(profile.id)"
                     >
-                        <mat-icon aria-hidden="true">manage_accounts</mat-icon>
-                        <span>{{
-                            'PROFILES.SWITCHER.MANAGE' | translate
-                        }}</span>
+                        <span
+                            class="rail-profile__avatar rail-profile__avatar--menu"
+                            aria-hidden="true"
+                            [style.background-color]="profile.colour"
+                            [style.color]="profile.textColour"
+                            >{{ profile.glyph }}</span
+                        >
+                        <span>{{ profile.name }}</span>
                     </button>
-                </mat-menu>
-            }
+                }
+                <button
+                    type="button"
+                    mat-menu-item
+                    data-test-id="rail-profile-manage"
+                    (click)="switcher?.manage()"
+                >
+                    <mat-icon aria-hidden="true">manage_accounts</mat-icon>
+                    <span>{{
+                        'PROFILES.SWITCHER.MANAGE' | translate
+                    }}</span>
+                </button>
+            </mat-menu>
         }
         <a
             class="rail-shortcut nav-item"
