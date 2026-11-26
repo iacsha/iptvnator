@@ -380,8 +380,10 @@ launches the backend through Nx or its `env` drifts from the `serve` target.
 another worktree holds 3333. `server-storage.e2e.ts` talks to a second
 backend from the same config, launched with `IPTVNATOR_STORAGE=server` on
 `STORAGE_BACKEND_PORT` (default 3334) and a data directory named after the
-Playwright process, so every run starts with an empty store; the spec
-accepts at most that one extra launch. The `web:serve` entry can stay on Nx:
+Playwright process, so every run starts with an empty store. `profiles.e2e.ts`
+has a third one (`PROFILES_BACKEND_PORT`, default 3335): turning household
+profiles on makes every page of a server ask "who's watching", so those
+specs cannot share the server the others run against in parallel. The `web:serve` entry can stay on Nx:
 `@angular/build:dev-server` runs inside the Nx process, so the group kill
 stops it. Playwright launches that command itself even outside CI: the
 web-e2e targets carry no Nx `serve` dependency, because Nx refuses a

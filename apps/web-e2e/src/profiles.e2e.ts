@@ -2,7 +2,7 @@ import type { APIRequestContext, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { addM3uUrlPlaylist } from './sources-pwa.helpers';
 import {
-    STORAGE_BACKEND_URL,
+    PROFILES_BACKEND_URL,
     newServerPage,
 } from './server-storage-pwa.helpers';
 
@@ -40,7 +40,7 @@ test.describe('household profiles @self-hosted', () => {
         data: Record<string, unknown>
     ): Promise<string> {
         const created = await request.post(
-            `${STORAGE_BACKEND_URL}/v1/profiles`,
+            `${PROFILES_BACKEND_URL}/v1/profiles`,
             {
                 headers,
                 data,
@@ -52,15 +52,15 @@ test.describe('household profiles @self-hosted', () => {
 
     test.beforeEach(async ({ request }) => {
         const instance = await (
-            await request.get(`${STORAGE_BACKEND_URL}/v1/instance`)
+            await request.get(`${PROFILES_BACKEND_URL}/v1/instance`)
         ).json();
         expect(instance.capabilities).toContain('profiles-v1');
         instanceId = instance.instanceId;
         headers = { 'X-IPTVnator-Instance-Id': instanceId };
-        await request.delete(`${STORAGE_BACKEND_URL}/v1/playlists`);
+        await request.delete(`${PROFILES_BACKEND_URL}/v1/playlists`);
         expect(
             (
-                await request.patch(`${STORAGE_BACKEND_URL}/v1/profiles`, {
+                await request.patch(`${PROFILES_BACKEND_URL}/v1/profiles`, {
                     headers,
                     data: { enabled: true },
                 })
@@ -76,7 +76,7 @@ test.describe('household profiles @self-hosted', () => {
 
     test.afterEach(async ({ request }) => {
         // Every profile but the Default: a test may have created its own.
-        const listed = await request.get(`${STORAGE_BACKEND_URL}/v1/profiles`, {
+        const listed = await request.get(`${PROFILES_BACKEND_URL}/v1/profiles`, {
             headers,
         });
         const profiles = listed.ok()
@@ -86,14 +86,14 @@ test.describe('household profiles @self-hosted', () => {
         for (const { id } of profiles)
             if (id !== 'default')
                 await request.delete(
-                    `${STORAGE_BACKEND_URL}/v1/profiles/${id}`,
+                    `${PROFILES_BACKEND_URL}/v1/profiles/${id}`,
                     { headers }
                 );
-        await request.patch(`${STORAGE_BACKEND_URL}/v1/profiles`, {
+        await request.patch(`${PROFILES_BACKEND_URL}/v1/profiles`, {
             headers,
             data: { enabled: false },
         });
-        await request.delete(`${STORAGE_BACKEND_URL}/v1/playlists`);
+        await request.delete(`${PROFILES_BACKEND_URL}/v1/playlists`);
     });
 
     const switcher = (page: Page) => page.getByTestId('rail-profile-switcher');
@@ -117,14 +117,17 @@ test.describe('household profiles @self-hosted', () => {
     }
 
     /**
-     * Opens an in-app path without reloading: the "who's watching" answer
-     * lives in memory for the app start, so `page.goto` would ask again.
+     * Opens an in-app path through the app's own links, without reloading:
+     * the "who's watching" answer lives in memory for the app start, so
+     * `page.goto` would ask again.
      */
     async function openInApp(page: Page, path: string): Promise<void> {
-        await page.evaluate((target) => {
-            window.history.pushState({}, '', target);
-            window.dispatchEvent(new PopStateEvent('popstate'));
-        }, path);
+        if (
+            path.startsWith('/workspace/settings/') &&
+            !page.url().includes('/workspace/settings')
+        )
+            await page.locator('a[href="/workspace/settings"]').first().click();
+        await page.locator(`a[href="${path}"]`).first().click();
         await expect(page).toHaveURL(new RegExp(`${path}$`));
     }
 
@@ -148,7 +151,7 @@ test.describe('household profiles @self-hosted', () => {
     test('asks who is watching at start-up and shows the rail switcher', async ({
         browser,
     }) => {
-        const page = await newServerPage(browser);
+        const page = await newServerPage(browser, PROFILES_BACKEND_URL);
         try {
             await pickAtStart(page, ids.ana);
             await expect(page).toHaveURL(/\/workspace\/sources/);
@@ -175,7 +178,7 @@ test.describe('household profiles @self-hosted', () => {
     test('creates a profile in Settings and chooses it', async ({
         browser,
     }) => {
-        const page = await newServerPage(browser);
+        const page = await newServerPage(browser, PROFILES_BACKEND_URL);
         try {
             await pickAtStart(page, ids.ana);
             await openInApp(page, '/workspace/settings/profiles');
@@ -203,7 +206,7 @@ test.describe('household profiles @self-hosted', () => {
     });
 
     test('keeps favorites apart between two profiles', async ({ browser }) => {
-        const page = await newServerPage(browser);
+        const page = await newServerPage(browser, PROFILES_BACKEND_URL);
         try {
             await pickAtStart(page, ids.ana);
             // Separation needs the syncs: one click turns the three on.
@@ -247,7 +250,7 @@ test.describe('household profiles @self-hosted', () => {
     test('blocks a kids profile until a parent has set a parental PIN, then forces the lock', async ({
         browser,
     }) => {
-        const page = await newServerPage(browser);
+        const page = await newServerPage(browser, PROFILES_BACKEND_URL);
         try {
             await pickAtStart(page, ids.ana);
             // No parental PIN on this device: the kids profile is refused with a message.
@@ -289,7 +292,7 @@ test.describe('household profiles @self-hosted', () => {
     test('keeps the lock forced on a slow start after a kids profile', async ({
         browser,
     }) => {
-        const page = await newServerPage(browser);
+        const page = await newServerPage(browser, PROFILES_BACKEND_URL);
         try {
             await pickAtStart(page, ids.ana);
             await setParentalPin(page);
