@@ -14,8 +14,16 @@ export const STORAGE_BACKEND_URL = `http://localhost:${
     process.env['STORAGE_BACKEND_PORT'] ?? '3334'
 }`;
 
+/** The server of profiles.e2e.ts, which turns household profiles on and off. */
+export const PROFILES_BACKEND_URL = `http://localhost:${
+    process.env['PROFILES_BACKEND_PORT'] ?? '3335'
+}`;
+
 /** A fresh browser profile (a "device") whose runtime config points at it. */
-export async function newServerPage(browser: Browser): Promise<Page> {
+export async function newServerPage(
+    browser: Browser,
+    backendUrl: string = STORAGE_BACKEND_URL
+): Promise<Page> {
     // Runtime configuration and instance replacement are routed by Playwright.
     // Real Service Worker coverage lives in pwa-styles.e2e.ts.
     const context = await browser.newContext({ serviceWorkers: 'block' });
@@ -23,7 +31,7 @@ export async function newServerPage(browser: Browser): Promise<Page> {
     await page.route('**/assets/app-config.js', (route) =>
         route.fulfill({
             contentType: 'application/javascript',
-            body: `window.__IPTVNATOR_CONFIG__ = { BACKEND_URL: ${JSON.stringify(STORAGE_BACKEND_URL)} };\n`,
+            body: `window.__IPTVNATOR_CONFIG__ = { BACKEND_URL: ${JSON.stringify(backendUrl)} };\n`,
         })
     );
     return page;

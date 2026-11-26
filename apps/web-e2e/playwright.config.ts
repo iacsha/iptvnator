@@ -20,10 +20,15 @@ const webServerCommand = isStaticPwaE2E
 const reuseExistingWebServer = isStaticPwaE2E ? false : !process.env['CI'];
 const webBackendPort = process.env['WEB_BACKEND_PORT'] ?? '3333';
 const storageBackendPort = process.env['STORAGE_BACKEND_PORT'] ?? '3334';
+const profilesBackendPort = process.env['PROFILES_BACKEND_PORT'] ?? '3335';
 // Path only; the backend creates it. A new pid gives every run an empty store.
 const storageBackendDataDir = join(
     tmpdir(),
     `iptvnator-web-e2e-storage-${process.pid}`
+);
+const profilesBackendDataDir = join(
+    tmpdir(),
+    `iptvnator-web-e2e-profiles-${process.pid}`
 );
 
 /**
@@ -133,6 +138,24 @@ export default defineConfig({
             url: `http://localhost:${storageBackendPort}/health`,
             // Never another backend on that port: the specs delete every
             // playlist before each test, which would wipe its library.
+            reuseExistingServer: false,
+            cwd: workspaceRoot,
+        },
+        /* A third one for profiles.e2e.ts: turning household profiles on makes
+         * every other page of that server ask "who's watching", so those
+         * specs cannot share the server the others run against in parallel. */
+        {
+            command: 'node --import tsx apps/web-backend/src/main.ts',
+            env: {
+                PORT: profilesBackendPort,
+                CLIENT_URL: new URL(baseURL).origin,
+                BACKEND_URL: '/api',
+                IPTVNATOR_PROXY_ALLOW_PRIVATE_NETWORKS: '1',
+                TSX_TSCONFIG_PATH: 'tsconfig.base.json',
+                IPTVNATOR_STORAGE: 'server',
+                IPTVNATOR_DATA_DIR: profilesBackendDataDir,
+            },
+            url: `http://localhost:${profilesBackendPort}/health`,
             reuseExistingServer: false,
             cwd: workspaceRoot,
         },
