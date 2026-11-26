@@ -2890,6 +2890,7 @@
         "PICKER": {
             "TITLE": "Ki nézi?",
             "MANAGE": "Profilok kezelése",
+            "OPEN_PARENTAL_LOCK": "Szülői felügyelet beállításainak megnyitása",
             "LOADING": "Profilok megnyitása…",
             "CONTINUE": "Tovább",
             "OFFLINE_TITLE": "A kiszolgáló nem válaszol",

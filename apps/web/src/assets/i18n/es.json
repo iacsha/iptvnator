@@ -2890,6 +2890,7 @@
         "PICKER": {
             "TITLE": "¿Quién está viendo?",
             "MANAGE": "Administrar perfiles",
+            "OPEN_PARENTAL_LOCK": "Abrir los ajustes del control parental",
             "LOADING": "Abriendo perfiles…",
             "CONTINUE": "Continuar",
             "OFFLINE_TITLE": "El servidor no responde",

@@ -2890,6 +2890,7 @@
         "PICKER": {
             "TITLE": "誰が見ていますか？",
             "MANAGE": "プロフィールを管理",
+            "OPEN_PARENTAL_LOCK": "ペアレンタルロックの設定を開く",
             "LOADING": "プロフィールを開いています…",
             "CONTINUE": "続ける",
             "OFFLINE_TITLE": "サーバーが応答しません",

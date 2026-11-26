@@ -245,6 +245,29 @@ describe('ProfilePickerComponent', () => {
         );
     });
 
+    it('offers a link to Settings > Parental lock beside the message, and only then', async () => {
+        const { choose, el, navigateByUrl } = await setup({ hasPin: false });
+        const link = () =>
+            el.querySelector('[data-test-id="profile-picker-parental"]');
+        expect(link()).toBeNull();
+        await choose(KIDS_ID);
+        expect(link()).not.toBeNull();
+        expect(link()?.textContent).toContain(
+            'PROFILES.PICKER.OPEN_PARENTAL_LOCK'
+        );
+        // Showing it never lets the kid in.
+        expect(navigateByUrl).not.toHaveBeenCalled();
+    });
+
+    it('drops the Settings link once the next choice succeeds', async () => {
+        const { choose, el } = await setup({ hasPin: false });
+        await choose(KIDS_ID);
+        await choose(ADULT_ID);
+        expect(
+            el.querySelector('[data-test-id="profile-picker-parental"]')
+        ).toBeNull();
+    });
+
     it('selects a plain profile and goes to the return url', async () => {
         const { fake, choose, navigateByUrl } = await setup();
         await choose(ADULT_ID);

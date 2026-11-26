@@ -68,13 +68,25 @@ export function profileSwitcherFactory(): ProfileSwitcher {
             const result = await injector
                 .get(ProfileChoiceService)
                 .choose(profile);
-            const key =
-                result === 'needs-parental-pin'
-                    ? 'PROFILES.ERRORS.KIDS_NEEDS_PARENTAL_PIN'
-                    : result === 'unavailable'
-                      ? 'PROFILES.ERRORS.GENERIC'
-                      : null;
-            if (key) injector.get(NotificationService).error(key);
+            const notifications = injector.get(NotificationService);
+            // The kid stays blocked; the action only opens Settings > Parental lock.
+            if (result === 'needs-parental-pin')
+                notifications.error(
+                    'PROFILES.ERRORS.KIDS_NEEDS_PARENTAL_PIN',
+                    undefined,
+                    {
+                        action: {
+                            labelKey: 'PROFILES.PICKER.OPEN_PARENTAL_LOCK',
+                            run: () =>
+                                void router.navigate([
+                                    '/workspace/settings',
+                                    'parental',
+                                ]),
+                        },
+                    }
+                );
+            else if (result === 'unavailable')
+                notifications.error('PROFILES.ERRORS.GENERIC');
         },
         manage(): void {
             void router.navigate(['/workspace/settings', 'profiles']);

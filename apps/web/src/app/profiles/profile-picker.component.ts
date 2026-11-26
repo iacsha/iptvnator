@@ -21,6 +21,8 @@ import { ProfileChoiceService } from './profile-choice.service';
 import { ProfileAvatarComponent } from './profile-avatar.component';
 import { markProfilePicked, sanitizeReturnUrl } from './profile-picker-route';
 
+const KIDS_NEEDS_PARENTAL_PIN = 'PROFILES.ERRORS.KIDS_NEEDS_PARENTAL_PIN';
+
 type Direction = 'left' | 'right' | 'up' | 'down' | 'first' | 'last';
 
 const KEY_DIRECTION: Readonly<Record<string, Direction>> = {
@@ -77,6 +79,10 @@ export class ProfilePickerComponent {
     readonly failed = computed(() => !this.runtime.list() && this.answered());
     readonly busy = signal(false);
     readonly error = signal<string | null>(null);
+    /** The kid stays blocked; the button only opens Settings > Parental lock. */
+    readonly needsParentalPin = computed(
+        () => this.error() === KIDS_NEEDS_PARENTAL_PIN
+    );
 
     constructor() {
         void this.refresh();
@@ -132,7 +138,7 @@ export class ProfilePickerComponent {
                 markProfilePicked();
                 await this.router.navigateByUrl(this.returnUrl);
             } else if (result === 'needs-parental-pin')
-                this.error.set('PROFILES.ERRORS.KIDS_NEEDS_PARENTAL_PIN');
+                this.error.set(KIDS_NEEDS_PARENTAL_PIN);
             else if (result === 'unavailable')
                 this.error.set('PROFILES.ERRORS.GENERIC');
         } finally {

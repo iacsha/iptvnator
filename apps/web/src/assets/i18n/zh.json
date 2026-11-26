@@ -2890,6 +2890,7 @@
         "PICKER": {
             "TITLE": "谁在观看？",
             "MANAGE": "管理个人资料",
+            "OPEN_PARENTAL_LOCK": "打开家长控制设置",
             "LOADING": "正在打开个人资料…",
             "CONTINUE": "继续",
             "OFFLINE_TITLE": "服务器无响应",
