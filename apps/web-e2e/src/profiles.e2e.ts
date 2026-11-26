@@ -75,10 +75,20 @@ test.describe('household profiles @self-hosted', () => {
     });
 
     test.afterEach(async ({ request }) => {
-        for (const id of Object.values(ids))
-            await request.delete(`${STORAGE_BACKEND_URL}/v1/profiles/${id}`, {
-                headers,
-            });
+        // Every profile but the Default: a test may have created its own.
+        const listed = await request.get(`${STORAGE_BACKEND_URL}/v1/profiles`, {
+            headers,
+        });
+        const profiles = listed.ok()
+            ? (((await listed.json()) as { profiles?: Created[] }).profiles ??
+              [])
+            : [];
+        for (const { id } of profiles)
+            if (id !== 'default')
+                await request.delete(
+                    `${STORAGE_BACKEND_URL}/v1/profiles/${id}`,
+                    { headers }
+                );
         await request.patch(`${STORAGE_BACKEND_URL}/v1/profiles`, {
             headers,
             data: { enabled: false },
