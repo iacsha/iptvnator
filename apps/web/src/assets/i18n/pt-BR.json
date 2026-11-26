@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "Quem está assistindo?",
             "MANAGE": "Gerenciar perfis",
+            "OPEN_PARENTAL_LOCK": "Abrir as configurações de controle parental",
             "LOADING": "Abrindo perfis…",
             "CONTINUE": "Continuar",
             "OFFLINE_TITLE": "O servidor não está respondendo",

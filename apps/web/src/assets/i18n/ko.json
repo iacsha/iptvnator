@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "누가 시청하나요?",
             "MANAGE": "프로필 관리",
+            "OPEN_PARENTAL_LOCK": "자녀 보호 설정 열기",
             "LOADING": "프로필 여는 중…",
             "CONTINUE": "계속",
             "OFFLINE_TITLE": "서버가 응답하지 않습니다",

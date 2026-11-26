@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "Kim izliyor?",
             "MANAGE": "Profilleri yönet",
+            "OPEN_PARENTAL_LOCK": "Ebeveyn kilidi ayarlarını aç",
             "LOADING": "Profiller açılıyor…",
             "CONTINUE": "Devam",
             "OFFLINE_TITLE": "Sunucu yanıt vermiyor",

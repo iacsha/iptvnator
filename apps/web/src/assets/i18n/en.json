@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "Who's watching?",
             "MANAGE": "Manage profiles",
+            "OPEN_PARENTAL_LOCK": "Open parental lock settings",
             "LOADING": "Opening profiles…",
             "CONTINUE": "Continue",
             "OFFLINE_TITLE": "The server is not answering",

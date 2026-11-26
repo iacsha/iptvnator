@@ -187,6 +187,24 @@ describe('WorkspaceShellRailComponent', () => {
             expect(button()).toBeNull();
         });
 
+        // The picker skips a lone Default, so the switcher has nothing to offer either.
+        it('stays out of the rail while the active profile is the only one', () => {
+            available.set(true);
+            others.set([]);
+            fixture.detectChanges();
+            expect(button()).toBeNull();
+        });
+
+        it('shows once a second profile exists', () => {
+            available.set(true);
+            others.set([]);
+            fixture.detectChanges();
+            expect(button()).toBeNull();
+            others.set([entry('kid', 'Kai')]);
+            fixture.detectChanges();
+            expect(button()).not.toBeNull();
+        });
+
         // A source server connection is not the server-storage mode: the
         // status stays inactive in the web build and the switcher must show.
         it('shows without the server-storage status', () => {

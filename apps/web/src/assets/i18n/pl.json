@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "Kto ogląda?",
             "MANAGE": "Zarządzaj profilami",
+            "OPEN_PARENTAL_LOCK": "Otwórz ustawienia kontroli rodzicielskiej",
             "LOADING": "Otwieranie profili…",
             "CONTINUE": "Dalej",
             "OFFLINE_TITLE": "Serwer nie odpowiada",

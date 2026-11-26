@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "Wer schaut zu?",
             "MANAGE": "Profile verwalten",
+            "OPEN_PARENTAL_LOCK": "Einstellungen der Kindersicherung öffnen",
             "LOADING": "Profile werden geöffnet …",
             "CONTINUE": "Weiter",
             "OFFLINE_TITLE": "Der Server antwortet nicht",

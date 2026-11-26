@@ -2007,7 +2007,8 @@ B2 makes the profiles UI visible.
 **Switcher.** A rail-footer avatar button with a `mat-menu`, inside the existing
 `serverState() !== 'inactive'` block of `WorkspaceShellRailComponent`, so a host
 without server storage renders no extra DOM (`launch/renderer.domMutationsToFirstCard`
-has no slack). It shows only when profiles are enabled and the server supports them. It
+has no slack). It shows only when profiles are enabled, the server supports them, and at least two
+profiles exist (Default plus one more), matching the picker, which skips a lone Default. It
 is a `nav-item` button of 44 px with an `aria-label` naming the active profile and
 `app-region: no-drag`; the phone's sticky footer fits it at 375 px. The menu lists
 the other profiles and "Manage profiles" (Settings > Profiles). The shell library
@@ -2028,7 +2029,9 @@ the parental PIN exactly as the picker does.
 profile or editing one to kids, with the existing `ParentalLockService.setupPin()`.
 Cancelling it aborts the create or edit. Entering a kids profile (picker or switcher)
 on a device with no parental PIN is blocked with "a parent needs to set a parental PIN
-on this device first". PIN setup never runs at profile-choice time: whoever sets the
+on this device first", and the message carries a button (a link in the picker, the action of
+the toast in the switcher) to Settings > Parental lock. The kid stays blocked; the button
+only opens Settings. PIN setup never runs at profile-choice time: whoever sets the
 first PIN owns the lock, and a child choosing a profile must not become that person
 (the only recovery is resetting the app's data, see [Parental lock](parental-lock.md)).
 This does not change a pre-existing gap: anyone can set the first PIN in Settings >

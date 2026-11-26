@@ -70,6 +70,15 @@
                 {{ key | translate }}
             </p>
         }
+        @if (needsParentalPin()) {
+            <a
+                class="profile-picker__manage"
+                data-test-id="profile-picker-parental"
+                [routerLink]="['/workspace/settings', 'parental']"
+                (click)="markPicked()"
+                >{{ 'PROFILES.PICKER.OPEN_PARENTAL_LOCK' | translate }}</a
+            >
+        }
         <a
             class="profile-picker__manage"
             data-test-id="profile-picker-manage"

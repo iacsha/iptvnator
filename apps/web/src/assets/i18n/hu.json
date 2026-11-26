@@ -2924,6 +2924,7 @@
         "PICKER": {
             "TITLE": "Ki használja az alkalmazást?",
             "MANAGE": "Profilok kezelése",
+            "OPEN_PARENTAL_LOCK": "Szülői felügyelet beállításainak megnyitása",
             "LOADING": "Profilok betöltése…",
             "CONTINUE": "Tovább",
             "OFFLINE_TITLE": "A kiszolgáló nem válaszol",
