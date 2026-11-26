@@ -101,7 +101,11 @@ const DESKTOP: Partial<RuntimeStub> = {
 
 describe('SettingsSearchService', () => {
     describe('profiles', () => {
-        const PROFILES_ROWS = ['profiles-enabled', 'profiles-start'];
+        const PROFILES_ROWS = [
+            'profiles-enabled',
+            'profiles-start',
+            'profiles-consent',
+        ];
 
         it('hides the Profiles section and its rows while profiles are unavailable', () => {
             const { service } = setup();
