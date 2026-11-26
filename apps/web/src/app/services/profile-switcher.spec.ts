@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -5,16 +6,17 @@ import { NotificationService } from '@iptvnator/services/notifications';
 import { DEFAULT_PROFILE_ID } from '@iptvnator/shared/interfaces/profiles';
 import { ProfileChoiceService } from '../profiles/profile-choice.service';
 import { fakeRuntime, KIDS_ID } from '../profiles/profiles.stub';
-import { profileSwitcherFactory } from './profile-switcher';
 
 const fake = fakeRuntime();
 
-jest.mock('@iptvnator/services/source-sync/connection', () => ({
+jest.unstable_mockModule('@iptvnator/services/source-sync/connection', () => ({
     sourceConnection: () => ({ url: 'https://server.test' }),
 }));
-jest.mock('./profiles-runtime.providers', () => ({
-    loadProfilesRuntime: async () => fake.runtime,
-}));
+jest.unstable_mockModule(
+    fileURLToPath(new URL('./profiles-runtime.providers.ts', import.meta.url)),
+    () => ({ loadProfilesRuntime: async () => fake.runtime })
+);
+const { profileSwitcherFactory } = await import('./profile-switcher');
 
 describe('profileSwitcherFactory: kids profile without a parental PIN', () => {
     const navigate = jest.fn(async () => true);
