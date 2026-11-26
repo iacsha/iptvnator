@@ -76,9 +76,12 @@ test.describe('household profiles @self-hosted', () => {
 
     test.afterEach(async ({ request }) => {
         // Every profile but the Default: a test may have created its own.
-        const listed = await request.get(`${PROFILES_BACKEND_URL}/v1/profiles`, {
-            headers,
-        });
+        const listed = await request.get(
+            `${PROFILES_BACKEND_URL}/v1/profiles`,
+            {
+                headers,
+            }
+        );
         const profiles = listed.ok()
             ? (((await listed.json()) as { profiles?: Created[] }).profiles ??
               [])
