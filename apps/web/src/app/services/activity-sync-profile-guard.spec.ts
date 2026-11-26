@@ -60,7 +60,7 @@ describe('the data source for a profile without any sync consent', () => {
             Promise.resolve(source.getPlaybackPosition('s', 1, 'vod'))
         ).resolves.toBe(null);
         await expect(
-            Promise.resolve().then(() => source.addFavorite('s', 1, 'vod'))
+            Promise.resolve().then(() => source.addFavorite(1, 's'))
         ).rejects.toThrow('sync turned on');
         await expect(
             Promise.resolve().then(() =>

@@ -170,13 +170,6 @@ describe('WorkspaceShellRailComponent', () => {
     });
 
     describe('profile switcher', () => {
-        const instance = {
-            service: 'iptvnator',
-            apiVersion: 1,
-            instanceId: 'i',
-            storage: 'server',
-            auth: 'none',
-        } as const;
         const button = (): HTMLButtonElement | null =>
             fixture.nativeElement.querySelector(
                 '[data-test-id="rail-profile-switcher"]'
@@ -189,26 +182,25 @@ describe('WorkspaceShellRailComponent', () => {
             manage.mockClear();
         });
 
-        it('stays out of the rail without server storage', () => {
+        it('stays out of the rail while profiles are not available', () => {
+            fixture.detectChanges();
+            expect(button()).toBeNull();
+        });
+
+        // A source server connection is not the server-storage mode: the
+        // status stays inactive in the web build and the switcher must show.
+        it('shows without the server-storage status', () => {
             available.set(true);
             fixture.detectChanges();
-            expect(button()).toBeNull();
+            expect(
+                fixture.nativeElement.querySelector(
+                    '[data-test-id="rail-server-status"]'
+                )
+            ).toBeNull();
+            expect(button()).not.toBeNull();
         });
 
-        it('stays out of the rail while profiles are not available', () => {
-            TestBed.inject(ServerStorageStatusService).activate(
-                instance,
-                () => undefined
-            );
-            fixture.detectChanges();
-            expect(button()).toBeNull();
-        });
-
-        it('is a 44 px nav-item button with a name, inside the server block', () => {
-            TestBed.inject(ServerStorageStatusService).activate(
-                instance,
-                () => undefined
-            );
+        it('is a 44 px nav-item button with a name', () => {
             available.set(true);
             fixture.detectChanges();
             const trigger = button()!;
@@ -222,10 +214,6 @@ describe('WorkspaceShellRailComponent', () => {
         });
 
         it('lists the other profiles and Manage profiles', () => {
-            TestBed.inject(ServerStorageStatusService).activate(
-                instance,
-                () => undefined
-            );
             available.set(true);
             fixture.detectChanges();
             button()!.click();
