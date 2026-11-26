@@ -1,6 +1,6 @@
 import type { APIRequestContext, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { addM3uUrlPlaylist, openSources } from './sources-pwa.helpers';
+import { addM3uUrlPlaylist } from './sources-pwa.helpers';
 import {
     STORAGE_BACKEND_URL,
     newServerPage,
@@ -106,8 +106,20 @@ test.describe('household profiles @self-hosted', () => {
         await page.getByTestId(`rail-profile-${id}`).click();
     }
 
+    /**
+     * Opens an in-app path without reloading: the "who's watching" answer
+     * lives in memory for the app start, so `page.goto` would ask again.
+     */
+    async function openInApp(page: Page, path: string): Promise<void> {
+        await page.evaluate((target) => {
+            window.history.pushState({}, '', target);
+            window.dispatchEvent(new PopStateEvent('popstate'));
+        }, path);
+        await expect(page).toHaveURL(new RegExp(`${path}$`));
+    }
+
     async function setParentalPin(page: Page): Promise<void> {
-        await page.goto('/workspace/settings/parental');
+        await openInApp(page, '/workspace/settings/parental');
         await page
             .locator(
                 '[data-test-id="parental-lock-enabled"] button[role="switch"]'
@@ -156,7 +168,7 @@ test.describe('household profiles @self-hosted', () => {
         const page = await newServerPage(browser);
         try {
             await pickAtStart(page, ids.ana);
-            await page.goto('/workspace/settings/profiles');
+            await openInApp(page, '/workspace/settings/profiles');
             await page.getByTestId('profile-add').click();
             await page
                 .getByRole('textbox', { name: /^Name/ })
@@ -185,13 +197,13 @@ test.describe('household profiles @self-hosted', () => {
         try {
             await pickAtStart(page, ids.ana);
             // Separation needs the syncs: one click turns the three on.
-            await page.goto('/workspace/settings/profiles');
+            await openInApp(page, '/workspace/settings/profiles');
             await page.getByTestId('profiles-consent-accept').click();
             await expect(
                 page.getByTestId('profiles-consent-offer')
             ).toHaveCount(0);
 
-            await openSources(page);
+            await openInApp(page, '/workspace/sources');
             await addM3uUrlPlaylist(page, 'Shared M3U');
             await page.locator('.favorite-button').first().click();
             await page
@@ -240,7 +252,7 @@ test.describe('household profiles @self-hosted', () => {
             // Unlocked by setting it up, then the kids profile locks it again.
             await switchTo(page, ids.kai);
             await expect(switcher(page)).toHaveAccessibleName(/Synthetic Kai/);
-            await page.goto('/workspace/settings/parental');
+            await openInApp(page, '/workspace/settings/parental');
             await expect(
                 page.getByTestId('parental-lock-forced')
             ).toBeVisible();
