@@ -46,25 +46,23 @@ describe('Playwright web-backend launch', () => {
 
             expect(source).not.toMatch(/\bnx\b[^'"`\n]*web-backend/);
             expect(start).toBeGreaterThan(-1);
-            // One stateless backend, plus at most one storage-enabled one.
-            const second = source.indexOf(
-                `'${launchCommand}'`,
-                start + launchCommand.length
-            );
-            if (second !== -1) {
+            // One stateless backend, plus the storage-enabled ones: the
+            // storage specs' and the profiles spec's, which flips a
+            // server-wide setting and so cannot share.
+            const storagePorts = ['storageBackendPort', 'profilesBackendPort'];
+            let from = start + launchCommand.length;
+            for (const port of storagePorts) {
+                const next = source.indexOf(`'${launchCommand}'`, from);
+                expect(next).toBeGreaterThan(-1);
                 const storageEntry = source.slice(
-                    second,
-                    source.indexOf('url:', second)
+                    next,
+                    source.indexOf('url:', next)
                 );
                 expect(storageEntry).toContain(`IPTVNATOR_STORAGE: 'server'`);
-                expect(storageEntry).toContain('PORT: storageBackendPort,');
-                expect(
-                    source.indexOf(
-                        `'${launchCommand}'`,
-                        second + launchCommand.length
-                    )
-                ).toBe(-1);
+                expect(storageEntry).toContain(`PORT: ${port},`);
+                from = next + launchCommand.length;
             }
+            expect(source.indexOf(`'${launchCommand}'`, from)).toBe(-1);
 
             // WEB_BACKEND_PORT relocates the run; its default is the target's.
             const { PORT: port, ...fixedEnv } = serveEnv;
