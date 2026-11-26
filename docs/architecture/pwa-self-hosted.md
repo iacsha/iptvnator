@@ -40,11 +40,11 @@ HTTPS has its own network interface selection, which defaults to loopback.
 If the saved Home network address is unavailable at startup, the library runs
 on this computer only. The app retries the saved address on its next launch.
 
-| Mode | Listener | Client address |
-| --- | --- | --- |
-| Home network | HTTP on the selected private IPv4 interface or loopback for this computer only | The selected LAN address and port 4334 |
-| Custom HTTPS | TLS on the selected interface and configured port (443 by default) | The HTTPS origin |
-| Cloudflare Tunnel | HTTP on `127.0.0.1:4335` | The public HTTPS origin through Cloudflare Access |
+| Mode              | Listener                                                                       | Client address                                    |
+| ----------------- | ------------------------------------------------------------------------------ | ------------------------------------------------- |
+| Home network      | HTTP on the selected private IPv4 interface or loopback for this computer only | The selected LAN address and port 4334            |
+| Custom HTTPS      | TLS on the selected interface and configured port (443 by default)             | The HTTPS origin                                  |
+| Cloudflare Tunnel | HTTP on `127.0.0.1:4335`                                                       | The public HTTPS origin through Cloudflare Access |
 
 For native HTTPS, enter absolute paths to the PEM certificate chain and matching
 private key. The hostname must resolve to the host from the client and match a
@@ -301,7 +301,7 @@ the source-specific routes below; the older whole-document/user-state routes
 remain compatible but do not enable viewing-activity synchronization:
 
 - `GET /v1/instance` (always public): `{ service, apiVersion, instanceId,
-  storage: 'server' | 'none', auth: 'none' | 'token' }`
+storage: 'server' | 'none', auth: 'none' | 'token' }`
 - `GET /v1/instance/status`: playlist count, database size and path
 - `GET /v1/playlists[?view=meta]`, `GET|PUT|DELETE /v1/playlists/:id`,
   `DELETE /v1/playlists`: whole playlist documents; `GET` sends an `ETag`
@@ -705,7 +705,6 @@ Viewing activity is local by default; the separate
 progress and watched marks. The existing user-state API remains compatible
 for explicit consumers. Do not re-enable automatic activity uploads by adding
 `provideServerStorage()` alongside source sync.
-
 
 `main.ts` probes `GET /v1/instance` before bootstrapping, and only when the
 deployment wrote a runtime `BACKEND_URL` into `window.__IPTVNATOR_CONFIG__`
@@ -1457,7 +1456,6 @@ Web development and PWA use `baseHref="/"`; packaged Electron frontend uses
 is the Electron frontend build, `pwa` is the web build, and `development` uses
 the index base. Do not ship the Electron frontend build as a PWA deployment.
 
-
 ## Favorites synchronization
 
 Settings → Connectivity provides an independent, disabled-by-default favorites consent.
@@ -1643,7 +1641,6 @@ a later polling result; either conflict choice starts from that newest copy.
 Xtream backup projection overlays shared identity and conflict metadata on
 existing typed archive entries too, preserving local order and timestamps.
 The same identity-compatibility helper guards both visible projection and export.
-
 
 ## Recently Viewed synchronization
 
@@ -2061,4 +2058,3 @@ their existing `setEnabled(true)` functions. It never runs by itself. In a profi
 than Default, a write refused for lack of its sync (`refuseProfileState()`, which throws
 `ProfileStateUnavailableError`) shows a translated prompt with a "Turn on sync" action,
 at most one per 15 seconds.
-
