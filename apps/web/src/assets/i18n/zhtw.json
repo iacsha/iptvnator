@@ -2884,6 +2884,7 @@
         "PICKER": {
             "TITLE": "誰在觀看？",
             "MANAGE": "管理個人檔案",
+            "OPEN_PARENTAL_LOCK": "開啟家長監護設定",
             "LOADING": "正在開啟個人檔案…",
             "CONTINUE": "繼續",
             "OFFLINE_TITLE": "伺服器沒有回應",

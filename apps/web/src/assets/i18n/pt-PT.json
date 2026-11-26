@@ -2884,6 +2884,7 @@
         "PICKER": {
             "TITLE": "Quem está a ver?",
             "MANAGE": "Gerir perfis",
+            "OPEN_PARENTAL_LOCK": "Abrir as definições de controlo parental",
             "LOADING": "A abrir perfis…",
             "CONTINUE": "Continuar",
             "OFFLINE_TITLE": "O servidor não está a responder",

@@ -2884,6 +2884,7 @@
         "PICKER": {
             "TITLE": "Qui regarde ?",
             "MANAGE": "Gérer les profils",
+            "OPEN_PARENTAL_LOCK": "Ouvrir les réglages du contrôle parental",
             "LOADING": "Ouverture des profils…",
             "CONTINUE": "Continuer",
             "OFFLINE_TITLE": "Le serveur ne répond pas",

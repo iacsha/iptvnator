@@ -2884,6 +2884,7 @@
         "PICKER": {
             "TITLE": "Wie kijkt er?",
             "MANAGE": "Profielen beheren",
+            "OPEN_PARENTAL_LOCK": "Instellingen voor ouderlijk toezicht openen",
             "LOADING": "Profielen openen…",
             "CONTINUE": "Doorgaan",
             "OFFLINE_TITLE": "De server reageert niet",

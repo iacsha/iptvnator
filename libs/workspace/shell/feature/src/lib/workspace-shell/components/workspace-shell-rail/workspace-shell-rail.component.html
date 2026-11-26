@@ -38,7 +38,13 @@
             </a>
         }
         <!-- Profiles come from the source server connection, not from the server-storage mode above. -->
-        @if (switcher?.available() && switcher?.active(); as current) {
+        <!-- Like the picker, which skips a lone Default: it shows with Default plus at least one more profile. -->
+        @if (
+            switcher?.available() &&
+                (switcher?.others()?.length ?? 0) > 0 &&
+                switcher?.active();
+            as current
+        ) {
             <button
                 type="button"
                 class="rail-shortcut nav-item rail-profile"
