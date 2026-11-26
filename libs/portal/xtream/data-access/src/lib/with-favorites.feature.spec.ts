@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TestBed } from '@angular/core/testing';
 import { patchState, signalStore } from '@ngrx/signals';
 import { XTREAM_DATA_SOURCE } from './data-sources/xtream-data-source.interface';
+import { ProfileStateUnavailableError } from '@iptvnator/services/profiles';
 import { withFavorites } from './with-favorites.feature';
 
 const ERROR_TOAST = expect.objectContaining({
@@ -391,6 +392,18 @@ describe('withFavorites', () => {
             );
         }
     );
+
+    it('adds no error toast when the write was refused for lack of sync, so the sync prompt stays', async () => {
+        dataSource.getContentByXtreamId.mockResolvedValue({ id: 42 });
+        dataSource.addFavorite.mockRejectedValue(
+            new ProfileStateUnavailableError()
+        );
+        await expect(
+            store.toggleFavorite(7, 'playlist-1', 'movie')
+        ).resolves.toBe(false);
+        expect(store.isFavorite()).toBe(false);
+        expect(snackBar.open).not.toHaveBeenCalled();
+    });
 
     it.each([false, true])(
         'toggles the typed target using its persisted status %s rather than the previous detail state',
