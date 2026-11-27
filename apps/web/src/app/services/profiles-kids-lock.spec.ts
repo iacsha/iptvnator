@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ParentalLockService } from '@iptvnator/services';
 import { prepareSourceConnection } from '@iptvnator/services/source-sync/connection';
-import { ADULT_ID, fakeRuntime, KIDS_ID } from '../profiles/profiles.stub';
+import {
+    ADULT_ID,
+    fakeRuntime,
+    KIDS_ID,
+    syntheticProfile,
+} from '../profiles/profiles.stub';
 import { ProfilesKidsLock } from './profiles-kids-lock';
 import { readKidsLast, writeKidsLast } from './profiles-preferences';
 import { ProfilesRuntime } from './profiles-runtime';
@@ -21,15 +26,16 @@ async function setup(connected = true) {
     await prepareSourceConnection();
     const fake = fakeRuntime();
     const setForced = jest.fn();
+    const lock = jest.fn();
     TestBed.configureTestingModule({
         providers: [
             { provide: ProfilesRuntime, useValue: fake.runtime },
-            { provide: ParentalLockService, useValue: { setForced } },
+            { provide: ParentalLockService, useValue: { setForced, lock } },
         ],
     });
     TestBed.inject(ProfilesKidsLock);
     const settle = () => TestBed.tick();
-    return { fake, setForced, settle };
+    return { fake, setForced, lock, settle };
 }
 
 describe('ProfilesKidsLock', () => {
@@ -53,6 +59,31 @@ describe('ProfilesKidsLock', () => {
         settle();
         expect(setForced).toHaveBeenLastCalledWith(false);
         expect(readKidsLast(NAS)).toBe(false);
+    });
+
+    it('locks the session again when one kids profile gives way to another', async () => {
+        const { fake, lock, settle } = await setup();
+        const SECOND = '44444444-4444-4444-8444-444444444444';
+        fake.list.update(
+            (list) =>
+                list && {
+                    ...list,
+                    profiles: [
+                        ...list.profiles,
+                        syntheticProfile(SECOND, 4, { kids: true }),
+                    ],
+                }
+        );
+        fake.activeId.set(KIDS_ID);
+        settle();
+        expect(lock).not.toHaveBeenCalled();
+        fake.activeId.set(SECOND);
+        settle();
+        expect(lock).toHaveBeenCalledTimes(1);
+        // Staying on the same kids profile asks for nothing more.
+        fake.list.update((list) => list && { ...list });
+        settle();
+        expect(lock).toHaveBeenCalledTimes(1);
     });
 
     it('keeps the lock forced until the runtime answers when the last profile was kids', async () => {

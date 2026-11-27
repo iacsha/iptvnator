@@ -19,6 +19,8 @@ import { ProfilesRuntime } from './profiles-runtime';
 export class ProfilesKidsLock {
     private readonly runtime = inject(ProfilesRuntime);
     private readonly lock = inject(ParentalLockService);
+    /** The kids profile this device is in, to lock again when it moves to another. */
+    private kidsId: string | null = null;
 
     constructor() {
         effect(() => this.apply());
@@ -32,6 +34,10 @@ export class ProfilesKidsLock {
         const held = this.runtime.held();
         const kids =
             this.runtime.enabled() && this.runtime.active()?.kids === true;
+        // A parent's PIN for one kids profile does not carry into the next.
+        const kidsId = kids ? (this.runtime.active()?.id ?? null) : null;
+        if (kidsId && this.kidsId && kidsId !== this.kidsId) this.lock.lock();
+        this.kidsId = kidsId;
         if (!instanceId) {
             this.lock.setForced(false);
             return;

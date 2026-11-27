@@ -1,4 +1,6 @@
 import { EnvironmentInjector, inject } from '@angular/core';
+import { activePersonalScope } from '@iptvnator/services/profiles';
+import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { favoritesProfileUsed } from './favorites-consent';
 import type { FavoritesPlaylistBridge } from '@iptvnator/services/favorites-events';
 export function favoritesPlaylistBridgeFactory(): FavoritesPlaylistBridge {
@@ -8,7 +10,10 @@ export function favoritesPlaylistBridgeFactory(): FavoritesPlaylistBridge {
         project: async (playlist) =>
             favoritesProfileUsed()
                 ? (await loadFavoritesRuntime(injector)).project(playlist)
-                : playlist,
+                : activePersonalScope() === DEFAULT_PERSONAL_SCOPE
+                  ? playlist
+                  : // Before any sync, the playlist's favorites are the household's.
+                    { ...playlist, favorites: [] },
         mutate: async (playlist, transform, persistLocal) =>
             favoritesProfileUsed()
                 ? (await loadFavoritesRuntime(injector)).mutate(

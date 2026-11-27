@@ -68,7 +68,10 @@ export function activityDataSourceFactory(): IXtreamDataSource {
                         ? invokeFavorites(injector, target, method, args)
                         : isHouseholdScope()
                           ? local(...args)
-                          : profileRawFallback(method);
+                          : // A promise, as the raw store would give: readers expect one value or a refusal.
+                            Promise.resolve().then(() =>
+                                profileRawFallback(method)
+                            );
             if (
                 [
                     'getRecentItems',
@@ -82,7 +85,9 @@ export function activityDataSourceFactory(): IXtreamDataSource {
                         ? invokeHistory(injector, target, method, args)
                         : isHouseholdScope()
                           ? local(...args)
-                          : profileHistoryFallback(method);
+                          : Promise.resolve().then(() =>
+                                profileHistoryFallback(method)
+                            );
             if (!method.includes('PlaybackPosition')) return local;
             return async (...args: unknown[]) => {
                 const existing = runtimes.get(injector);
