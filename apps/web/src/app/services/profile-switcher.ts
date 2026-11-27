@@ -8,22 +8,23 @@ import {
 import { NotificationService } from '@iptvnator/services/notifications';
 import { sourceConnection } from '@iptvnator/services/source-sync/connection';
 import type { ServerProfile } from '@iptvnator/shared/interfaces/profiles';
-import {
-    profileInitial,
-    readableTextColour,
-} from '../profiles/profile-appearance';
 import type { ProfilesRuntime } from './profiles-runtime';
 import { loadProfilesRuntime } from './profiles-runtime.providers';
 
 export { PROFILE_SWITCHER };
 
-function entryOf(profile: ServerProfile): ProfileSwitcherEntry {
+type Appearance = typeof import('../profiles/profile-appearance');
+
+function entryOf(
+    appearance: Appearance,
+    profile: ServerProfile
+): ProfileSwitcherEntry {
     return {
         id: profile.id,
         name: profile.name,
-        glyph: profile.emoji || profileInitial(profile.name),
+        glyph: profile.emoji || appearance.profileInitial(profile.name),
         colour: profile.colour,
-        textColour: readableTextColour(profile.colour),
+        textColour: appearance.readableTextColour(profile.colour),
     };
 }
 
@@ -37,14 +38,23 @@ export function profileSwitcherFactory(): ProfileSwitcher {
     const injector = inject(EnvironmentInjector);
     const router = inject(Router);
     const runtime = signal<ProfilesRuntime | null>(null);
+    // The tile helpers load with the runtime: nothing renders before it.
+    const appearance = signal<Appearance | null>(null);
     if (sourceConnection())
-        void loadProfilesRuntime(injector)
-            .then((loaded) => runtime.set(loaded))
+        void Promise.all([
+            loadProfilesRuntime(injector),
+            import('../profiles/profile-appearance'),
+        ])
+            .then(([loaded, loadedAppearance]) => {
+                appearance.set(loadedAppearance);
+                runtime.set(loaded);
+            })
             .catch(() => undefined);
 
     const active = computed(() => {
         const current = runtime()?.active();
-        return current ? entryOf(current) : null;
+        const helpers = appearance();
+        return current && helpers ? entryOf(helpers, current) : null;
     });
     return {
         available: computed(() => {
@@ -54,10 +64,12 @@ export function profileSwitcherFactory(): ProfileSwitcher {
         active,
         others: computed(() => {
             const loaded = runtime();
+            const helpers = appearance();
             const current = loaded?.activeId();
+            if (!helpers) return [];
             return (loaded?.list()?.profiles ?? [])
                 .filter((profile) => profile.id !== current)
-                .map(entryOf);
+                .map((profile) => entryOf(helpers, profile));
         }),
         async choose(id: string): Promise<void> {
             const loaded = runtime();
