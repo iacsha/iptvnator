@@ -1,5 +1,7 @@
 import { EnvironmentInjector, inject } from '@angular/core';
 import type { HistoryPlaylistBridge } from '@iptvnator/services/history-events';
+import { activePersonalScope } from '@iptvnator/services/profiles';
+import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { historyProfileUsed } from './history-consent';
 export function historyPlaylistBridgeFactory(): HistoryPlaylistBridge {
     const injector = inject(EnvironmentInjector);
@@ -8,7 +10,10 @@ export function historyPlaylistBridgeFactory(): HistoryPlaylistBridge {
         project: async (playlist) =>
             historyProfileUsed()
                 ? (await loadHistoryRuntime(injector)).project(playlist)
-                : playlist,
+                : activePersonalScope() === DEFAULT_PERSONAL_SCOPE
+                  ? playlist
+                  : // Before any sync, the playlist's archive is the household's.
+                    { ...playlist, recentlyViewed: [] },
         mutate: async (playlist, action) =>
             historyProfileUsed()
                 ? (await loadHistoryRuntime(injector)).mutate(playlist, action)
