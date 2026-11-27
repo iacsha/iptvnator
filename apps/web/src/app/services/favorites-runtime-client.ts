@@ -7,7 +7,7 @@ import {
 } from '@iptvnator/services/favorites-sync';
 import { requestSourceServer } from '@iptvnator/services/source-sync';
 import { sourceConnection } from '@iptvnator/services/source-sync/connection';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import type { RuntimeCapabilitiesService } from '@iptvnator/services';
 import type { FavoriteSourceContext } from '@iptvnator/shared/interfaces/favorites-sync';
 import type { Playlist } from '@iptvnator/shared/interfaces';

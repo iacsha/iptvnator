@@ -28,7 +28,7 @@ import {
     SourceSyncService,
 } from '@iptvnator/services/source-sync';
 import { sourceConnection } from '@iptvnator/services/source-sync/connection';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import {
     HistorySyncClient,
     IndexedDbHistoryStore,

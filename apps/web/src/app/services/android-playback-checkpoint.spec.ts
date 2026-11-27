@@ -1,4 +1,4 @@
-import { setActivePersonalScope } from '@iptvnator/services/profiles';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import {
     prepareSourceConnection,
     sourceProfileName,

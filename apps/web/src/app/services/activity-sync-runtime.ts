@@ -19,7 +19,7 @@ import {
     PlaybackPositionRuntimeBridgeService,
 } from '@iptvnator/services';
 import { SourceSyncService } from '@iptvnator/services/source-sync';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { ActivitySessionScopes } from './activity-session-scopes';
 import { personalPositionsUnavailable } from './activity-personal-positions';

@@ -6,7 +6,7 @@ import {
 import {
     setActivePersonalScope,
     ProfileStateUnavailableError,
-} from '@iptvnator/services/profiles';
+} from '@iptvnator/services/profiles/active-scope';
 import type { FavoritesSyncClient } from '@iptvnator/services/favorites-sync';
 import type { HistorySyncClient } from '@iptvnator/services/history-sync';
 import type { Playlist } from '@iptvnator/shared/interfaces';

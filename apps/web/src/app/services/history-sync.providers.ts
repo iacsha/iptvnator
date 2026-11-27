@@ -1,6 +1,6 @@
 import { EnvironmentInjector, inject } from '@angular/core';
 import type { HistoryPlaylistBridge } from '@iptvnator/services/history-events';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { historyProfileUsed } from './history-consent';
 export function historyPlaylistBridgeFactory(): HistoryPlaylistBridge {

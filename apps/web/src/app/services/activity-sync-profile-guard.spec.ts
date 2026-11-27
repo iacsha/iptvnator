@@ -4,7 +4,7 @@ import {
     type IXtreamDataSource,
 } from '@iptvnator/portal/xtream/data-access';
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
-import { setActivePersonalScope } from '@iptvnator/services/profiles';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { activityDataSourceFactory } from './activity-sync.providers';
 
 const KIDS = 'profile:11111111-1111-4111-8111-111111111111';

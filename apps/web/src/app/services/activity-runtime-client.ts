@@ -11,7 +11,7 @@ import type {
 import type { ActivitySourceContext } from '@iptvnator/shared/interfaces/activity-sync';
 import { requestSourceServer } from '@iptvnator/services/source-sync';
 import { sourceConnection } from '@iptvnator/services/source-sync/connection';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { readActivityConsent } from './activity-consent-state';
 import { ActivityPositionAdapter } from './activity-position-adapter';
 import { ActivityLocalOnlyPositions } from './activity-local-only-positions';

@@ -1,7 +1,7 @@
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
 import { NotificationService } from '@iptvnator/services/notifications';
 import { FavoriteChannelMembershipEvents } from '@iptvnator/services/favorites-events';
-import { ProfileStateUnavailableError } from '@iptvnator/services/profiles';
+import { ProfileStateUnavailableError } from '@iptvnator/services/profiles/active-scope';
 import { DestroyRef, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {

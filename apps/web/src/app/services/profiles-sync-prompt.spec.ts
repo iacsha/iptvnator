@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@iptvnator/services/notifications';
-import { refuseProfileState } from '@iptvnator/services/profiles';
+import { refuseProfileState } from '@iptvnator/services/profiles/active-scope';
 import { ProfileSeparationService } from './profiles-separation';
 import { ProfilesSyncPrompt } from './profiles-sync-prompt';
 

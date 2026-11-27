@@ -1,5 +1,5 @@
 import { EnvironmentInjector, inject } from '@angular/core';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { favoritesProfileUsed } from './favorites-consent';
 import type { FavoritesPlaylistBridge } from '@iptvnator/services/favorites-events';

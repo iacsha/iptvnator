@@ -18,7 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TestBed } from '@angular/core/testing';
 import { patchState, signalStore } from '@ngrx/signals';
 import { XTREAM_DATA_SOURCE } from './data-sources/xtream-data-source.interface';
-import { ProfileStateUnavailableError } from '@iptvnator/services/profiles';
+import { ProfileStateUnavailableError } from '@iptvnator/services/profiles/active-scope';
 import { withFavorites } from './with-favorites.feature';
 
 const ERROR_TOAST = expect.objectContaining({

@@ -6,7 +6,7 @@ import { announceActivityChange } from '@iptvnator/services/activity-changes';
 import {
     activePersonalScope,
     setActivePersonalScope,
-} from '@iptvnator/services/profiles';
+} from '@iptvnator/services/profiles/active-scope';
 import type { PersonalScope } from '@iptvnator/shared/interfaces/profiles';
 import { ActivitySyncRuntime } from './activity-sync-runtime';
 import { FavoritesSyncRuntime } from './favorites-sync-runtime';

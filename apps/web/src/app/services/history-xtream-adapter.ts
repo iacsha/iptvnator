@@ -7,7 +7,7 @@ import type {
     XtreamPlayedContent,
 } from '@iptvnator/portal/xtream/data-access';
 import type { HistorySyncClient } from '@iptvnator/services/history-sync';
-import { refuseProfileState } from '@iptvnator/services/profiles';
+import { refuseProfileState } from '@iptvnator/services/profiles/active-scope';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { favoriteReferenceKey } from '@iptvnator/shared/interfaces/favorites-sync';
 import {

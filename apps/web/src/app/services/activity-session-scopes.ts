@@ -1,4 +1,4 @@
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import type { PersonalScope } from '@iptvnator/shared/interfaces/profiles';
 
 const LIMIT = 100;

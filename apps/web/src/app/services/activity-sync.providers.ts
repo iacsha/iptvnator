@@ -12,7 +12,7 @@ import {
     xtreamDataSourceFactory,
     type IXtreamDataSource,
 } from '@iptvnator/portal/xtream/data-access';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { personalPositionsUnavailable } from './activity-personal-positions';
 import { activityEnabled } from './activity-consent';

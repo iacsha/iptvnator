@@ -1,4 +1,4 @@
-import { refuseProfileState } from '@iptvnator/services/profiles';
+import { refuseProfileState } from '@iptvnator/services/profiles/active-scope';
 
 const READ_EMPTY: Readonly<Record<string, unknown>> = {
     getPlaybackPosition: null,

@@ -13,7 +13,7 @@ import {
 import { getPlaybackMediaExtensionFromUrl } from '@iptvnator/playback/util';
 import { ParentalLockService } from '@iptvnator/services';
 import { sourceProfileName } from '@iptvnator/services/source-sync/connection';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import {
     createRandomId,
     type ResolvedPortalPlayback,

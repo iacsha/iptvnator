@@ -5,7 +5,7 @@ import {
     inject,
 } from '@angular/core';
 import { NotificationService } from '@iptvnator/services/notifications';
-import { onProfileStateRefused } from '@iptvnator/services/profiles';
+import { onProfileStateRefused } from '@iptvnator/services/profiles/active-scope';
 import { ProfileSeparationService } from './profiles-separation';
 
 /** One prompt per this long, however many writes are refused. */

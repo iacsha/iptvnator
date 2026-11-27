@@ -3,7 +3,7 @@ import {
     favoriteFailureState,
 } from './favorites-runtime-summary';
 import { createRandomId } from '@iptvnator/shared/interfaces';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { profileRawFallback } from './favorites-profile-fallback';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { refreshFavoriteViews } from './favorites-view-refresh';

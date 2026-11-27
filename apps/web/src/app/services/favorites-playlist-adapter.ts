@@ -6,7 +6,7 @@ import {
     m3uFavoriteReference,
     type FavoriteEntry,
 } from '@iptvnator/shared/interfaces/favorites-sync';
-import { refuseProfileState } from '@iptvnator/services/profiles';
+import { refuseProfileState } from '@iptvnator/services/profiles/active-scope';
 import {
     captureFavoriteOwner,
     FavoriteSupersededError,

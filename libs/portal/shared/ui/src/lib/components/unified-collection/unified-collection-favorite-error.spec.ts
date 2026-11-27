@@ -1,5 +1,5 @@
 import { XTREAM_FAVORITE_IDENTITY_CONFLICT } from '@iptvnator/shared/interfaces';
-import { ProfileStateUnavailableError } from '@iptvnator/services/profiles';
+import { ProfileStateUnavailableError } from '@iptvnator/services/profiles/active-scope';
 import { favoriteSaveFailureKey } from './unified-collection-favorite-error';
 
 describe('favoriteSaveFailureKey', () => {

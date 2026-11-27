@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { setActivePersonalScope } from '@iptvnator/services/profiles';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import {

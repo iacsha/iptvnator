@@ -9,7 +9,7 @@ import {
     nativePlaybackResetKey,
 } from '@iptvnator/services/pwa-native-playback-resets';
 import { sourceProfileName } from '@iptvnator/services/source-sync/connection';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import {
     DEFAULT_PERSONAL_SCOPE,
     parsePersonalScope,

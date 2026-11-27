@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import type { Playlist } from '@iptvnator/shared/interfaces';
-import { setActivePersonalScope } from '@iptvnator/services/profiles';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import type { PersonalScope } from '@iptvnator/shared/interfaces/profiles';
 import { favoritesPlaylistBridgeFactory } from './favorites-sync.providers';
 import { historyPlaylistBridgeFactory } from './history-sync.providers';

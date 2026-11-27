@@ -1,7 +1,7 @@
 import { EnvironmentInjector } from '@angular/core';
 import { ParentalLockService } from '@iptvnator/services';
 import { TestBed } from '@angular/core/testing';
-import { setActivePersonalScope } from '@iptvnator/services/profiles';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { prepareSourceConnection } from '@iptvnator/services/source-sync/connection';
 import type {
     SourceServerRequest,
