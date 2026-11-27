@@ -157,6 +157,16 @@
                     }
                     @case ('server') {
                         <app-settings-server-section />
+                        @if (profilesState() === 'unsupported') {
+                            <p
+                                class="settings-section__desc"
+                                data-test-id="settings-profiles-unsupported"
+                            >
+                                {{
+                                    'SETTINGS.PROFILES.UNSUPPORTED' | translate
+                                }}
+                            </p>
+                        }
                     }
                     @case ('android-device') {
                         @if (androidSettingsControls; as controls) {

@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Profils",
             "SUBTITLE": "Donnez à chaque personne du foyer son propre profil sur ce serveur. Le code PIN d'un profil est un verrou léger pour les enfants et les colocataires, pas une sécurité : toute personne ayant accès au serveur peut toujours consulter toutes ses données.",
+            "SHARED_NOTE": "Les favoris, les éléments récemment regardés et les positions de lecture d'un serveur Xtream, ainsi que les favoris et les éléments récents des playlists M3U et Stalker, restent pour l'instant partagés entre tous les profils.",
+            "UNSUPPORTED": "Aucun serveur connecté ne prend en charge les profils : les paramètres n'ont donc pas de section Profils. Connectez ou mettez à jour un serveur pour les utiliser.",
             "LOADING": "Chargement des profils…",
             "LOAD_ERROR_TITLE": "Impossible de charger les profils",
             "LOAD_ERROR_DESCRIPTION": "Rechargez la page et réessayez.",

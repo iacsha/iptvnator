@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Profiller",
             "SUBTITLE": "Bu sunucuda hanedeki her kişiye kendi profilini verin. Profil PIN'i çocuklar ve ev arkadaşları için hafif bir kilittir, güvenlik değildir: sunucuya erişimi olan herkes yine de tüm verilerine ulaşabilir.",
+            "SHARED_NOTE": "Bir Xtream sunucusundaki favoriler, son izlenenler ve oynatma konumları ile M3U ve Stalker oynatma listelerinin favorileri ve son izlenenleri şimdilik tüm profiller tarafından ortak kullanılıyor.",
+            "UNSUPPORTED": "Bağlı hiçbir sunucu profilleri desteklemiyor, bu yüzden Ayarlar'da Profiller bölümü yok. Kullanmak için bir sunucu bağlayın veya güncelleyin.",
             "LOADING": "Profiller yükleniyor…",
             "LOAD_ERROR_TITLE": "Profiller yüklenemedi",
             "LOAD_ERROR_DESCRIPTION": "Sayfayı yenileyip tekrar deneyin.",

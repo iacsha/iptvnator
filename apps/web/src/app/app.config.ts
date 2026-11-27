@@ -41,7 +41,7 @@ import {
     provideParentalLockPlaylistCleanup,
     DataService,
     PROFILE_SWITCHER,
-    SETTINGS_PROFILES_AVAILABLE,
+    SETTINGS_PROFILES_STATE,
 } from '@iptvnator/services';
 import { dbConfig } from '@iptvnator/shared/interfaces';
 import { getInitialLanguage } from './app-language-preference';
@@ -180,7 +180,7 @@ export const appConfig: ApplicationConfig = {
         },
         ...provideSourceSync(),
         {
-            provide: SETTINGS_PROFILES_AVAILABLE,
+            provide: SETTINGS_PROFILES_STATE,
             useFactory: profilesAvailabilityFactory,
         },
         {

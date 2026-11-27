@@ -16,8 +16,14 @@ export const PROFILES_SETTINGS_SEARCH_ENTRIES: readonly SettingsSearchEntry[] =
             section: 'profiles',
             labelKey: 'SETTINGS.PROFILES.START',
             descriptionKey: 'SETTINGS.PROFILES.START_DESCRIPTION',
-            keywords: ['profiles', "who's watching", 'picker', 'startup', 'last'],
-            requires: ['profiles'],
+            keywords: [
+                'profiles',
+                "who's watching",
+                'picker',
+                'startup',
+                'last',
+            ],
+            requires: ['profiles-on'],
         },
         {
             id: 'profiles-consent',
@@ -25,6 +31,6 @@ export const PROFILES_SETTINGS_SEARCH_ENTRIES: readonly SettingsSearchEntry[] =
             labelKey: 'SETTINGS.PROFILES.CONSENT_TITLE',
             descriptionKey: 'SETTINGS.PROFILES.CONSENT_BODY',
             keywords: ['profiles', 'sync', 'favorites', 'history', 'separate'],
-            requires: ['profiles'],
+            requires: ['profiles-on'],
         },
     ];

@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Profilok",
             "SUBTITLE": "Adjon a háztartás minden tagjának saját profilt ezen a kiszolgálón. A profil PIN-kódja csak könnyű zár gyerekeknek és lakótársaknak, nem biztonsági megoldás: a kiszolgálóhoz hozzáférő bárki továbbra is elérheti az összes adatot.",
+            "SHARED_NOTE": "Az Xtream-kiszolgáló kedvencei, legutóbb megnézett elemei és lejátszási pozíciói, valamint az M3U- és Stalker-lejátszási listák kedvencei és legutóbb megtekintett elemei egyelőre minden profilban közösek.",
+            "UNSUPPORTED": "Egyetlen csatlakoztatott kiszolgáló sem támogatja a profilokat, ezért a Beállításokban nincs Profilok szakasz. Csatlakoztass vagy frissíts egy kiszolgálót, hogy használhasd őket.",
             "LOADING": "Profilok betöltése…",
             "LOAD_ERROR_TITLE": "A profilokat nem sikerült betölteni",
             "LOAD_ERROR_DESCRIPTION": "Töltse újra az oldalt, és próbálja meg újra.",

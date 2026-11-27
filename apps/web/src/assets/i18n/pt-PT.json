@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Perfis",
             "SUBTITLE": "Dá a cada pessoa da casa o seu próprio perfil neste servidor. O PIN do perfil é um bloqueio leve para crianças e coabitantes, não uma segurança: quem tiver acesso ao servidor continua a poder aceder a todos os dados.",
+            "SHARED_NOTE": "Os favoritos, os itens vistos recentemente e as posições de reprodução de um servidor Xtream, bem como os favoritos e os vistos recentemente das playlists M3U e Stalker, continuam, por agora, a ser partilhados por todos os perfis.",
+            "UNSUPPORTED": "Nenhum servidor ligado suporta perfis, por isso as definições não têm uma secção Perfis. Ligue ou atualize um servidor para os usar.",
             "LOADING": "A carregar perfis…",
             "LOAD_ERROR_TITLE": "Não foi possível carregar os perfis",
             "LOAD_ERROR_DESCRIPTION": "Recarrega a página e tenta novamente.",
