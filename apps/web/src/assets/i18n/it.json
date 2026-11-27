@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Profili",
             "SUBTITLE": "Dai a ogni persona della famiglia il suo profilo su questo server. Il PIN di un profilo è un blocco leggero per bambini e coinquilini, non una misura di sicurezza: chiunque abbia accesso al server può comunque raggiungere tutti i suoi dati.",
+            "SHARED_NOTE": "I preferiti, gli elementi guardati di recente e le posizioni di riproduzione restano separati per profilo solo finché la relativa sincronizzazione è attiva, come indicato sotto. Senza di essa, e per tutto ciò che è stato salvato prima, per ora restano condivisi da tutti i profili.",
+            "UNSUPPORTED": "Nessun server connesso supporta i profili, quindi le impostazioni non hanno una sezione Profili. Collega o aggiorna un server per usarli.",
             "LOADING": "Caricamento dei profili…",
             "LOAD_ERROR_TITLE": "Impossibile caricare i profili",
             "LOAD_ERROR_DESCRIPTION": "Ricarica la pagina e riprova.",

@@ -170,7 +170,7 @@ export interface SettingsSectionVisibility {
     supportsRemoteControl: boolean;
     supportsServerStorage: boolean;
     supportsAndroidSettings?: boolean;
-    /** The profiles UI is on and the connected server supports profiles. */
+    /** The connected server supports profiles (on or off). */
     supportsProfiles?: boolean;
 }
 

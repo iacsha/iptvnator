@@ -38,7 +38,7 @@ describe('buildSettingsSectionNavItems', () => {
         return ids;
     }
 
-    it('shows the Profiles section only when the profiles UI is available', () => {
+    it('shows the Profiles section only when the connected server supports profiles', () => {
         const base = {
             supportsEpg: true,
             supportsRemoteControl: true,

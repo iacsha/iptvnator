@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Profilok",
             "SUBTITLE": "Hozzon létre ezen a kiszolgálón külön profilt a háztartás minden tagjának. A profil PIN-kódja egyszerű hozzáférési korlát a gyermekek és a lakótársak számára, nem biztonsági megoldás. Bárki, aki hozzáfér a kiszolgálóhoz, továbbra is elérheti annak összes adatát.",
+            "SHARED_NOTE": "A kedvencek, a legutóbb megnézett elemek és a lejátszási pozíciók csak addig vannak profilonként elkülönítve, amíg a megfelelő szinkronizálás be van kapcsolva, ahogy lent látható. Nélküle, és a korábban mentett elemeknél egyelőre minden profilban közösek.",
+            "UNSUPPORTED": "Egyetlen csatlakoztatott kiszolgáló sem támogatja a profilokat, ezért a Beállításokban nincs Profilok szakasz. Csatlakoztass vagy frissíts egy kiszolgálót, hogy használhasd őket.",
             "LOADING": "Profilok betöltése…",
             "LOAD_ERROR_TITLE": "A profilokat nem sikerült betölteni",
             "LOAD_ERROR_DESCRIPTION": "Frissítse az oldalt, és próbálja újra.",

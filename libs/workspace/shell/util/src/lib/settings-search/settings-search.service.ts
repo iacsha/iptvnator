@@ -6,7 +6,7 @@ import {
     getAndroidSettingsControls,
     RuntimeCapabilitiesService,
     ServerStorageStatusService,
-    SETTINGS_PROFILES_AVAILABLE,
+    SETTINGS_PROFILES_STATE,
 } from '@iptvnator/services';
 import {
     EmbeddedMpvSupport,
@@ -37,7 +37,7 @@ import {
 export class SettingsSearchService {
     private readonly runtime = inject(RuntimeCapabilitiesService);
     private readonly serverStorageStatus = inject(ServerStorageStatusService);
-    private readonly profilesAvailable = inject(SETTINGS_PROFILES_AVAILABLE);
+    private readonly profilesState = inject(SETTINGS_PROFILES_STATE);
     private readonly vodSourceDiscovery = inject(VodSourceDiscoveryService);
     private readonly router = inject(Router);
     private readonly translate = inject(TranslateService);
@@ -78,7 +78,8 @@ export class SettingsSearchService {
             'embedded-mpv-frame-copy':
                 !!this.embeddedMpvSupport()?.frameCopyAvailable,
             'server-storage': this.serverStorageStatus.isActive(),
-            profiles: this.profilesAvailable(),
+            profiles: this.profilesState() !== 'unsupported',
+            'profiles-on': this.profilesState() === 'on',
         };
     }
 

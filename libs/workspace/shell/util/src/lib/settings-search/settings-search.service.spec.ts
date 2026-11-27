@@ -6,7 +6,8 @@ import { VodSourceDiscoveryService } from '@iptvnator/portal/shared/data-access'
 import {
     RuntimeCapabilitiesService,
     ServerStorageStatusService,
-    SETTINGS_PROFILES_AVAILABLE,
+    SETTINGS_PROFILES_STATE,
+    type SettingsProfilesState,
 } from '@iptvnator/services';
 import { EMBEDDED_MPV_SUPPORT_RECHECK_MS } from '@iptvnator/shared/interfaces';
 import { SETTINGS_SEARCH_ENTRIES } from './settings-search-entries';
@@ -42,7 +43,7 @@ interface RuntimeStub {
 function setup(
     runtime: Partial<RuntimeStub> = {},
     serverStorage = false,
-    profiles = false
+    profiles: SettingsProfilesState = 'unsupported'
 ) {
     const router = { navigate: jest.fn().mockResolvedValue(true) };
     TestBed.configureTestingModule({
@@ -74,8 +75,8 @@ function setup(
             },
             { provide: Router, useValue: router },
             {
-                provide: SETTINGS_PROFILES_AVAILABLE,
-                useValue: signal(profiles).asReadonly(),
+                provide: SETTINGS_PROFILES_STATE,
+                useValue: signal<SettingsProfilesState>(profiles).asReadonly(),
             },
             {
                 provide: TranslateService,
@@ -107,35 +108,41 @@ describe('SettingsSearchService', () => {
             'profiles-consent',
         ];
 
-        it('hides the Profiles section and its rows while profiles are unavailable', () => {
+        const rowsOf = (service: ReturnType<typeof setup>['service']) =>
+            service
+                .visibleEntries()
+                .filter((entry) => entry.section === 'profiles')
+                .map(({ id }) => id);
+
+        it('hides the Profiles section and its rows while profiles are unsupported', () => {
             const { service } = setup();
 
             expect(service.visibleSections().map(({ id }) => id)).not.toContain(
                 'profiles'
             );
-            expect(service.visibleEntries().map(({ id }) => id)).not.toEqual(
-                expect.arrayContaining(PROFILES_ROWS)
-            );
-            expect(
-                service
-                    .visibleEntries()
-                    .some((entry) => entry.section === 'profiles')
-            ).toBe(false);
+            expect(rowsOf(service)).toEqual([]);
             expect(service.search('profiles')).toEqual([]);
         });
 
-        it('shows the section, its rows and the search results once available', () => {
-            const { service } = setup({}, true, true);
+        it('offers only the switch while profiles are off', () => {
+            const { service } = setup({}, true, 'off');
 
             expect(service.visibleSections().map(({ id }) => id)).toContain(
                 'profiles'
             );
-            expect(service.visibleEntries().map(({ id }) => id)).toEqual(
-                expect.arrayContaining(PROFILES_ROWS)
-            );
+            expect(rowsOf(service)).toEqual(['profiles-enabled']);
             expect(
                 service.search('household').map(({ entry }) => entry.id)
             ).toContain('profiles-enabled');
+        });
+
+        it('shows the section and all its rows while profiles are on', () => {
+            const { service } = setup({}, true, 'on');
+
+            expect(service.visibleSections().map(({ id }) => id)).toContain(
+                'profiles'
+            );
+            expect(rowsOf(service)).toEqual(PROFILES_ROWS);
         });
     });
 

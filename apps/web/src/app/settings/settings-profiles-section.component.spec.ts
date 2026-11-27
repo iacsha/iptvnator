@@ -188,6 +188,23 @@ describe('SettingsProfilesSectionComponent', () => {
         expect(fake.runtime.refresh).toHaveBeenCalled();
     });
 
+    it('says what is still shared by all profiles', async () => {
+        const { q } = await setup();
+        expect(q('profiles-shared-note')?.textContent).toContain(
+            'SETTINGS.PROFILES.SHARED_NOTE'
+        );
+    });
+
+    it('offers only the switch while profiles are off', async () => {
+        const { fake, fixture, q } = await setup();
+        expect(q('profiles-start-ask')).toBeTruthy();
+        fake.list.update((list) => list && { ...list, enabled: false });
+        fixture.detectChanges();
+        expect(q('profiles-enabled')).toBeTruthy();
+        expect(q('profiles-start-ask')).toBeNull();
+        expect(q('profiles-consent-offer')).toBeNull();
+    });
+
     it('stores the start-up choice per server instance and device', async () => {
         const { click } = await setup();
         await click('profiles-start-last');
@@ -616,6 +633,10 @@ describe('SettingsProfilesSectionComponent', () => {
     });
 
     it('moves through the start-up options with the arrow keys', async () => {
+        localStorage.setItem(
+            `iptvnator-server:${NAS}:profiles-start-v1`,
+            'ask'
+        );
         const { q, fixture } = await setup();
         const ask = q('profiles-start-ask')!;
         const last = q('profiles-start-last')!;

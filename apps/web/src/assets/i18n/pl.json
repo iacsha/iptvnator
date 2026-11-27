@@ -856,6 +856,8 @@
         "PROFILES": {
             "TITLE": "Profile",
             "SUBTITLE": "Daj każdej osobie w domu własny profil na tym serwerze. PIN profilu to lekka blokada dla dzieci i współlokatorów, a nie zabezpieczenie: każdy, kto ma dostęp do serwera, nadal może dotrzeć do wszystkich jego danych.",
+            "SHARED_NOTE": "Ulubione, ostatnio oglądane pozycje i pozycje odtwarzania są rozdzielone między profile tylko wtedy, gdy włączona jest odpowiednia synchronizacja, jak wymieniono poniżej. Bez niej oraz dla wszystkiego, co zapisano wcześniej, są na razie nadal wspólne dla wszystkich profili.",
+            "UNSUPPORTED": "Żaden połączony serwer nie obsługuje profili, dlatego w Ustawieniach nie ma sekcji Profile. Połącz lub zaktualizuj serwer, aby z nich korzystać.",
             "LOADING": "Wczytywanie profili…",
             "LOAD_ERROR_TITLE": "Nie udało się wczytać profili",
             "LOAD_ERROR_DESCRIPTION": "Odśwież stronę i spróbuj ponownie.",

@@ -19,7 +19,7 @@ async function connect(instanceId: string | null): Promise<void> {
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe('profilesAvailabilityFactory', () => {
-    it('stays false without touching the network without a connected server', async () => {
+    it('is unsupported without touching the network without a connected server', async () => {
         await connect(null);
         const request = jest.fn();
         const fake = fakeRuntime();
@@ -34,12 +34,12 @@ describe('profilesAvailabilityFactory', () => {
         );
         await settle();
         TestBed.tick();
-        expect(available()).toBe(false);
+        expect(available()).toBe('unsupported');
         expect(request).not.toHaveBeenCalled();
         expect(fake.runtime.refresh).not.toHaveBeenCalled();
     });
 
-    it('is true once a connected server is capable, and false when it is not', async () => {
+    it('tells unsupported, off and on apart for a connected server', async () => {
         await connect('synthetic-nas');
         const fake = fakeRuntime();
         fake.runtime.capable.set(false);
@@ -59,13 +59,19 @@ describe('profilesAvailabilityFactory', () => {
         await settle();
         TestBed.tick();
         // Not answered yet: a direct visit to the section waits.
-        expect(available()).toBe(true);
+        expect(available()).toBe('on');
         fake.runtime.state.set('unsupported');
         TestBed.tick();
-        expect(available()).toBe(false);
+        expect(available()).toBe('unsupported');
         fake.runtime.capable.set(true);
         fake.runtime.state.set('ready');
         TestBed.tick();
-        expect(available()).toBe(true);
+        expect(available()).toBe('on');
+        fake.list.update((list) => list && { ...list, enabled: false });
+        TestBed.tick();
+        expect(available()).toBe('off');
+        fake.list.update((list) => list && { ...list, enabled: true });
+        TestBed.tick();
+        expect(available()).toBe('on');
     });
 });
