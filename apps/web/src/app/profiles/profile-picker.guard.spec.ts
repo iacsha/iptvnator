@@ -26,6 +26,7 @@ import { ParentalLockService } from '@iptvnator/services';
 import { writeKidsLast } from '../services/profiles-preferences';
 import {
     ADULT_ID,
+    KIDS_ID,
     fakeRuntime,
     PIN_ID,
     syntheticProfile,
@@ -142,6 +143,36 @@ describe('profilePickerGuard', () => {
         writeProfilesStart(NAS, 'last');
         const none = setup();
         expect(none.target(await none.run())).toContain('/profile-picker');
+    });
+
+    it('shows the picker for a saved kids profile when this device has no parental PIN', async () => {
+        writeProfilesStart(NAS, 'last');
+        writeActiveProfileId(NAS, KIDS_ID);
+        const none = setup();
+        none.fake.runtime.localPin.set('none');
+        expect(none.target(await none.run())).toContain('/profile-picker');
+        // Nothing restored: the lock is not forced for a profile nobody is on.
+        expect(none.fake.runtime.select).not.toHaveBeenCalled();
+        expect(setForced).not.toHaveBeenCalled();
+    });
+
+    it('keeps restoring a saved kids profile when this device has a parental PIN', async () => {
+        writeProfilesStart(NAS, 'last');
+        writeActiveProfileId(NAS, KIDS_ID);
+        const set = setup();
+        await expect(set.run()).resolves.toBe(true);
+    });
+
+    it('waits for the local PIN before deciding', async () => {
+        writeProfilesStart(NAS, 'last');
+        writeActiveProfileId(NAS, KIDS_ID);
+        const slow = setup();
+        slow.fake.runtime.localPin.set('unknown');
+        slow.fake.runtime.readLocalPin.mockImplementation(async () => {
+            slow.fake.runtime.localPin.set('none');
+        });
+        expect(slow.target(await slow.run())).toContain('/profile-picker');
+        expect(slow.fake.runtime.readLocalPin).toHaveBeenCalled();
     });
 
     it('does not block when the server is offline or the runtime is not capable', async () => {

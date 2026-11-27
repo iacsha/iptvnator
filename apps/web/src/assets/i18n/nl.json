@@ -856,7 +856,9 @@
         "PROFILES": {
             "TITLE": "Profielen",
             "SUBTITLE": "Geef iedereen in het huishouden een eigen profiel op deze server. Een profielpincode is een lichte vergrendeling voor kinderen en huisgenoten, geen beveiliging: wie toegang heeft tot de server, kan nog steeds bij alle gegevens.",
-            "SHARED_NOTE": "Favorieten, onlangs bekeken items en afspeelposities worden alleen per profiel gescheiden gehouden zolang de bijbehorende synchronisatie aan staat, zoals hieronder vermeld. Zonder synchronisatie, en voor alles wat eerder is opgeslagen, worden ze voorlopig nog door alle profielen gedeeld.",
+            "SHARED_NOTE_FAVORITES": "Favorieten worden door alle profielen gedeeld totdat de synchronisatie ervan aan staat.",
+            "SHARED_NOTE_HISTORY": "Onlangs bekeken items worden door alle profielen gedeeld totdat de synchronisatie ervan aan staat.",
+            "SHARED_NOTE_ACTIVITY": "Afspeelposities worden door alle profielen gedeeld totdat de synchronisatie ervan aan staat.",
             "UNSUPPORTED": "Geen verbonden server ondersteunt profielen, daarom heeft Instellingen geen onderdeel Profielen. Verbind of werk een server bij om ze te gebruiken.",
             "LOADING": "Profielen laden…",
             "LOAD_ERROR_TITLE": "Profielen konden niet worden geladen",

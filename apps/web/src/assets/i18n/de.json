@@ -856,7 +856,9 @@
         "PROFILES": {
             "TITLE": "Profile",
             "SUBTITLE": "Gib jeder Person im Haushalt ein eigenes Profil auf diesem Server. Eine Profil-PIN ist eine leichte Sperre für Kinder und Mitbewohner, kein Sicherheitsmerkmal: Wer Zugriff auf den Server hat, kann weiterhin alle Daten erreichen.",
-            "SHARED_NOTE": "Favoriten, zuletzt angesehene Titel und Wiedergabepositionen werden für jedes Profil nur getrennt, solange die jeweilige Synchronisierung eingeschaltet ist, wie unten aufgeführt. Ohne sie und für alles, was zuvor gespeichert wurde, werden sie vorerst noch von allen Profilen gemeinsam genutzt.",
+            "SHARED_NOTE_FAVORITES": "Favoriten werden von allen Profilen gemeinsam genutzt, bis ihre Synchronisierung eingeschaltet ist.",
+            "SHARED_NOTE_HISTORY": "Zuletzt angesehene Titel werden von allen Profilen gemeinsam genutzt, bis ihre Synchronisierung eingeschaltet ist.",
+            "SHARED_NOTE_ACTIVITY": "Wiedergabepositionen werden von allen Profilen gemeinsam genutzt, bis ihre Synchronisierung eingeschaltet ist.",
             "UNSUPPORTED": "Kein verbundener Server unterstützt Profile, deshalb gibt es in den Einstellungen keinen Bereich Profile. Verbinde oder aktualisiere einen Server, um sie zu nutzen.",
             "LOADING": "Profile werden geladen …",
             "LOAD_ERROR_TITLE": "Profile konnten nicht geladen werden",

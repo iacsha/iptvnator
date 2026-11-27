@@ -856,7 +856,9 @@
         "PROFILES": {
             "TITLE": "Profiles",
             "SUBTITLE": "Give each person in the household their own profile on this server. A profile PIN is a light lock for kids and housemates, not security: anyone with access to the server can still reach all of its data.",
-            "SHARED_NOTE": "Favorites, recently watched items and playback positions are kept apart for each profile only while their sync is turned on, as listed below. Without it, and for anything saved before, they are still shared by all profiles for now.",
+            "SHARED_NOTE_FAVORITES": "Favorites are shared by all profiles until their sync is turned on.",
+            "SHARED_NOTE_HISTORY": "Recently watched items are shared by all profiles until their sync is turned on.",
+            "SHARED_NOTE_ACTIVITY": "Playback positions are shared by all profiles until their sync is turned on.",
             "UNSUPPORTED": "No connected server supports profiles, so Settings has no Profiles section. Connect or update a server to use them.",
             "LOADING": "Loading profiles…",
             "LOAD_ERROR_TITLE": "Profiles could not be loaded",

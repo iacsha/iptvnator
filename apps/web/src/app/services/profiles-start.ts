@@ -10,7 +10,10 @@ export interface ProfilesStartInput {
     readonly enabled: boolean;
     readonly startPref: 'ask' | 'last';
     readonly lastId: string | null;
-    readonly profiles: readonly Pick<ServerProfile, 'id' | 'hasPin'>[];
+    /** This device has a parental PIN; a kids profile is not restored without one. */
+    readonly hasParentalPin?: boolean;
+    readonly profiles: readonly (Pick<ServerProfile, 'id' | 'hasPin'> &
+        Partial<Pick<ServerProfile, 'kids'>>)[];
 }
 
 export function needsPicker(input: ProfilesStartInput): boolean {
@@ -24,7 +27,11 @@ export function needsPicker(input: ProfilesStartInput): boolean {
         return false;
     if (input.startPref === 'ask') return true;
     const last = input.profiles.find((profile) => profile.id === input.lastId);
-    return !last || last.hasPin;
+    return (
+        !last ||
+        last.hasPin ||
+        (last.kids === true && input.hasParentalPin !== true)
+    );
 }
 
 export function resolveActiveProfileId(

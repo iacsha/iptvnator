@@ -178,3 +178,22 @@ describe('resolveActiveProfileId', () => {
         );
     });
 });
+
+describe('needsPicker with a saved kids profile', () => {
+    const KIDS = '44444444-4444-4444-8444-444444444444';
+    const kidsHousehold = [...household, { id: KIDS, hasPin: false, kids: true }];
+    const input: ProfilesStartInput = {
+        ...base,
+        lastId: KIDS,
+        profiles: kidsHousehold,
+    };
+
+    it('asks when this device has no parental PIN', () => {
+        expect(needsPicker(input)).toBe(true);
+        expect(needsPicker({ ...input, hasParentalPin: false })).toBe(true);
+    });
+
+    it('restores it when this device has a parental PIN', () => {
+        expect(needsPicker({ ...input, hasParentalPin: true })).toBe(false);
+    });
+});

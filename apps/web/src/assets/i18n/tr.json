@@ -856,7 +856,9 @@
         "PROFILES": {
             "TITLE": "Profiller",
             "SUBTITLE": "Bu sunucuda hanedeki her kişiye kendi profilini verin. Profil PIN'i çocuklar ve ev arkadaşları için hafif bir kilittir, güvenlik değildir: sunucuya erişimi olan herkes yine de tüm verilerine ulaşabilir.",
-            "SHARED_NOTE": "Favoriler, son izlenenler ve oynatma konumları, aşağıda listelendiği gibi yalnızca ilgili eşitleme açıkken her profil için ayrı tutulur. Eşitleme olmadan ve daha önce kaydedilen her şey için şimdilik tüm profiller tarafından ortak kullanılır.",
+            "SHARED_NOTE_FAVORITES": "Favoriler, eşitlemeleri açılana kadar tüm profiller tarafından ortak kullanılır.",
+            "SHARED_NOTE_HISTORY": "Son izlenenler, eşitlemeleri açılana kadar tüm profiller tarafından ortak kullanılır.",
+            "SHARED_NOTE_ACTIVITY": "Oynatma konumları, eşitlemeleri açılana kadar tüm profiller tarafından ortak kullanılır.",
             "UNSUPPORTED": "Bağlı hiçbir sunucu profilleri desteklemiyor, bu yüzden Ayarlar'da Profiller bölümü yok. Kullanmak için bir sunucu bağlayın veya güncelleyin.",
             "LOADING": "Profiller yükleniyor…",
             "LOAD_ERROR_TITLE": "Profiller yüklenemedi",

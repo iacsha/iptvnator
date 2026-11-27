@@ -64,6 +64,8 @@ async function shouldAsk(
     try {
         const runtime = await loadProfilesRuntime(injector);
         await runtime.refresh();
+        // The saved kids profile is restored only where a PIN can unlock it.
+        await runtime.readLocalPin();
         // No verified answer (offline, refused, checking): stay on Default
         // for the session, so a later poll cannot switch the viewer.
         if (runtime.state() !== 'ready') return null;
@@ -73,6 +75,7 @@ async function shouldAsk(
             enabled: runtime.enabled(),
             startPref: readProfilesStart(instanceId),
             lastId: readActiveProfileId(instanceId),
+            hasParentalPin: runtime.localPin() === 'set',
             profiles: runtime.list()?.profiles ?? [],
         });
         // The restored profile's state loads before the first screen; the

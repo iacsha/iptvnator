@@ -856,7 +856,9 @@
         "PROFILES": {
             "TITLE": "Perfiles",
             "SUBTITLE": "Da a cada persona del hogar su propio perfil en este servidor. El PIN de un perfil es un bloqueo ligero para niños y compañeros de casa, no una medida de seguridad: quien tenga acceso al servidor puede seguir viendo todos sus datos.",
-            "SHARED_NOTE": "Los favoritos, los elementos vistos recientemente y las posiciones de reproducción solo se mantienen separados por perfil mientras su sincronización esté activada, como se indica abajo. Sin ella, y para todo lo guardado antes, siguen compartidos entre todos los perfiles por ahora.",
+            "SHARED_NOTE_FAVORITES": "Los favoritos se comparten entre todos los perfiles hasta que se active su sincronización.",
+            "SHARED_NOTE_HISTORY": "Los elementos vistos recientemente se comparten entre todos los perfiles hasta que se active su sincronización.",
+            "SHARED_NOTE_ACTIVITY": "Las posiciones de reproducción se comparten entre todos los perfiles hasta que se active su sincronización.",
             "UNSUPPORTED": "Ningún servidor conectado admite perfiles, por eso los ajustes no tienen una sección Perfiles. Conecta o actualiza un servidor para usarlos.",
             "LOADING": "Cargando perfiles…",
             "LOAD_ERROR_TITLE": "No se pudieron cargar los perfiles",

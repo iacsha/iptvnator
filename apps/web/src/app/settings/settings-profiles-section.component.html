@@ -2,9 +2,17 @@
     <header class="settings-group__header">
         <h2>{{ 'SETTINGS.PROFILES.TITLE' | translate }}</h2>
         <p>{{ 'SETTINGS.PROFILES.SUBTITLE' | translate }}</p>
-        <p data-test-id="profiles-shared-note">
-            {{ 'SETTINGS.PROFILES.SHARED_NOTE' | translate }}
-        </p>
+        @if (sharedParts().length) {
+            <p data-test-id="profiles-shared-note">
+                @for (part of sharedParts(); track part.id) {
+                    <span
+                        class="profiles-shared-note__part"
+                        [attr.data-test-id]="'profiles-shared-note-' + part.id"
+                        >{{ part.noteKey | translate }}
+                    </span>
+                }
+            </p>
+        }
     </header>
 
     @if (failed()) {

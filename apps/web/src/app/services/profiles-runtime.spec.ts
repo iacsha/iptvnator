@@ -98,6 +98,7 @@ async function connect(instanceId = NAS): Promise<void> {
 describe('ProfilesRuntime', () => {
     const originalElectron = window.electron;
     let fake: ReturnType<typeof fakeServer>;
+    let pinState: jest.Mock;
 
     async function start(): Promise<ProfilesRuntime> {
         TestBed.configureTestingModule({
@@ -105,7 +106,7 @@ describe('ProfilesRuntime', () => {
                 { provide: PROFILES_REQUEST, useValue: fake.request },
                 {
                     provide: ParentalLockService,
-                    useValue: { setForced: jest.fn() },
+                    useValue: { setForced: jest.fn(), pinState },
                 },
             ],
         });
@@ -121,6 +122,7 @@ describe('ProfilesRuntime', () => {
         Reflect.deleteProperty(window, 'electron');
         localStorage.clear();
         fake = fakeServer();
+        pinState = jest.fn(async () => 'set');
         await connect();
     });
 
@@ -514,6 +516,52 @@ describe('ProfilesRuntime', () => {
         fake.server.revision = 2;
         await runtime.refresh();
         expect(runtime.activeId()).toBe(ADULT);
+    });
+
+    describe('a saved kids profile on a device without a parental PIN', () => {
+        const withKids = () => {
+            fake.server.profiles = [
+                profile(DEFAULT_PROFILE_ID, 0),
+                { ...profile(ADULT, 1), kids: true },
+            ];
+            writeActiveProfileId(NAS, ADULT);
+        };
+
+        it('is not restored, and stays saved', async () => {
+            withKids();
+            pinState.mockResolvedValue('none');
+            const runtime = await start();
+            expect(runtime.localPin()).toBe('none');
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+            expect(readActiveProfileId(NAS)).toBe(ADULT);
+        });
+
+        it('counts an unreadable PIN as none', async () => {
+            withKids();
+            pinState.mockResolvedValue('unreadable');
+            const runtime = await start();
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+        });
+
+        it('is restored when the device has a PIN', async () => {
+            withKids();
+            const runtime = await start();
+            expect(runtime.activeId()).toBe(ADULT);
+        });
+
+        it('is dropped when a restored profile became kids and there is no PIN', async () => {
+            pinState.mockResolvedValue('none');
+            writeActiveProfileId(NAS, ADULT);
+            const runtime = await start();
+            expect(runtime.activeId()).toBe(ADULT);
+            fake.server.profiles = [
+                profile(DEFAULT_PROFILE_ID, 0),
+                { ...profile(ADULT, 1), kids: true },
+            ];
+            fake.server.revision = 2;
+            await runtime.refresh();
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+        });
     });
 
     it('asks the PIN of a restored profile that gained one after launch', async () => {

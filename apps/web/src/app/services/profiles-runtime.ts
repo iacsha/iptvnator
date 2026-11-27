@@ -6,6 +6,7 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { ParentalLockService } from '@iptvnator/services';
 import {
     ProfilesClient,
     activePersonalScope,
@@ -33,6 +34,8 @@ import {
 import { PROFILES_REQUEST } from './profiles-request.token';
 import { resolveActiveProfileId } from './profiles-start';
 
+export type LocalPin = 'unknown' | 'set' | 'none' | 'unreadable';
+
 export const PROFILES_POLL_MS = 30_000;
 /** A server without profiles may be upgraded later: ask again after this long. */
 export const PROFILES_REPROBE_MS = 5 * 60_000;
@@ -41,6 +44,9 @@ export const PROFILES_REPROBE_MS = 5 * 60_000;
 export class ProfilesRuntime {
     private readonly destroyRef = inject(DestroyRef);
     private readonly request = inject(PROFILES_REQUEST);
+    private readonly parentalLock = inject(ParentalLockService);
+    private readonly localPinState = signal<LocalPin>('unknown');
+    private localPinRead?: Promise<void>;
     private readonly capableState = signal(false);
     private readonly listState = signal<ServerProfileList | null>(null);
     private readonly stateValue = signal<
@@ -69,6 +75,13 @@ export class ProfilesRuntime {
     private deletions = 0;
     private profilesClient?: ProfilesClient;
 
+    /**
+     * Whether this device has a parental PIN, read from device-local storage.
+     * A kids profile needs one to be restored or locked on: without it nobody
+     * could unlock, switch or leave. `'unknown'` until read; `'unreadable'`
+     * counts as no PIN, like the picker's blocked kids tile.
+     */
+    readonly localPin: Signal<LocalPin> = this.localPinState.asReadonly();
     readonly capable: Signal<boolean> = this.capableState.asReadonly();
     /** Start-up gave up waiting and stays on Default for this session. */
     readonly held: Signal<boolean> = this.heldState.asReadonly();
@@ -123,6 +136,15 @@ export class ProfilesRuntime {
             document.removeEventListener('visibilitychange', visibility);
         });
         queueMicrotask(refresh);
+        void this.readLocalPin();
+    }
+
+    /** Reads the local PIN once; start-up decisions about kids profiles wait for it. */
+    readLocalPin(): Promise<void> {
+        return (this.localPinRead ??= this.parentalLock
+            .pinState()
+            .catch((): LocalPin => 'unreadable')
+            .then((state) => this.localPinState.set(state)));
     }
 
     client(): ProfilesClient {
@@ -285,6 +307,8 @@ export class ProfilesRuntime {
             if (!this.isCurrent(instanceId) || !capable) return;
         }
         if (!this.capableState() || !this.isCurrent(instanceId)) return;
+        await this.readLocalPin();
+        if (!this.isCurrent(instanceId)) return;
         const deletions = this.deletions;
         const result = await this.client().list(this.revision);
         if (!this.isCurrent(instanceId)) return;
@@ -359,9 +383,13 @@ export class ProfilesRuntime {
         if (!this.startupRead && list) {
             this.startupRead = true;
             const saved = readActiveProfileId(instanceId);
+            const savedProfile = list.profiles.find(
+                (profile) => profile.id === saved
+            );
             if (
                 !this.sessionChoice &&
-                !list.profiles.find((profile) => profile.id === saved)?.hasPin
+                !savedProfile?.hasPin &&
+                !this.needsParentalPin(savedProfile)
             )
                 this.sessionChoice = saved;
         }
@@ -374,6 +402,16 @@ export class ProfilesRuntime {
                 ?.hasPin
         )
             this.sessionChoice = null;
+        // A kids profile (saved on another device, or made one since) cannot
+        // be restored where no parental PIN exists to unlock it.
+        if (
+            this.sessionChoice &&
+            !this.choiceUnlocked &&
+            this.needsParentalPin(
+                list?.profiles.find((p) => p.id === this.sessionChoice)
+            )
+        )
+            this.sessionChoice = null;
         const id = this.sessionChoice;
         this.setActive(resolveActiveProfileId(list, id));
         if (
@@ -384,6 +422,10 @@ export class ProfilesRuntime {
             this.sessionChoice = null;
             clearActiveProfileId(instanceId);
         }
+    }
+
+    private needsParentalPin(profile: ServerProfile | undefined): boolean {
+        return profile?.kids === true && this.localPinState() !== 'set';
     }
 
     private reprobeDue(): boolean {

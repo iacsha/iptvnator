@@ -188,11 +188,34 @@ describe('SettingsProfilesSectionComponent', () => {
         expect(fake.runtime.refresh).toHaveBeenCalled();
     });
 
-    it('says what is still shared by all profiles', async () => {
-        const { q } = await setup();
-        expect(q('profiles-shared-note')?.textContent).toContain(
-            'SETTINGS.PROFILES.SHARED_NOTE'
-        );
+    describe('the note on what is still shared', () => {
+        const note = (q: (id: string) => HTMLElement | null) =>
+            ['favorites', 'history', 'activity'].filter((id) =>
+                q(`profiles-shared-note-${id}`)
+            );
+
+        it('lists every part when all syncs are off', async () => {
+            const { q } = await setup({
+                syncs: { activity: false, favorites: false, history: false },
+            });
+            expect(note(q)).toEqual(['favorites', 'history', 'activity']);
+            expect(q('profiles-shared-note-favorites')?.textContent).toContain(
+                'SETTINGS.PROFILES.SHARED_NOTE_FAVORITES'
+            );
+        });
+
+        it('lists only the parts whose sync is off', async () => {
+            const { q } = await setup({
+                syncs: { activity: true, favorites: false, history: true },
+            });
+            expect(note(q)).toEqual(['favorites']);
+        });
+
+        it('is gone when all syncs are on', async () => {
+            const { q } = await setup();
+            expect(q('profiles-shared-note')).toBeNull();
+            expect(note(q)).toEqual([]);
+        });
     });
 
     it('offers only the switch while profiles are off', async () => {

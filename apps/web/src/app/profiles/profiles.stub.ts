@@ -70,6 +70,8 @@ export function fakeRuntime(
         activeId,
         capable: signal(true),
         held: signal(false),
+        localPin: signal<'unknown' | 'set' | 'none' | 'unreadable'>('set'),
+        readLocalPin: jest.fn(async () => undefined),
         scope: signal<PersonalScope>('shared'),
         enabled: computed(() => list()?.enabled ?? false),
         active: computed(

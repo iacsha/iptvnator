@@ -12,6 +12,8 @@ import { ProfilesRuntime } from './profiles-runtime';
  * (`readKidsLast`), so a slow or offline server, or start-up giving up and
  * holding Default, never opens the library to a child: the lock stays forced
  * until the runtime answers, and for the rest of a session held on Default.
+ * A device with no local parental PIN never forces the lock from the
+ * remembered flag: a kids profile saved on another device must not trap it.
  * The forced state lives in memory only. The remembered flag is a per-device
  * `localStorage` key and never syncs.
  */
@@ -47,6 +49,13 @@ export class ProfilesKidsLock {
         const answered =
             (state === 'ready' || state === 'unsupported') && !held;
         if (answered) writeKidsLast(instanceId, kids);
-        this.lock.setForced(kids || (!answered && readKidsLast(instanceId)));
+        // Not knowing yet whether a PIN exists keeps the lock forced; once it
+        // is known, a device without one is never locked: nobody could unlock.
+        const pin = this.runtime.localPin();
+        const remembered =
+            !answered &&
+            readKidsLast(instanceId) &&
+            (pin === 'unknown' || pin === 'set');
+        this.lock.setForced(kids || remembered);
     }
 }

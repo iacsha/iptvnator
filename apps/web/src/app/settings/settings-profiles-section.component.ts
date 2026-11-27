@@ -73,20 +73,27 @@ export class SettingsProfilesSectionComponent {
             {
                 id: 'favorites',
                 labelKey: 'SETTINGS.PROFILES.PART_FAVORITES',
+                noteKey: 'SETTINGS.PROFILES.SHARED_NOTE_FAVORITES',
                 separate: separate?.favorites ?? false,
             },
             {
                 id: 'history',
                 labelKey: 'SETTINGS.PROFILES.PART_HISTORY',
+                noteKey: 'SETTINGS.PROFILES.SHARED_NOTE_HISTORY',
                 separate: separate?.history ?? false,
             },
             {
                 id: 'activity',
                 labelKey: 'SETTINGS.PROFILES.PART_ACTIVITY',
+                noteKey: 'SETTINGS.PROFILES.SHARED_NOTE_ACTIVITY',
                 separate: separate?.activity ?? false,
             },
         ];
     });
+    /** The parts every profile still shares because their sync is off; empty when all are on. */
+    readonly sharedParts = computed(() =>
+        this.parts().filter((part) => !part.separate)
+    );
     readonly showOffer = computed(
         () =>
             this.enabled() &&

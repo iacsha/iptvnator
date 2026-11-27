@@ -120,6 +120,26 @@ describe('ProfilesKidsLock', () => {
         expect(setForced).toHaveBeenLastCalledWith(false);
     });
 
+    it('does not force the lock from the remembered flag when this device has no PIN', async () => {
+        const { fake, setForced, settle } = await setup();
+        writeKidsLast(NAS, true);
+        fake.runtime.localPin.set('unknown');
+        fake.state.set('offline');
+        settle();
+        // Not knowing yet: stay locked.
+        expect(setForced).toHaveBeenLastCalledWith(true);
+        fake.runtime.localPin.set('none');
+        settle();
+        expect(setForced).toHaveBeenLastCalledWith(false);
+        fake.runtime.localPin.set('unreadable');
+        settle();
+        expect(setForced).toHaveBeenLastCalledWith(false);
+        // With a PIN the remembered lock holds again.
+        fake.runtime.localPin.set('set');
+        settle();
+        expect(setForced).toHaveBeenLastCalledWith(true);
+    });
+
     it('lets a server without profiles forget the flag', async () => {
         const { fake, setForced, settle } = await setup();
         writeKidsLast(NAS, true);
