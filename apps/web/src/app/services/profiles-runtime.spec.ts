@@ -297,7 +297,7 @@ describe('ProfilesRuntime', () => {
         afterEach(() => setActivePersonalScope('shared'));
 
         it('keeps the old profile shown and active until the move resolves', async () => {
-            const runtime = await start(true);
+            const runtime = await start();
             const gap = deferredMove();
             const switching = runtime.switchTo(ADULT, gap.move);
             await Promise.resolve();
@@ -320,7 +320,7 @@ describe('ProfilesRuntime', () => {
         });
 
         it('publishes the profile at `moved`, before the move has finished re-listing', async () => {
-            const runtime = await start(true);
+            const runtime = await start();
             const gap = deferredMove();
             const switching = runtime.switchTo(ADULT, gap.move);
             await Promise.resolve();
@@ -335,7 +335,7 @@ describe('ProfilesRuntime', () => {
 
         it('leaves the old profile active and the choice unsaved when the move fails', async () => {
             writeActiveProfileId(NAS, DEFAULT_PROFILE_ID);
-            const runtime = await start(true);
+            const runtime = await start();
             const gap = deferredMove();
             const switching = runtime.switchTo(ADULT, gap.move);
             await Promise.resolve();
@@ -352,14 +352,14 @@ describe('ProfilesRuntime', () => {
         });
 
         it('does not switch to a profile that is not listed', async () => {
-            const runtime = await start(true);
+            const runtime = await start();
             const move = jest.fn(async () => undefined);
             await expect(runtime.switchTo(STALE, move)).resolves.toBe(false);
             expect(move).not.toHaveBeenCalled();
         });
 
         it('drops the choice when the start-up guard falls back to Default during the move', async () => {
-            const runtime = await start(true);
+            const runtime = await start();
             const gap = deferredMove();
             const switching = runtime.switchTo(ADULT, gap.move);
             await Promise.resolve();
@@ -372,7 +372,7 @@ describe('ProfilesRuntime', () => {
         });
 
         it('publishes after the move when it never announced the scope change', async () => {
-            const runtime = await start(true);
+            const runtime = await start();
             // Already on the scope: the switch has nothing to move.
             await expect(
                 runtime.switchTo(DEFAULT_PROFILE_ID, async () => undefined)
@@ -381,7 +381,7 @@ describe('ProfilesRuntime', () => {
         });
 
         it('does not publish a profile whose scope the device never reached', async () => {
-            const runtime = await start(true);
+            const runtime = await start();
             // The move resolved but a newer switch kept the device on Default.
             await expect(
                 runtime.switchTo(ADULT, async () => undefined)

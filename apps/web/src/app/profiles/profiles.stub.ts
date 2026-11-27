@@ -81,7 +81,10 @@ export function fakeRuntime(
         idle: jest.fn(async () => undefined),
         holdDefault: jest.fn(() => undefined),
         recheck: jest.fn(async () => undefined),
-        select: jest.fn((_id: string) => true),
+        select: jest.fn((id: string) => {
+            activeId.set(id);
+            return true;
+        }),
         /** Publishes at `moved`, or once `move` resolves when it never calls it. */
         switchTo: jest.fn(
             async (

@@ -181,7 +181,7 @@ export class ProfilesRuntime {
         };
         const restore = () =>
             move(this.scope(), () => undefined).catch(() => undefined);
-        const scope = this.uiEnabled ? profile.scope : DEFAULT_PERSONAL_SCOPE;
+        const scope = profile.scope;
         try {
             await move(scope, commit);
             // No `moved` call means the device was already on the scope, or a

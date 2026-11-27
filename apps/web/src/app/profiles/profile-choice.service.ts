@@ -58,10 +58,16 @@ export class ProfileChoiceService {
             }
             if (profile.hasPin && !(await this.askPin(profile)))
                 return 'cancelled';
-            if (!this.runtime.select(profile.id)) return 'unavailable';
-            // The workspace opens on the chosen profile's state, never the old one's.
+            // The workspace opens on the chosen profile's state, never the old
+            // one's. The shown profile changes only once the device has moved
+            // to the new scope; until then, or if the move fails, the old
+            // profile stays shown and keeps receiving writes.
             const profileSwitch = await loadProfileSwitch(this.injector);
-            await profileSwitch.apply(this.runtime.scope());
+            const switched = await this.runtime.switchTo(
+                profile.id,
+                (scope, moved) => profileSwitch.apply(scope, moved)
+            );
+            if (!switched) return 'unavailable';
             return 'selected';
         } finally {
             this.busy.set(false);

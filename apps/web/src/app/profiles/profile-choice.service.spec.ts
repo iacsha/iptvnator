@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { ParentalLockService } from '@iptvnator/services';
+import { DEFAULT_PROFILE_ID } from '@iptvnator/shared/interfaces/profiles';
 import { ProfileSwitchService } from '../services/profile-switch.service';
 import { ProfilesRuntime } from '../services/profiles-runtime';
 import { ProfileChoiceService } from './profile-choice.service';
@@ -20,7 +21,9 @@ function setup(
     const fake = fakeRuntime();
     const confirmPin = jest.fn(async () => options.leave ?? true);
     const setupPin = jest.fn(async () => true);
-    const apply = jest.fn(async (_scope: string) => undefined);
+    const apply = jest.fn(
+        async (_scope: string, _moved?: () => void) => undefined
+    );
     const open = jest.fn();
     TestBed.configureTestingModule({
         providers: [
@@ -59,7 +62,47 @@ describe('ProfileChoiceService', () => {
             'selected'
         );
         expect(fake.runtime.select).toHaveBeenCalledWith(ADULT_ID);
-        expect(apply).toHaveBeenCalledWith('shared');
+        expect(apply).toHaveBeenCalledWith(
+            `profile:${ADULT_ID}`,
+            expect.any(Function)
+        );
+    });
+
+    it('keeps the old profile active until the switch has moved the scope', async () => {
+        const { service, fake, apply, profile } = setup();
+        let moveScope!: () => void;
+        let finish!: () => void;
+        apply.mockImplementationOnce(
+            (_scope, moved) =>
+                new Promise<undefined>((resolve) => {
+                    moveScope = () => moved?.();
+                    finish = () => resolve(undefined);
+                })
+        );
+        const choosing = service.choose(profile(ADULT_ID));
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        // Drain and rescope are still running: nothing shows the new profile.
+        expect(fake.runtime.active()?.id).toBe(DEFAULT_PROFILE_ID);
+        expect(fake.activeId()).toBe(DEFAULT_PROFILE_ID);
+        expect(fake.runtime.select).not.toHaveBeenCalled();
+        moveScope();
+        expect(fake.runtime.active()?.id).toBe(ADULT_ID);
+        finish();
+        await expect(choosing).resolves.toBe('selected');
+    });
+
+    it('leaves the old profile active and reports the error when the switch fails', async () => {
+        const { service, fake, apply, profile } = setup();
+        apply.mockRejectedValueOnce(new Error('synthetic'));
+        fake.runtime.switchTo.mockImplementationOnce(async (_id, move) => {
+            await move('shared', () => undefined).catch(() => undefined);
+            return false;
+        });
+        await expect(service.choose(profile(ADULT_ID))).resolves.toBe(
+            'unavailable'
+        );
+        expect(fake.activeId()).toBe(DEFAULT_PROFILE_ID);
+        expect(fake.runtime.select).not.toHaveBeenCalled();
     });
 
     it('blocks a kids profile on a device without a parental PIN and never sets one up', async () => {
@@ -143,7 +186,7 @@ describe('ProfileChoiceService', () => {
 
     it('reports a profile that is gone', async () => {
         const { service, fake } = setup();
-        fake.runtime.select.mockReturnValueOnce(false);
+        fake.runtime.switchTo.mockResolvedValueOnce(false);
         await expect(
             service.choose(syntheticProfile(ADULT_ID, 1))
         ).resolves.toBe('unavailable');
