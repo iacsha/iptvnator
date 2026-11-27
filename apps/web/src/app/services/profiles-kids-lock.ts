@@ -49,13 +49,14 @@ export class ProfilesKidsLock {
         const answered =
             (state === 'ready' || state === 'unsupported') && !held;
         if (answered) writeKidsLast(instanceId, kids);
-        // Not knowing yet whether a PIN exists keeps the lock forced; once it
-        // is known, a device without one is never locked: nobody could unlock.
+        // Not knowing whether a PIN exists (still reading, or the read failed)
+        // keeps the lock forced; only a read that found no PIN releases it,
+        // because nobody could unlock.
         const pin = this.runtime.localPin();
         const remembered =
             !answered &&
             readKidsLast(instanceId) &&
-            (pin === 'unknown' || pin === 'set');
+            pin !== 'none';
         this.lock.setForced(kids || remembered);
     }
 }

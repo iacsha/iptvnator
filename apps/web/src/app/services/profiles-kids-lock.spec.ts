@@ -131,9 +131,10 @@ describe('ProfilesKidsLock', () => {
         fake.runtime.localPin.set('none');
         settle();
         expect(setForced).toHaveBeenLastCalledWith(false);
+        // A failed read is not an absent PIN: the lock stays on.
         fake.runtime.localPin.set('unreadable');
         settle();
-        expect(setForced).toHaveBeenLastCalledWith(false);
+        expect(setForced).toHaveBeenLastCalledWith(true);
         // With a PIN the remembered lock holds again.
         fake.runtime.localPin.set('set');
         settle();
