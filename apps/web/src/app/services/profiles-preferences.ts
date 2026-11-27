@@ -2,6 +2,7 @@ import {
     DEFAULT_PROFILE_ID,
     isProfileId,
 } from '@iptvnator/shared/interfaces/profiles';
+import { isAndroidShellRuntime } from './runtime-config';
 
 export type ProfilesStartPreference = 'ask' | 'last';
 
@@ -41,10 +42,19 @@ export function writeKidsLast(
     }
 }
 
+/** TV asks who is watching, since the remote is shared; desktop and web carry on as the last profile. */
+export function defaultProfilesStart(): ProfilesStartPreference {
+    return isAndroidShellRuntime() ? 'ask' : 'last';
+}
+
+/** A stored choice always wins; without one, the platform's default. */
 export function readProfilesStart(
     instanceId: string | null | undefined
 ): ProfilesStartPreference {
-    return read(profilesStartKey(instanceId)) === 'last' ? 'last' : 'ask';
+    const stored = read(profilesStartKey(instanceId));
+    return stored === 'ask' || stored === 'last'
+        ? stored
+        : defaultProfilesStart();
 }
 
 export function writeProfilesStart(

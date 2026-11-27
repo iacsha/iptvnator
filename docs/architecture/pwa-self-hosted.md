@@ -1866,8 +1866,9 @@ has no body and is a success, not a broken response. `5xx` and network errors ma
 
 **Per-device preferences.** `localStorage` keys per server instance, never
 synced and removed with the site data:
-`iptvnator-server:<instanceId>:profiles-start-v1` (`'ask'` or `'last'`, default
-`'ask'`) and `iptvnator-server:<instanceId>:active-profile-v1` (a profile id). B2 adds
+`iptvnator-server:<instanceId>:profiles-start-v1` (`'ask'` or `'last'`; a stored
+choice always wins, and without one the default is `'ask'` on the Android TV shell
+(`isAndroidShellRuntime()`) and `'last'` on desktop and web) and `iptvnator-server:<instanceId>:active-profile-v1` (a profile id). B2 adds
 a third, `iptvnator-server:<instanceId>:kids-last-v1` (`'1'` while this device's last
 profile was a kids profile; see "Slow start" below).
 A stored id that is not in the current list, or any id while profiles are off,
