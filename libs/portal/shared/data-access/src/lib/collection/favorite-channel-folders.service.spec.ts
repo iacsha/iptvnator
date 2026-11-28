@@ -4,7 +4,7 @@ import {
     USER_DATA_STORAGE,
     type UserDataStorage,
 } from '@iptvnator/services';
-import { setActivePersonalScope } from '@iptvnator/services/profiles';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import type { PersonalScope } from '@iptvnator/shared/interfaces/profiles';
 import { FavoriteChannelMembershipEvents } from '@iptvnator/services/favorites-events';
 import {

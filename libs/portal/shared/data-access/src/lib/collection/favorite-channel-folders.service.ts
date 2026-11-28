@@ -16,7 +16,7 @@ import {
     FavoriteChannelMembershipEvents,
     type ChangedFavoriteChannel,
 } from '@iptvnator/services/favorites-events';
-import { activePersonalScope } from '@iptvnator/services/profiles';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { sourceProfileName } from '@iptvnator/services/source-sync/connection';
 import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
 import { createRandomId } from '@iptvnator/shared/interfaces';
