@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Controllo parentale attivato",
             "DISABLED_TOAST": "Controllo parentale disattivato",
             "PIN_CHANGED_TOAST": "PIN cambiato",
-            "LOCKED_TOAST": "Bloccato"
+            "LOCKED_TOAST": "Bloccato",
+            "FORCED_NOTE": "Il blocco è attivo perché è attivo un profilo bambini. Esci dal profilo bambini per modificarlo."
         },
         "AGE_RATING_COUNTRY_LABEL": "Paese della classificazione per età",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Scegli il paese della classificazione. In assenza di dati locali, possono essere usati quelli statunitensi o del fornitore.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "Profili",
             "SUBTITLE": "Dai a ogni persona della famiglia il suo profilo su questo server. Il PIN di un profilo è un blocco leggero per bambini e coinquilini, non una misura di sicurezza: chiunque abbia accesso al server può comunque raggiungere tutti i suoi dati.",
+            "SHARED_NOTE_FAVORITES": "I preferiti sono condivisi da tutti i profili finché la loro sincronizzazione non viene attivata.",
+            "SHARED_NOTE_HISTORY": "Gli elementi guardati di recente sono condivisi da tutti i profili finché la loro sincronizzazione non viene attivata.",
+            "SHARED_NOTE_ACTIVITY": "Le posizioni di riproduzione sono condivise da tutti i profili finché la loro sincronizzazione non viene attivata.",
+            "UNSUPPORTED": "Nessun server connesso supporta i profili, quindi le impostazioni non hanno una sezione Profili. Collega o aggiorna un server per usarli.",
             "LOADING": "Caricamento dei profili…",
             "LOAD_ERROR_TITLE": "Impossibile caricare i profili",
             "LOAD_ERROR_DESCRIPTION": "Ricarica la pagina e riprova.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "PIN di {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Per modificare o rimuovere il PIN di {{name}} serve il PIN attuale.",
             "PARENTAL_TITLE": "PIN parentale richiesto",
-            "PARENTAL_DESCRIPTION": "Questo profilo bambini è protetto dal controllo parentale."
+            "PARENTAL_DESCRIPTION": "Questo profilo bambini è protetto dal controllo parentale.",
+            "SEPARATION_TITLE": "Separato per ogni profilo",
+            "CONSENT_TITLE": "Tenere separati i dati di ogni profilo?",
+            "CONSENT_BODY": "Preferiti, visti di recente e avanzamento della riproduzione sono tenuti per profilo solo finché la loro sincronizzazione è attiva su questo dispositivo. Attivarle tutte e tre ora?",
+            "CONSENT_ACCEPT": "Attiva tutte e tre",
+            "CONSENT_SKIP": "Non ora",
+            "CONSENT_FAILED": "Impossibile attivare una sincronizzazione. Controlla la connessione al server e riprova.",
+            "PART_FAVORITES": "Preferiti",
+            "PART_HISTORY": "Visti di recente",
+            "PART_ACTIVITY": "Avanzamento della riproduzione",
+            "PART_SEPARATE": "Separato",
+            "PART_SHARED": "Condiviso (sincronizzazione disattivata)",
+            "HOUSEHOLD_NOTE": "Playlist, sorgenti e impostazioni sono condivise da tutti.",
+            "KIDS_PARENTAL_NOTE": "Il PIN di controllo parentale viene impostato al salvataggio del primo profilo bambini, se questo dispositivo non ne ha uno."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "Ambra",
         "ACCENT_CORAL": "Corallo",
         "ACCENT_MAGENTA": "Magenta",
-        "ACCENT_VIOLET": "Viola"
+        "ACCENT_VIOLET": "Viola",
+        "ACCENT_RED": "Rosso",
+        "ACCENT_CYAN": "Ciano",
+        "ACCENT_LIME": "Verde lime",
+        "ACCENT_SLATE": "Ardesia",
+        "ACCENT_BROWN": "Marrone"
     },
     "AUDIO_PLAYER": {
         "PLAY": "Riproduci",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "Un PIN è composto da 4 a 8 cifre.",
             "UNAVAILABLE": "Questo server non supporta i profili.",
             "OFFLINE": "Il server non risponde. Riprova.",
-            "GENERIC": "Qualcosa è andato storto. Riprova."
+            "GENERIC": "Qualcosa è andato storto. Riprova.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Un genitore deve prima impostare un PIN di controllo parentale su questo dispositivo. Apri Impostazioni > Controllo parentale.",
+            "PARENTAL_PIN_UNREADABLE": "Impossibile leggere il PIN di controllo parentale di questo dispositivo. Non verrà sostituito. Riprova o apri Impostazioni > Controllo parentale."
         },
         "PICKER": {
             "TITLE": "Chi sta guardando?",
             "MANAGE": "Gestisci profili",
+            "OPEN_PARENTAL_LOCK": "Apri le impostazioni del controllo parentale",
             "LOADING": "Apertura dei profili…",
             "CONTINUE": "Continua",
             "OFFLINE_TITLE": "Il server non risponde",
             "OFFLINE_DESCRIPTION": "Puoi continuare con il profilo predefinito.",
             "LEAVE_KIDS_TITLE": "Esci dal profilo bambini",
             "LEAVE_KIDS_DESCRIPTION": "Inserisci il PIN parentale per passare a un altro profilo."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Preferiti, cronologia e avanzamento di questo profilo restano separati solo con la sincronizzazione attiva.",
+            "ACTION": "Attiva la sincronizzazione",
+            "DONE": "La sincronizzazione è attiva. Questo profilo ora ha i suoi dati.",
+            "FAILED": "Impossibile attivare la sincronizzazione. Controlla le impostazioni."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profilo: {{name}}. Cambia profilo",
+            "MANAGE": "Gestisci profili"
         }
     }
 }

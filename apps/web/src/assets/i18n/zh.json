@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "家长控制已启用",
             "DISABLED_TOAST": "家长控制已禁用",
             "PIN_CHANGED_TOAST": "PIN 码已更改",
-            "LOCKED_TOAST": "已锁定"
+            "LOCKED_TOAST": "已锁定",
+            "FORCED_NOTE": "由于儿童个人资料处于活动状态,锁定已开启。退出儿童个人资料后才能更改。"
         },
         "AGE_RATING_COUNTRY_LABEL": "年龄分级国家",
         "AGE_RATING_COUNTRY_DESCRIPTION": "选择年龄分级使用的国家。缺少本地分级时，可能使用美国或提供商的数据。",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "个人资料",
             "SUBTITLE": "为家庭中的每个人在此服务器上创建专属个人资料。个人资料 PIN 码只是针对孩子和同住者的简易锁，并非真正的安全措施：任何能访问服务器的人仍可查看其全部数据。",
+            "SHARED_NOTE_FAVORITES": "在开启同步之前，收藏由所有个人资料共用。",
+            "SHARED_NOTE_HISTORY": "在开启同步之前，最近观看由所有个人资料共用。",
+            "SHARED_NOTE_ACTIVITY": "在开启同步之前，播放位置由所有个人资料共用。",
+            "UNSUPPORTED": "没有已连接的服务器支持个人资料，因此设置中没有“个人资料”部分。请连接或更新服务器以使用它们。",
             "LOADING": "正在加载个人资料…",
             "LOAD_ERROR_TITLE": "无法加载个人资料",
             "LOAD_ERROR_DESCRIPTION": "请刷新页面后重试。",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "{{name}} 的 PIN 码",
             "PIN_CHANGE_DESCRIPTION": "更改或移除 {{name}} 的 PIN 码需要输入当前 PIN 码。",
             "PARENTAL_TITLE": "需要家长 PIN 码",
-            "PARENTAL_DESCRIPTION": "此儿童个人资料受家长控制保护。"
+            "PARENTAL_DESCRIPTION": "此儿童个人资料受家长控制保护。",
+            "SEPARATION_TITLE": "每个个人资料各自独立",
+            "CONSENT_TITLE": "将每个个人资料的数据分开保存?",
+            "CONSENT_BODY": "只有在此设备上开启各自的同步时,收藏、最近观看和播放进度才会按个人资料分别保存。现在全部开启吗?",
+            "CONSENT_ACCEPT": "全部开启",
+            "CONSENT_SKIP": "暂不",
+            "CONSENT_FAILED": "有一项同步无法开启。请检查服务器连接后重试。",
+            "PART_FAVORITES": "收藏",
+            "PART_HISTORY": "最近观看",
+            "PART_ACTIVITY": "播放进度",
+            "PART_SEPARATE": "独立",
+            "PART_SHARED": "共用(同步已关闭)",
+            "HOUSEHOLD_NOTE": "播放列表、来源和设置由所有人共用。",
+            "KIDS_PARENTAL_NOTE": "如果此设备还没有 PIN,将在保存第一个儿童个人资料时设置家长控制 PIN。"
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "琥珀色",
         "ACCENT_CORAL": "珊瑚色",
         "ACCENT_MAGENTA": "洋红色",
-        "ACCENT_VIOLET": "紫罗兰色"
+        "ACCENT_VIOLET": "紫罗兰色",
+        "ACCENT_RED": "红色",
+        "ACCENT_CYAN": "青色",
+        "ACCENT_LIME": "酸橙色",
+        "ACCENT_SLATE": "石板灰",
+        "ACCENT_BROWN": "棕色"
     },
     "AUDIO_PLAYER": {
         "PLAY": "播放",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "PIN 码为 4 到 8 位数字。",
             "UNAVAILABLE": "此服务器不支持个人资料。",
             "OFFLINE": "服务器无响应。请重试。",
-            "GENERIC": "出了点问题。请重试。"
+            "GENERIC": "出了点问题。请重试。",
+            "KIDS_NEEDS_PARENTAL_PIN": "需要先由家长在此设备上设置家长控制 PIN。请打开设置 > 家长控制。",
+            "PARENTAL_PIN_UNREADABLE": "无法读取此设备上的家长控制 PIN。不会替换它。请重试,或打开设置 > 家长控制。"
         },
         "PICKER": {
             "TITLE": "谁在观看？",
             "MANAGE": "管理个人资料",
+            "OPEN_PARENTAL_LOCK": "打开家长控制设置",
             "LOADING": "正在打开个人资料…",
             "CONTINUE": "继续",
             "OFFLINE_TITLE": "服务器无响应",
             "OFFLINE_DESCRIPTION": "你可以继续使用默认个人资料。",
             "LEAVE_KIDS_TITLE": "退出儿童个人资料",
             "LEAVE_KIDS_DESCRIPTION": "输入家长 PIN 码以切换到其他个人资料。"
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "只有开启同步,此个人资料的收藏、历史记录和播放进度才能单独保存。",
+            "ACTION": "开启同步",
+            "DONE": "同步已开启。此个人资料现在拥有自己的数据。",
+            "FAILED": "无法开启同步。请检查设置。"
+        },
+        "SWITCHER": {
+            "BUTTON": "个人资料:{{name}}。切换个人资料",
+            "MANAGE": "管理个人资料"
         }
     }
 }

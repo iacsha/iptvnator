@@ -61,7 +61,11 @@ export class SettingsProfilesFacade {
         writeProfilesStart(instanceId, value);
     }
 
-    setEnabled(enabled: boolean): Promise<void> {
+    async setEnabled(enabled: boolean): Promise<void> {
+        // Turning profiles off ends the kids lock: it asks for the parental PIN
+        // while the lock is held, like leaving the kids profile does.
+        if (!enabled && this.parentalLock.forced() && !(await this.unlock()))
+            return;
         return this.run(() => this.runtime.client().setEnabled(enabled));
     }
 
@@ -70,6 +74,9 @@ export class SettingsProfilesFacade {
             this.runtime.list()?.profiles.map((profile) => profile.colour)
         );
         await this.askForm(undefined, taken, async (form) => {
+            // The parental PIN is set up here, never when a profile is chosen.
+            if (form.kids && !(await this.ensureParentalPin()))
+                return 'cancelled';
             await this.verified();
             const request: CreateServerProfileRequest = {
                 name: form.name,
@@ -87,6 +94,8 @@ export class SettingsProfilesFacade {
             await this.verified();
             const changes = this.changesOf(profile, form);
             if (!changes) return null;
+            if (changes.kids === true && !(await this.ensureParentalPin()))
+                return 'cancelled';
             // Parental PIN first: an adult profile in a kids' hands must not
             // lose its kids flag by a plain click.
             if (
@@ -95,11 +104,14 @@ export class SettingsProfilesFacade {
                 !(await this.unlock())
             )
                 return 'cancelled';
-            if (!(profile.hasPin && changes.pin !== undefined))
-                return this.outcome(
-                    await this.runtime.client().update(profile.id, changes),
-                    profile.id
-                );
+            if (!(profile.hasPin && changes.pin !== undefined)) {
+                const result = await this.runtime
+                    .client()
+                    .update(profile.id, changes);
+                // Another device set a PIN since this list loaded: ask for it now.
+                if (result.ok || result.error.code !== 'pin_required')
+                    return this.outcome(result, profile.id);
+            }
             const failure: { error: ProfilesError | null } = { error: null };
             const done = await this.askPin(
                 profile,
@@ -185,9 +197,10 @@ export class SettingsProfilesFacade {
         takenColours: ReadonlySet<string>,
         submit: SettingsProfileDialogData['submit']
     ): Promise<void> {
-        const suggestedColour =
-            PROFILE_SWATCHES.find((colour) => !takenColours.has(colour)) ??
-            PROFILE_SWATCHES[0];
+        const suggestedColour = (
+            PROFILE_SWATCHES.find(({ hex }) => !takenColours.has(hex)) ??
+            PROFILE_SWATCHES[0]
+        ).hex;
         const ref = SettingsProfileDialogComponent.open(this.dialog, {
             profile,
             suggestedColour,
@@ -244,6 +257,22 @@ export class SettingsProfilesFacade {
         return (await firstValueFrom(ref.afterClosed())) === true;
     }
 
+    /**
+     * A kids profile needs a parental PIN on this device. When there is none,
+     * set one up now (the existing parental lock prompt). Cancelling it aborts
+     * the create or edit.
+     */
+    private async ensureParentalPin(): Promise<boolean> {
+        const state = await this.parentalLock.pinState();
+        if (state === 'set') return true;
+        if (state === 'unreadable') {
+            // Never replace a PIN that only failed to read.
+            this.error.set({ key: 'PROFILES.ERRORS.PARENTAL_PIN_UNREADABLE' });
+            return false;
+        }
+        return this.parentalLock.setupPin();
+    }
+
     private unlock(): Promise<boolean> {
         return this.parentalLock.confirmPin({
             titleKey: 'SETTINGS.PROFILES.PARENTAL_TITLE',
@@ -279,11 +308,9 @@ export class SettingsProfilesFacade {
         await this.runtime.refresh();
     }
 
-    /** The runtime does not refresh after a mutation: do it, twice if a poll raced it. */
+    /** The runtime does not refresh after a mutation: wait out any refresh that began before it, then ask afresh. */
     private async settle(): Promise<void> {
-        const before = this.runtime.list()?.revision;
+        await this.runtime.idle();
         await this.runtime.refresh();
-        if (this.runtime.list()?.revision === before)
-            await this.runtime.refresh();
     }
 }

@@ -1,8 +1,5 @@
 import { EpgPreferencesService } from '@iptvnator/services';
-import {
-    isCatalogUnavailable,
-    XTREAM_FAVORITE_IDENTITY_CONFLICT,
-} from '@iptvnator/shared/interfaces';
+import { isCatalogUnavailable } from '@iptvnator/shared/interfaces';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -49,6 +46,7 @@ import {
     UnifiedCollectionDataService,
 } from '@iptvnator/portal/shared/data-access';
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
+import { favoriteSaveFailureKey } from './unified-collection-favorite-error';
 import { UnifiedLiveTabComponent } from './unified-live-tab.component';
 import { UnifiedGridTabComponent } from './unified-grid-tab.component';
 import {
@@ -382,12 +380,8 @@ export class UnifiedCollectionPageComponent implements AfterContentInit {
         try {
             await this.data.toggleFavorite(item);
         } catch (error) {
-            const key =
-                error instanceof Error &&
-                error.message === XTREAM_FAVORITE_IDENTITY_CONFLICT
-                    ? 'PORTALS.FAVORITE_IDENTITY_CONFLICT'
-                    : 'PORTALS.FAVORITE_SAVE_FAILED';
-            this.notifications.error(key);
+            const key = favoriteSaveFailureKey(error);
+            if (key) this.notifications.error(key);
         }
     }
 

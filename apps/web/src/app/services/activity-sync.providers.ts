@@ -12,8 +12,18 @@ import {
     xtreamDataSourceFactory,
     type IXtreamDataSource,
 } from '@iptvnator/portal/xtream/data-access';
+import { activePersonalScope } from '@iptvnator/services/profiles/active-scope';
+import { DEFAULT_PERSONAL_SCOPE } from '@iptvnator/shared/interfaces/profiles';
+import { personalPositionsUnavailable } from './activity-personal-positions';
 import { activityEnabled } from './activity-consent';
+import {
+    profileHistoryFallback,
+    profileRawFallback,
+} from './favorites-profile-fallback';
 import type { ActivitySyncRuntime } from './activity-sync-runtime';
+
+/** Only the Default profile may touch the household's raw stores. */
+const isHouseholdScope = () => activePersonalScope() === DEFAULT_PERSONAL_SCOPE;
 
 const runtimes = new WeakMap<EnvironmentInjector, ActivitySyncRuntime>();
 
@@ -56,7 +66,12 @@ export function activityDataSourceFactory(): IXtreamDataSource {
                 return (...args: unknown[]) =>
                     favoritesProfileUsed()
                         ? invokeFavorites(injector, target, method, args)
-                        : local(...args);
+                        : isHouseholdScope()
+                          ? local(...args)
+                          : // A promise, as the raw store would give: readers expect one value or a refusal.
+                            Promise.resolve().then(() =>
+                                profileRawFallback(method)
+                            );
             if (
                 [
                     'getRecentItems',
@@ -68,11 +83,20 @@ export function activityDataSourceFactory(): IXtreamDataSource {
                 return (...args: unknown[]) =>
                     historyProfileUsed()
                         ? invokeHistory(injector, target, method, args)
-                        : local(...args);
+                        : isHouseholdScope()
+                          ? local(...args)
+                          : Promise.resolve().then(() =>
+                                profileHistoryFallback(method)
+                            );
             if (!method.includes('PlaybackPosition')) return local;
             return async (...args: unknown[]) => {
                 const existing = runtimes.get(injector);
-                if (!existing && !activityEnabled()) return local(...args);
+                if (!existing && !activityEnabled())
+                    // The raw store is the household's: another profile has no
+                    // progress of its own without its activity sync.
+                    return isHouseholdScope()
+                        ? local(...args)
+                        : personalPositionsUnavailable(method);
                 const service =
                     existing ?? (await loadActivityRuntime(injector));
                 return service.invoke(target, method, args);

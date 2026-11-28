@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "ペアレンタルロックを有効にしました",
             "DISABLED_TOAST": "ペアレンタルロックを無効にしました",
             "PIN_CHANGED_TOAST": "PIN を変更しました",
-            "LOCKED_TOAST": "ロックしました"
+            "LOCKED_TOAST": "ロックしました",
+            "FORCED_NOTE": "キッズプロフィールが有効なためロックがオンです。変更するにはキッズプロフィールを終了してください。"
         },
         "AGE_RATING_COUNTRY_LABEL": "年齢区分の国",
         "AGE_RATING_COUNTRY_DESCRIPTION": "年齢区分に使用する国を選択します。現地の情報がない場合は米国またはプロバイダーの情報を使用します。",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "プロフィール",
             "SUBTITLE": "このサーバー上で、家族一人ひとりに専用のプロフィールを作成できます。プロフィールの PIN は子供や同居人向けの簡易ロックであり、セキュリティ対策ではありません。サーバーにアクセスできる人は、すべてのデータに引き続きアクセスできます。",
+            "SHARED_NOTE_FAVORITES": "お気に入りは、同期をオンにするまで、すべてのプロフィールで共有されます。",
+            "SHARED_NOTE_HISTORY": "最近見た項目は、同期をオンにするまで、すべてのプロフィールで共有されます。",
+            "SHARED_NOTE_ACTIVITY": "再生位置は、同期をオンにするまで、すべてのプロフィールで共有されます。",
+            "UNSUPPORTED": "プロフィールに対応した接続済みのサーバーがないため、設定にプロフィールのセクションはありません。利用するにはサーバーを接続または更新してください。",
             "LOADING": "プロフィールを読み込み中…",
             "LOAD_ERROR_TITLE": "プロフィールを読み込めませんでした",
             "LOAD_ERROR_DESCRIPTION": "ページを再読み込みして、もう一度お試しください。",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "{{name}} の PIN",
             "PIN_CHANGE_DESCRIPTION": "{{name}} の PIN を変更または削除するには、現在の PIN が必要です。",
             "PARENTAL_TITLE": "ペアレンタル PIN が必要です",
-            "PARENTAL_DESCRIPTION": "このキッズプロフィールはペアレンタルロックで保護されています。"
+            "PARENTAL_DESCRIPTION": "このキッズプロフィールはペアレンタルロックで保護されています。",
+            "SEPARATION_TITLE": "プロフィールごとに分離",
+            "CONSENT_TITLE": "プロフィールごとにデータを分けますか?",
+            "CONSENT_BODY": "お気に入り、最近視聴したもの、再生の進行状況は、この端末でそれぞれの同期がオンの間だけプロフィールごとに保存されます。3つともオンにしますか?",
+            "CONSENT_ACCEPT": "3つともオンにする",
+            "CONSENT_SKIP": "今はしない",
+            "CONSENT_FAILED": "同期のひとつをオンにできませんでした。サーバーへの接続を確認して、もう一度お試しください。",
+            "PART_FAVORITES": "お気に入り",
+            "PART_HISTORY": "最近視聴したもの",
+            "PART_ACTIVITY": "再生の進行状況",
+            "PART_SEPARATE": "分離",
+            "PART_SHARED": "共有(同期オフ)",
+            "HOUSEHOLD_NOTE": "プレイリスト、ソース、設定は全員で共有されます。",
+            "KIDS_PARENTAL_NOTE": "この端末にPINがない場合、最初のキッズプロフィールを保存するときにペアレンタルロックのPINを設定します。"
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "アンバー",
         "ACCENT_CORAL": "コーラル",
         "ACCENT_MAGENTA": "マゼンタ",
-        "ACCENT_VIOLET": "バイオレット"
+        "ACCENT_VIOLET": "バイオレット",
+        "ACCENT_RED": "レッド",
+        "ACCENT_CYAN": "シアン",
+        "ACCENT_LIME": "ライム",
+        "ACCENT_SLATE": "スレート",
+        "ACCENT_BROWN": "ブラウン"
     },
     "AUDIO_PLAYER": {
         "PLAY": "再生",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "PIN は 4～8 桁です。",
             "UNAVAILABLE": "このサーバーはプロフィールに対応していません。",
             "OFFLINE": "サーバーが応答しません。もう一度お試しください。",
-            "GENERIC": "問題が発生しました。もう一度お試しください。"
+            "GENERIC": "問題が発生しました。もう一度お試しください。",
+            "KIDS_NEEDS_PARENTAL_PIN": "先に保護者がこの端末でペアレンタルロックのPINを設定する必要があります。設定 > ペアレンタルロックを開いてください。",
+            "PARENTAL_PIN_UNREADABLE": "この端末のペアレンタルロックのPINを読み取れませんでした。置き換えは行いません。もう一度試すか、設定 > ペアレンタルロックを開いてください。"
         },
         "PICKER": {
             "TITLE": "誰が見ていますか？",
             "MANAGE": "プロフィールを管理",
+            "OPEN_PARENTAL_LOCK": "ペアレンタルロックの設定を開く",
             "LOADING": "プロフィールを開いています…",
             "CONTINUE": "続ける",
             "OFFLINE_TITLE": "サーバーが応答しません",
             "OFFLINE_DESCRIPTION": "デフォルトのプロフィールで続行できます。",
             "LEAVE_KIDS_TITLE": "キッズプロフィールを終了",
             "LEAVE_KIDS_DESCRIPTION": "別のプロフィールに切り替えるには、ペアレンタル PIN を入力してください。"
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "このプロフィールのお気に入り、履歴、再生の進行状況は、同期をオンにした場合のみ分けて保存できます。",
+            "ACTION": "同期をオンにする",
+            "DONE": "同期をオンにしました。このプロフィールは自分のデータを持ちます。",
+            "FAILED": "同期をオンにできませんでした。設定を確認してください。"
+        },
+        "SWITCHER": {
+            "BUTTON": "プロフィール: {{name}}。プロフィールを切り替える",
+            "MANAGE": "プロフィールを管理"
         }
     }
 }

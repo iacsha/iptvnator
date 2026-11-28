@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { ParentalLockService } from '@iptvnator/services';
 import { prepareSourceConnection } from '@iptvnator/services/source-sync/connection';
 import { fakeRuntime } from '../profiles/profiles.stub';
 import { profilesAvailabilityFactory } from './profiles-availability';
 import { PROFILES_REQUEST } from './profiles-request.token';
 import { ProfilesRuntime } from './profiles-runtime';
-import { PROFILES_UI_ENABLED_TOKEN } from './profiles-ui-enabled';
 
 async function connect(instanceId: string | null): Promise<void> {
     localStorage.clear();
@@ -19,13 +19,12 @@ async function connect(instanceId: string | null): Promise<void> {
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe('profilesAvailabilityFactory', () => {
-    it('stays false without touching the network while the UI switch is off', async () => {
-        await connect('synthetic-nas');
+    it('is unsupported without touching the network without a connected server', async () => {
+        await connect(null);
         const request = jest.fn();
         const fake = fakeRuntime();
         TestBed.configureTestingModule({
             providers: [
-                { provide: PROFILES_UI_ENABLED_TOKEN, useValue: false },
                 { provide: PROFILES_REQUEST, useValue: request },
                 { provide: ProfilesRuntime, useValue: fake.runtime },
             ],
@@ -35,18 +34,21 @@ describe('profilesAvailabilityFactory', () => {
         );
         await settle();
         TestBed.tick();
-        expect(available()).toBe(false);
+        expect(available()).toBe('unsupported');
         expect(request).not.toHaveBeenCalled();
         expect(fake.runtime.refresh).not.toHaveBeenCalled();
     });
 
-    it('is true once a connected server is capable, and false when it is not', async () => {
+    it('tells unsupported, off and on apart for a connected server', async () => {
         await connect('synthetic-nas');
         const fake = fakeRuntime();
         fake.runtime.capable.set(false);
         TestBed.configureTestingModule({
             providers: [
-                { provide: PROFILES_UI_ENABLED_TOKEN, useValue: true },
+                {
+                    provide: ParentalLockService,
+                    useValue: { setForced: jest.fn() },
+                },
                 { provide: ProfilesRuntime, useValue: fake.runtime },
             ],
         });
@@ -57,30 +59,19 @@ describe('profilesAvailabilityFactory', () => {
         await settle();
         TestBed.tick();
         // Not answered yet: a direct visit to the section waits.
-        expect(available()).toBe(true);
+        expect(available()).toBe('on');
         fake.runtime.state.set('unsupported');
         TestBed.tick();
-        expect(available()).toBe(false);
+        expect(available()).toBe('unsupported');
         fake.runtime.capable.set(true);
         fake.runtime.state.set('ready');
         TestBed.tick();
-        expect(available()).toBe(true);
-    });
-
-    it('is false without a connected server', async () => {
-        await connect(null);
-        const fake = fakeRuntime();
-        TestBed.configureTestingModule({
-            providers: [
-                { provide: PROFILES_UI_ENABLED_TOKEN, useValue: true },
-                { provide: ProfilesRuntime, useValue: fake.runtime },
-            ],
-        });
-        const available = TestBed.runInInjectionContext(
-            profilesAvailabilityFactory
-        );
-        await settle();
+        expect(available()).toBe('on');
+        fake.list.update((list) => list && { ...list, enabled: false });
         TestBed.tick();
-        expect(available()).toBe(false);
+        expect(available()).toBe('off');
+        fake.list.update((list) => list && { ...list, enabled: true });
+        TestBed.tick();
+        expect(available()).toBe('on');
     });
 });

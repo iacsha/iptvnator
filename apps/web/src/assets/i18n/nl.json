@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Ouderlijk toezicht ingeschakeld",
             "DISABLED_TOAST": "Ouderlijk toezicht uitgeschakeld",
             "PIN_CHANGED_TOAST": "Pincode gewijzigd",
-            "LOCKED_TOAST": "Vergrendeld"
+            "LOCKED_TOAST": "Vergrendeld",
+            "FORCED_NOTE": "De vergrendeling staat aan omdat een kinderprofiel actief is. Verlaat het kinderprofiel om dit te wijzigen."
         },
         "AGE_RATING_COUNTRY_LABEL": "Land voor leeftijdsclassificatie",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Kies het land voor de leeftijdsclassificatie. Ontbrekende lokale gegevens kunnen worden aangevuld met Amerikaanse of aanbiedergegevens.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "Profielen",
             "SUBTITLE": "Geef iedereen in het huishouden een eigen profiel op deze server. Een profielpincode is een lichte vergrendeling voor kinderen en huisgenoten, geen beveiliging: wie toegang heeft tot de server, kan nog steeds bij alle gegevens.",
+            "SHARED_NOTE_FAVORITES": "Favorieten worden door alle profielen gedeeld totdat de synchronisatie ervan aan staat.",
+            "SHARED_NOTE_HISTORY": "Onlangs bekeken items worden door alle profielen gedeeld totdat de synchronisatie ervan aan staat.",
+            "SHARED_NOTE_ACTIVITY": "Afspeelposities worden door alle profielen gedeeld totdat de synchronisatie ervan aan staat.",
+            "UNSUPPORTED": "Geen verbonden server ondersteunt profielen, daarom heeft Instellingen geen onderdeel Profielen. Verbind of werk een server bij om ze te gebruiken.",
             "LOADING": "Profielen laden…",
             "LOAD_ERROR_TITLE": "Profielen konden niet worden geladen",
             "LOAD_ERROR_DESCRIPTION": "Laad de pagina opnieuw en probeer het nog eens.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "Pincode voor {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Voor het wijzigen of verwijderen van de pincode van {{name}} is de huidige pincode nodig.",
             "PARENTAL_TITLE": "Ouderpincode nodig",
-            "PARENTAL_DESCRIPTION": "Dit kinderprofiel wordt beschermd door het ouderlijk toezicht."
+            "PARENTAL_DESCRIPTION": "Dit kinderprofiel wordt beschermd door het ouderlijk toezicht.",
+            "SEPARATION_TITLE": "Gescheiden per profiel",
+            "CONSENT_TITLE": "Gegevens per profiel gescheiden houden?",
+            "CONSENT_BODY": "Favorieten, recent bekeken en afspeelvoortgang worden alleen per profiel bijgehouden zolang hun synchronisatie op dit apparaat aanstaat. Alle drie nu inschakelen?",
+            "CONSENT_ACCEPT": "Alle drie inschakelen",
+            "CONSENT_SKIP": "Niet nu",
+            "CONSENT_FAILED": "Een synchronisatie kon niet worden ingeschakeld. Controleer de serververbinding en probeer het opnieuw.",
+            "PART_FAVORITES": "Favorieten",
+            "PART_HISTORY": "Recent bekeken",
+            "PART_ACTIVITY": "Afspeelvoortgang",
+            "PART_SEPARATE": "Gescheiden",
+            "PART_SHARED": "Gedeeld (synchronisatie uit)",
+            "HOUSEHOLD_NOTE": "Afspeellijsten, bronnen en instellingen worden door iedereen gedeeld.",
+            "KIDS_PARENTAL_NOTE": "Een pincode voor ouderlijk toezicht wordt ingesteld bij het opslaan van het eerste kinderprofiel, als dit apparaat er nog geen heeft."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "Amber",
         "ACCENT_CORAL": "Koraal",
         "ACCENT_MAGENTA": "Magenta",
-        "ACCENT_VIOLET": "Violet"
+        "ACCENT_VIOLET": "Violet",
+        "ACCENT_RED": "Rood",
+        "ACCENT_CYAN": "Cyaan",
+        "ACCENT_LIME": "Limoen",
+        "ACCENT_SLATE": "Leisteen",
+        "ACCENT_BROWN": "Bruin"
     },
     "AUDIO_PLAYER": {
         "PLAY": "Afspelen",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "Een pincode bestaat uit 4 tot 8 cijfers.",
             "UNAVAILABLE": "Deze server ondersteunt geen profielen.",
             "OFFLINE": "De server reageert niet. Probeer het opnieuw.",
-            "GENERIC": "Er is iets misgegaan. Probeer het opnieuw."
+            "GENERIC": "Er is iets misgegaan. Probeer het opnieuw.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Eerst moet een ouder op dit apparaat een pincode voor ouderlijk toezicht instellen. Open Instellingen > Ouderlijk toezicht.",
+            "PARENTAL_PIN_UNREADABLE": "De pincode voor ouderlijk toezicht op dit apparaat kon niet worden gelezen. Hij wordt niet vervangen. Probeer het opnieuw of open Instellingen > Ouderlijk toezicht."
         },
         "PICKER": {
             "TITLE": "Wie kijkt er?",
             "MANAGE": "Profielen beheren",
+            "OPEN_PARENTAL_LOCK": "Instellingen voor ouderlijk toezicht openen",
             "LOADING": "Profielen openen…",
             "CONTINUE": "Doorgaan",
             "OFFLINE_TITLE": "De server reageert niet",
             "OFFLINE_DESCRIPTION": "Je kunt doorgaan met het standaardprofiel.",
             "LEAVE_KIDS_TITLE": "Kinderprofiel verlaten",
             "LEAVE_KIDS_DESCRIPTION": "Voer de ouderpincode in om naar een ander profiel te wisselen."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Favorieten, geschiedenis en voortgang van dit profiel blijven alleen gescheiden als synchronisatie aanstaat.",
+            "ACTION": "Synchronisatie inschakelen",
+            "DONE": "Synchronisatie staat aan. Dit profiel heeft nu eigen gegevens.",
+            "FAILED": "Synchronisatie kon niet worden ingeschakeld. Controleer de instellingen."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profiel: {{name}}. Van profiel wisselen",
+            "MANAGE": "Profielen beheren"
         }
     }
 }

@@ -1,3 +1,4 @@
+import { PROFILES_SETTINGS_SEARCH_ENTRIES } from './settings-search-entries-profiles';
 import { PLAYBACK_SETTINGS_SEARCH_ENTRIES } from './settings-search-entries-playback';
 import { SettingsSearchEntry } from './settings-search.types';
 
@@ -330,22 +331,7 @@ export const SETTINGS_SEARCH_ENTRIES: readonly SettingsSearchEntry[] = [
         descriptionKey: 'SETTINGS.IMPORT_EXPORT_DATA_DESCRIPTION',
         keywords: ['backup', 'restore', 'import', 'export', 'migrate'],
     },
-    {
-        id: 'profiles-enabled',
-        section: 'profiles',
-        labelKey: 'SETTINGS.PROFILES.ENABLED',
-        descriptionKey: 'SETTINGS.PROFILES.ENABLED_DESCRIPTION',
-        keywords: ['profiles', 'household', 'family', 'kids', 'users'],
-        requires: ['profiles'],
-    },
-    {
-        id: 'profiles-start',
-        section: 'profiles',
-        labelKey: 'SETTINGS.PROFILES.START',
-        descriptionKey: 'SETTINGS.PROFILES.START_DESCRIPTION',
-        keywords: ['profiles', "who's watching", 'picker', 'startup', 'last'],
-        requires: ['profiles'],
-    },
+    ...PROFILES_SETTINGS_SEARCH_ENTRIES,
     {
         id: 'source-server',
         section: 'server',

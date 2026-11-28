@@ -23,6 +23,7 @@ import {
     readProfilesStart,
     type ProfilesStartPreference,
 } from '../services/profiles-preferences';
+import { ProfileSeparationService } from '../services/profiles-separation';
 import { loadProfilesRuntime } from '../services/profiles-runtime.providers';
 import type { ProfilesRuntime } from '../services/profiles-runtime';
 import { SettingsProfilesFacade } from './settings-profiles.facade';
@@ -48,6 +49,10 @@ export class SettingsProfilesSectionComponent {
     readonly facade = inject(SettingsProfilesFacade);
     readonly runtime = signal<ProfilesRuntime | null>(null);
     readonly failed = signal(false);
+    readonly separation = inject(ProfileSeparationService);
+    /** "Not now": the offer stays away until the next visit. */
+    readonly offerDismissed = signal(false);
+    readonly consentFailed = signal(false);
     readonly limit = PROFILE_LIMIT;
     readonly defaultId = DEFAULT_PROFILE_ID;
     readonly instanceId = sourceConnection()?.instanceId;
@@ -61,11 +66,47 @@ export class SettingsProfilesSectionComponent {
     readonly enabled = computed(() => this.runtime()?.enabled() ?? false);
     readonly atLimit = computed(() => this.profiles().length >= this.limit);
     readonly loaded = computed(() => this.runtime()?.list() != null);
+    /** Which parts of a profile are separate on this device, given each sync's consent. */
+    readonly parts = computed(() => {
+        const separate = this.separation.parts();
+        return [
+            {
+                id: 'favorites',
+                labelKey: 'SETTINGS.PROFILES.PART_FAVORITES',
+                noteKey: 'SETTINGS.PROFILES.SHARED_NOTE_FAVORITES',
+                separate: separate?.favorites ?? false,
+            },
+            {
+                id: 'history',
+                labelKey: 'SETTINGS.PROFILES.PART_HISTORY',
+                noteKey: 'SETTINGS.PROFILES.SHARED_NOTE_HISTORY',
+                separate: separate?.history ?? false,
+            },
+            {
+                id: 'activity',
+                labelKey: 'SETTINGS.PROFILES.PART_ACTIVITY',
+                noteKey: 'SETTINGS.PROFILES.SHARED_NOTE_ACTIVITY',
+                separate: separate?.activity ?? false,
+            },
+        ];
+    });
+    /** The parts every profile still shares because their sync is off; empty when all are on. */
+    readonly sharedParts = computed(() =>
+        this.parts().filter((part) => !part.separate)
+    );
+    readonly showOffer = computed(
+        () =>
+            this.enabled() &&
+            !!this.separation.parts() &&
+            !this.separation.allOn() &&
+            !this.offerDismissed()
+    );
     readonly offline = computed(
         () => !this.loaded() && this.runtime()?.state() === 'offline'
     );
 
     constructor() {
+        void this.separation.load();
         void loadProfilesRuntime(inject(EnvironmentInjector))
             .then((runtime) => {
                 this.facade.attach(runtime);
@@ -73,6 +114,12 @@ export class SettingsProfilesSectionComponent {
                 void runtime.refresh();
             })
             .catch(() => this.failed.set(true));
+    }
+
+    /** The one button of the offer: turns on the syncs that are off, nothing else. */
+    async turnOnSyncs(): Promise<void> {
+        this.consentFailed.set(false);
+        if (!(await this.separation.enableAll())) this.consentFailed.set(true);
     }
 
     reload(): void {

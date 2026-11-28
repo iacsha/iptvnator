@@ -101,6 +101,11 @@
                         ) | translate
                     }}
                 </p>
+                @if (!isDefault) {
+                    <p data-test-id="profile-kids-parental-note">
+                        {{ 'SETTINGS.PROFILES.KIDS_PARENTAL_NOTE' | translate }}
+                    </p>
+                }
             </div>
 
             <mat-form-field appearance="outline" subscriptSizing="dynamic">

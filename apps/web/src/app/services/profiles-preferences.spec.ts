@@ -30,25 +30,49 @@ describe('per-device profile preferences', () => {
         expect(activeProfileKey(undefined)).toBeNull();
     });
 
-    it('defaults the start-up preference to "ask"', () => {
-        expect(readProfilesStart(NAS)).toBe('ask');
-        expect(readProfilesStart(null)).toBe('ask');
-    });
+    describe('start-up preference', () => {
+        const tvShell = () =>
+            ((window as unknown as { TvShell?: unknown }).TvShell = {
+                postMessage: () => undefined,
+            });
+        afterEach(() => {
+            delete (window as unknown as { TvShell?: unknown }).TvShell;
+        });
 
-    it('round-trips the start-up preference per instance', () => {
-        expect(writeProfilesStart(NAS, 'last')).toBe(true);
-        expect(readProfilesStart(NAS)).toBe('last');
-        expect(readProfilesStart(OTHER)).toBe('ask');
-        expect(writeProfilesStart(NAS, 'ask')).toBe(true);
-        expect(readProfilesStart(NAS)).toBe('ask');
-    });
+        it('defaults to "last" on desktop and web', () => {
+            expect(readProfilesStart(NAS)).toBe('last');
+            expect(readProfilesStart(null)).toBe('last');
+        });
 
-    it('reads an unrecognised stored start-up value as "ask"', () => {
-        localStorage.setItem(
-            `iptvnator-server:${NAS}:profiles-start-v1`,
-            'always'
-        );
-        expect(readProfilesStart(NAS)).toBe('ask');
+        it('defaults to "ask" on TV', () => {
+            tvShell();
+            expect(readProfilesStart(NAS)).toBe('ask');
+            expect(readProfilesStart(null)).toBe('ask');
+        });
+
+        it('lets a stored choice win on every platform', () => {
+            expect(writeProfilesStart(NAS, 'ask')).toBe(true);
+            expect(readProfilesStart(NAS)).toBe('ask');
+            tvShell();
+            expect(writeProfilesStart(NAS, 'last')).toBe(true);
+            expect(readProfilesStart(NAS)).toBe('last');
+        });
+
+        it('keeps each instance to its own choice', () => {
+            expect(writeProfilesStart(NAS, 'ask')).toBe(true);
+            expect(readProfilesStart(NAS)).toBe('ask');
+            expect(readProfilesStart(OTHER)).toBe('last');
+        });
+
+        it('reads an unrecognised stored value as the platform default', () => {
+            localStorage.setItem(
+                `iptvnator-server:${NAS}:profiles-start-v1`,
+                'always'
+            );
+            expect(readProfilesStart(NAS)).toBe('last');
+            tvShell();
+            expect(readProfilesStart(NAS)).toBe('ask');
+        });
     });
 
     it('does not write without a server instance', () => {
@@ -94,7 +118,7 @@ describe('per-device profile preferences', () => {
         jest.spyOn(Storage.prototype, 'getItem').mockImplementation(denied);
         jest.spyOn(Storage.prototype, 'setItem').mockImplementation(denied);
         jest.spyOn(Storage.prototype, 'removeItem').mockImplementation(denied);
-        expect(readProfilesStart(NAS)).toBe('ask');
+        expect(readProfilesStart(NAS)).toBe('last');
         expect(readActiveProfileId(NAS)).toBeNull();
         expect(writeProfilesStart(NAS, 'last')).toBe(false);
         expect(writeActiveProfileId(NAS, ADULT)).toBe(false);

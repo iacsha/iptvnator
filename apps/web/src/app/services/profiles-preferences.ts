@@ -2,6 +2,7 @@ import {
     DEFAULT_PROFILE_ID,
     isProfileId,
 } from '@iptvnator/shared/interfaces/profiles';
+import { isAndroidShellRuntime } from './runtime-config';
 
 export type ProfilesStartPreference = 'ask' | 'last';
 
@@ -17,10 +18,43 @@ export function activeProfileKey(instanceId: string | null | undefined) {
         : null;
 }
 
+/** Whether this device's last profile was a kids profile (per server instance, never synced). */
+export function kidsLastKey(instanceId: string | null | undefined) {
+    return instanceId ? `iptvnator-server:${instanceId}:kids-last-v1` : null;
+}
+
+export function readKidsLast(instanceId: string | null | undefined): boolean {
+    return read(kidsLastKey(instanceId)) === '1';
+}
+
+export function writeKidsLast(
+    instanceId: string | null | undefined,
+    kids: boolean
+): boolean {
+    const key = kidsLastKey(instanceId);
+    if (!key) return false;
+    if (kids) return write(key, '1');
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/** TV asks who is watching, since the remote is shared; desktop and web carry on as the last profile. */
+export function defaultProfilesStart(): ProfilesStartPreference {
+    return isAndroidShellRuntime() ? 'ask' : 'last';
+}
+
+/** A stored choice always wins; without one, the platform's default. */
 export function readProfilesStart(
     instanceId: string | null | undefined
 ): ProfilesStartPreference {
-    return read(profilesStartKey(instanceId)) === 'last' ? 'last' : 'ask';
+    const stored = read(profilesStartKey(instanceId));
+    return stored === 'ask' || stored === 'last'
+        ? stored
+        : defaultProfilesStart();
 }
 
 export function writeProfilesStart(

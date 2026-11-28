@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Ebeveyn kilidi etkinleştirildi",
             "DISABLED_TOAST": "Ebeveyn kilidi devre dışı bırakıldı",
             "PIN_CHANGED_TOAST": "PIN değiştirildi",
-            "LOCKED_TOAST": "Kilitlendi"
+            "LOCKED_TOAST": "Kilitlendi",
+            "FORCED_NOTE": "Çocuk profili etkin olduğu için kilit açık. Değiştirmek için çocuk profilinden çıkın."
         },
         "AGE_RATING_COUNTRY_LABEL": "Yaş sınıflandırması ülkesi",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Sınıflandırma ülkesini seçin. Yerel veri yoksa ABD veya sağlayıcı verileri kullanılabilir.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "Profiller",
             "SUBTITLE": "Bu sunucuda hanedeki her kişiye kendi profilini verin. Profil PIN'i çocuklar ve ev arkadaşları için hafif bir kilittir, güvenlik değildir: sunucuya erişimi olan herkes yine de tüm verilerine ulaşabilir.",
+            "SHARED_NOTE_FAVORITES": "Favoriler, eşitlemeleri açılana kadar tüm profiller tarafından ortak kullanılır.",
+            "SHARED_NOTE_HISTORY": "Son izlenenler, eşitlemeleri açılana kadar tüm profiller tarafından ortak kullanılır.",
+            "SHARED_NOTE_ACTIVITY": "Oynatma konumları, eşitlemeleri açılana kadar tüm profiller tarafından ortak kullanılır.",
+            "UNSUPPORTED": "Bağlı hiçbir sunucu profilleri desteklemiyor, bu yüzden Ayarlar'da Profiller bölümü yok. Kullanmak için bir sunucu bağlayın veya güncelleyin.",
             "LOADING": "Profiller yükleniyor…",
             "LOAD_ERROR_TITLE": "Profiller yüklenemedi",
             "LOAD_ERROR_DESCRIPTION": "Sayfayı yenileyip tekrar deneyin.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "{{name}} için PIN",
             "PIN_CHANGE_DESCRIPTION": "{{name}} profilinin PIN'ini değiştirmek veya kaldırmak için mevcut PIN gerekir.",
             "PARENTAL_TITLE": "Ebeveyn PIN'i gerekli",
-            "PARENTAL_DESCRIPTION": "Bu çocuk profili ebeveyn kilidiyle korunuyor."
+            "PARENTAL_DESCRIPTION": "Bu çocuk profili ebeveyn kilidiyle korunuyor.",
+            "SEPARATION_TITLE": "Her profil için ayrı",
+            "CONSENT_TITLE": "Her profilin verileri ayrı tutulsun mu?",
+            "CONSENT_BODY": "Favoriler, son izlenenler ve oynatma ilerlemesi yalnızca bu cihazda eşitlemeleri açıkken profil başına tutulur. Üçü de şimdi açılsın mı?",
+            "CONSENT_ACCEPT": "Üçünü de aç",
+            "CONSENT_SKIP": "Şimdi değil",
+            "CONSENT_FAILED": "Bir eşitleme açılamadı. Sunucu bağlantısını kontrol edip tekrar deneyin.",
+            "PART_FAVORITES": "Favoriler",
+            "PART_HISTORY": "Son izlenenler",
+            "PART_ACTIVITY": "Oynatma ilerlemesi",
+            "PART_SEPARATE": "Ayrı",
+            "PART_SHARED": "Ortak (eşitleme kapalı)",
+            "HOUSEHOLD_NOTE": "Oynatma listeleri, kaynaklar ve ayarlar herkes için ortaktır.",
+            "KIDS_PARENTAL_NOTE": "Bu cihazda PIN yoksa, ebeveyn kilidi PIN'i ilk çocuk profili kaydedilirken belirlenir."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "Kehribar",
         "ACCENT_CORAL": "Mercan",
         "ACCENT_MAGENTA": "Macenta",
-        "ACCENT_VIOLET": "Mor"
+        "ACCENT_VIOLET": "Mor",
+        "ACCENT_RED": "Kırmızı",
+        "ACCENT_CYAN": "Camgöbeği",
+        "ACCENT_LIME": "Misket limonu",
+        "ACCENT_SLATE": "Arduvaz",
+        "ACCENT_BROWN": "Kahverengi"
     },
     "AUDIO_PLAYER": {
         "PLAY": "Oynat",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "PIN 4 ile 8 basamaktan oluşur.",
             "UNAVAILABLE": "Bu sunucu profilleri desteklemiyor.",
             "OFFLINE": "Sunucu yanıt vermiyor. Tekrar deneyin.",
-            "GENERIC": "Bir şeyler ters gitti. Tekrar deneyin."
+            "GENERIC": "Bir şeyler ters gitti. Tekrar deneyin.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Önce bir ebeveynin bu cihazda ebeveyn kilidi PIN'i belirlemesi gerekir. Ayarlar > Ebeveyn kilidi'ni açın.",
+            "PARENTAL_PIN_UNREADABLE": "Bu cihazdaki ebeveyn kilidi PIN'i okunamadı. Değiştirilmeyecek. Tekrar deneyin veya Ayarlar > Ebeveyn kilidi'ni açın."
         },
         "PICKER": {
             "TITLE": "Kim izliyor?",
             "MANAGE": "Profilleri yönet",
+            "OPEN_PARENTAL_LOCK": "Ebeveyn kilidi ayarlarını aç",
             "LOADING": "Profiller açılıyor…",
             "CONTINUE": "Devam",
             "OFFLINE_TITLE": "Sunucu yanıt vermiyor",
             "OFFLINE_DESCRIPTION": "Varsayılan profille devam edebilirsiniz.",
             "LEAVE_KIDS_TITLE": "Çocuk profilinden çık",
             "LEAVE_KIDS_DESCRIPTION": "Başka bir profile geçmek için ebeveyn PIN'ini girin."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Bu profilin favorileri, geçmişi ve ilerlemesi yalnızca eşitleme açıkken ayrı tutulabilir.",
+            "ACTION": "Eşitlemeyi aç",
+            "DONE": "Eşitleme açık. Bu profil artık kendi verilerini tutuyor.",
+            "FAILED": "Eşitleme açılamadı. Ayarları kontrol edin."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil: {{name}}. Profil değiştir",
+            "MANAGE": "Profilleri yönet"
         }
     }
 }

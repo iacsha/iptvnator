@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Parental lock enabled",
             "DISABLED_TOAST": "Parental lock disabled",
             "PIN_CHANGED_TOAST": "PIN changed",
-            "LOCKED_TOAST": "Locked"
+            "LOCKED_TOAST": "Locked",
+            "FORCED_NOTE": "The lock is on because a kids profile is active. Leave the kids profile to change it."
         },
         "AGE_RATING_COUNTRY_LABEL": "Age rating country",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Choose the country used for age classifications. Missing local ratings may use US or provider data.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "Profiles",
             "SUBTITLE": "Give each person in the household their own profile on this server. A profile PIN is a light lock for kids and housemates, not security: anyone with access to the server can still reach all of its data.",
+            "SHARED_NOTE_FAVORITES": "Favorites are shared by all profiles until their sync is turned on.",
+            "SHARED_NOTE_HISTORY": "Recently watched items are shared by all profiles until their sync is turned on.",
+            "SHARED_NOTE_ACTIVITY": "Playback positions are shared by all profiles until their sync is turned on.",
+            "UNSUPPORTED": "No connected server supports profiles, so Settings has no Profiles section. Connect or update a server to use them.",
             "LOADING": "Loading profiles…",
             "LOAD_ERROR_TITLE": "Profiles could not be loaded",
             "LOAD_ERROR_DESCRIPTION": "Reload the page and try again.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "PIN for {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Changing or removing the PIN of {{name}} needs its current PIN.",
             "PARENTAL_TITLE": "Parental PIN needed",
-            "PARENTAL_DESCRIPTION": "This kids profile is protected by the parental lock."
+            "PARENTAL_DESCRIPTION": "This kids profile is protected by the parental lock.",
+            "SEPARATION_TITLE": "Separate for each profile",
+            "CONSENT_TITLE": "Keep each profile's data separate?",
+            "CONSENT_BODY": "Favorites, recently watched and playback progress are kept per profile only while their sync is on for this device. Turn on all three now?",
+            "CONSENT_ACCEPT": "Turn on all three",
+            "CONSENT_SKIP": "Not now",
+            "CONSENT_FAILED": "A sync could not be turned on. Check the server connection and try again.",
+            "PART_FAVORITES": "Favorites",
+            "PART_HISTORY": "Recently watched",
+            "PART_ACTIVITY": "Playback progress",
+            "PART_SEPARATE": "Separate",
+            "PART_SHARED": "Shared (sync is off)",
+            "HOUSEHOLD_NOTE": "Playlists, sources and settings are shared by everyone.",
+            "KIDS_PARENTAL_NOTE": "A parental PIN is set up when you save the first kids profile, if this device has none."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "Amber",
         "ACCENT_CORAL": "Coral",
         "ACCENT_MAGENTA": "Magenta",
-        "ACCENT_VIOLET": "Violet"
+        "ACCENT_VIOLET": "Violet",
+        "ACCENT_RED": "Red",
+        "ACCENT_CYAN": "Cyan",
+        "ACCENT_LIME": "Lime",
+        "ACCENT_SLATE": "Slate",
+        "ACCENT_BROWN": "Brown"
     },
     "AUDIO_PLAYER": {
         "PLAY": "Play",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "A PIN has 4 to 8 digits.",
             "UNAVAILABLE": "This server does not support profiles.",
             "OFFLINE": "The server is not answering. Try again.",
-            "GENERIC": "Something went wrong. Try again."
+            "GENERIC": "Something went wrong. Try again.",
+            "KIDS_NEEDS_PARENTAL_PIN": "A parent needs to set a parental PIN on this device first. Open Settings > Parental lock.",
+            "PARENTAL_PIN_UNREADABLE": "The parental PIN on this device could not be read. It will not be replaced. Try again or open Settings > Parental lock."
         },
         "PICKER": {
             "TITLE": "Who's watching?",
             "MANAGE": "Manage profiles",
+            "OPEN_PARENTAL_LOCK": "Open parental lock settings",
             "LOADING": "Opening profiles…",
             "CONTINUE": "Continue",
             "OFFLINE_TITLE": "The server is not answering",
             "OFFLINE_DESCRIPTION": "You can continue with the Default profile.",
             "LEAVE_KIDS_TITLE": "Leave the kids profile",
             "LEAVE_KIDS_DESCRIPTION": "Enter the parental PIN to switch to another profile."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "This profile's favorites, history and progress can only be kept separate with sync turned on.",
+            "ACTION": "Turn on sync",
+            "DONE": "Sync is on. This profile now keeps its own data.",
+            "FAILED": "Sync could not be turned on. Check Settings."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profile: {{name}}. Switch profile",
+            "MANAGE": "Manage profiles"
         }
     }
 }

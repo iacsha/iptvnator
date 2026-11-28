@@ -2,6 +2,17 @@
     <header class="settings-group__header">
         <h2>{{ 'SETTINGS.PROFILES.TITLE' | translate }}</h2>
         <p>{{ 'SETTINGS.PROFILES.SUBTITLE' | translate }}</p>
+        @if (sharedParts().length) {
+            <p data-test-id="profiles-shared-note">
+                @for (part of sharedParts(); track part.id) {
+                    <span
+                        class="profiles-shared-note__part"
+                        [attr.data-test-id]="'profiles-shared-note-' + part.id"
+                        >{{ part.noteKey | translate }}
+                    </span>
+                }
+            </p>
+        }
     </header>
 
     @if (failed()) {
@@ -55,53 +66,158 @@
                     </div>
                 </div>
 
-                <div class="setting-item" data-setting-id="profiles-start">
-                    <div class="setting-item__meta">
-                        <h4 id="profiles-start-label">
-                            {{ 'SETTINGS.PROFILES.START' | translate }}
-                        </h4>
-                        <p>
-                            {{
-                                'SETTINGS.PROFILES.START_DESCRIPTION'
-                                    | translate
-                            }}
-                        </p>
-                    </div>
-                    <div
-                        class="setting-item__control"
-                        role="radiogroup"
-                        aria-labelledby="profiles-start-label"
-                    >
-                        <button
-                            mat-flat-button
-                            type="button"
-                            role="radio"
-                            data-test-id="profiles-start-ask"
-                            [attr.aria-checked]="startPref() === 'ask'"
-                            [tabIndex]="startPref() === 'ask' ? 0 : -1"
-                            (keydown)="onStartKey($event)"
-                            [class.profiles-choice--on]="startPref() === 'ask'"
-                            (click)="setStart('ask')"
+                @if (enabled()) {
+                    <div class="setting-item" data-setting-id="profiles-start">
+                        <div class="setting-item__meta">
+                            <h4 id="profiles-start-label">
+                                {{ 'SETTINGS.PROFILES.START' | translate }}
+                            </h4>
+                            <p>
+                                {{
+                                    'SETTINGS.PROFILES.START_DESCRIPTION'
+                                        | translate
+                                }}
+                            </p>
+                        </div>
+                        <div
+                            class="setting-item__control"
+                            role="radiogroup"
+                            aria-labelledby="profiles-start-label"
                         >
-                            {{ 'SETTINGS.PROFILES.START_ASK' | translate }}
-                        </button>
-                        <button
-                            mat-flat-button
-                            type="button"
-                            role="radio"
-                            data-test-id="profiles-start-last"
-                            [attr.aria-checked]="startPref() === 'last'"
-                            [tabIndex]="startPref() === 'last' ? 0 : -1"
-                            (keydown)="onStartKey($event)"
-                            [class.profiles-choice--on]="startPref() === 'last'"
-                            (click)="setStart('last')"
-                        >
-                            {{ 'SETTINGS.PROFILES.START_LAST' | translate }}
-                        </button>
+                            <button
+                                mat-flat-button
+                                type="button"
+                                role="radio"
+                                data-test-id="profiles-start-ask"
+                                [attr.aria-checked]="startPref() === 'ask'"
+                                [tabIndex]="startPref() === 'ask' ? 0 : -1"
+                                (keydown)="onStartKey($event)"
+                                [class.profiles-choice--on]="
+                                    startPref() === 'ask'
+                                "
+                                (click)="setStart('ask')"
+                            >
+                                {{ 'SETTINGS.PROFILES.START_ASK' | translate }}
+                            </button>
+                            <button
+                                mat-flat-button
+                                type="button"
+                                role="radio"
+                                data-test-id="profiles-start-last"
+                                [attr.aria-checked]="startPref() === 'last'"
+                                [tabIndex]="startPref() === 'last' ? 0 : -1"
+                                (keydown)="onStartKey($event)"
+                                [class.profiles-choice--on]="
+                                    startPref() === 'last'
+                                "
+                                (click)="setStart('last')"
+                            >
+                                {{ 'SETTINGS.PROFILES.START_LAST' | translate }}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </section>
+
+        @if (enabled()) {
+            <section
+                class="settings-section"
+                aria-labelledby="profiles-separation-title"
+                data-test-id="profiles-separation"
+            >
+                <div class="settings-section__header">
+                    <h3 id="profiles-separation-title">
+                        {{ 'SETTINGS.PROFILES.SEPARATION_TITLE' | translate }}
+                    </h3>
+                </div>
+                <p class="settings-section__desc">
+                    {{ 'SETTINGS.PROFILES.HOUSEHOLD_NOTE' | translate }}
+                </p>
+                <div class="settings-card">
+                    @if (showOffer()) {
+                        <div
+                            class="setting-item"
+                            data-setting-id="profiles-consent"
+                            data-test-id="profiles-consent-offer"
+                        >
+                            <div class="setting-item__meta">
+                                <h4>
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_TITLE'
+                                            | translate
+                                    }}
+                                </h4>
+                                <p>
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_BODY'
+                                            | translate
+                                    }}
+                                </p>
+                            </div>
+                            <div class="setting-item__control profiles-offer">
+                                <button
+                                    mat-flat-button
+                                    type="button"
+                                    data-test-id="profiles-consent-accept"
+                                    [disabled]="separation.busy()"
+                                    (click)="turnOnSyncs()"
+                                >
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_ACCEPT'
+                                            | translate
+                                    }}
+                                </button>
+                                <button
+                                    mat-button
+                                    type="button"
+                                    data-test-id="profiles-consent-skip"
+                                    [disabled]="separation.busy()"
+                                    (click)="offerDismissed.set(true)"
+                                >
+                                    {{
+                                        'SETTINGS.PROFILES.CONSENT_SKIP'
+                                            | translate
+                                    }}
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    @if (consentFailed()) {
+                        <p
+                            class="profiles-error"
+                            role="alert"
+                            data-test-id="profiles-consent-failed"
+                        >
+                            {{ 'SETTINGS.PROFILES.CONSENT_FAILED' | translate }}
+                        </p>
+                    }
+                    <ul class="profiles-parts" data-test-id="profiles-parts">
+                        @for (part of parts(); track part.id) {
+                            <li
+                                class="setting-item profiles-part"
+                                [attr.data-test-id]="'profiles-part-' + part.id"
+                                [attr.data-separate]="part.separate"
+                            >
+                                <div class="setting-item__meta">
+                                    <h4 class="profiles-part__name">
+                                        {{ part.labelKey | translate }}
+                                    </h4>
+                                </div>
+                                <div class="setting-item__control">
+                                    <span class="profiles-badge">{{
+                                        (part.separate
+                                            ? 'SETTINGS.PROFILES.PART_SEPARATE'
+                                            : 'SETTINGS.PROFILES.PART_SHARED'
+                                        ) | translate
+                                    }}</span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </section>
+        }
 
         <section class="settings-section">
             <div class="settings-section__header">

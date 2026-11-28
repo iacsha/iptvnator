@@ -29,6 +29,9 @@
             "@iptvnator/services/profiles": [
                 "libs/services/src/profiles.ts"
             ],
+            "@iptvnator/services/profiles/active-scope": [
+                "libs/services/src/lib/profiles/active-scope.ts"
+            ],
             "@iptvnator/services/history-events": [
                 "libs/services/src/history-events.ts"
             ],

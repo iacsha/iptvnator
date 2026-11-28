@@ -30,7 +30,7 @@ import {
     getAndroidSettingsControls,
     RuntimeCapabilitiesService,
     ServerStorageStatusService,
-    SETTINGS_PROFILES_AVAILABLE,
+    SETTINGS_PROFILES_STATE,
     injectTranslationTick,
 } from '@iptvnator/services';
 import { VodSourceDiscoveryService } from '@iptvnator/portal/shared/data-access';
@@ -261,14 +261,14 @@ export class SettingsComponent
     readonly updateChannelOptions = SETTINGS_UPDATE_CHANNEL_OPTIONS;
     readonly epgViewModeOptions = SETTINGS_EPG_VIEW_MODE_OPTIONS;
 
-    private readonly supportsProfiles = inject(SETTINGS_PROFILES_AVAILABLE);
+    readonly profilesState = inject(SETTINGS_PROFILES_STATE);
     readonly sectionNavItems = computed<SettingsSection[]>(() =>
         buildSettingsSectionNavItems({
             supportsEpg: this.form.supportsEpgDisplay,
             supportsRemoteControl: this.supportsRemoteControl,
             supportsServerStorage: this.supportsServerStorage,
             supportsAndroidSettings: !!this.androidSettingsControls,
-            supportsProfiles: this.supportsProfiles(),
+            supportsProfiles: this.profilesState() !== 'unsupported',
         })
     );
     get sectionNav(): SettingsSection[] {

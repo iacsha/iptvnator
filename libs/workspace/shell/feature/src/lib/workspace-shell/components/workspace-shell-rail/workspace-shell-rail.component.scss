@@ -293,6 +293,29 @@
     }
 }
 
+// Household profile switcher: the avatar of the active profile opens a menu.
+// The `nav-item` class supplies the button reset and the focus ring.
+.rail-profile__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    user-select: none;
+}
+
+.rail-profile__avatar--menu {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    font-size: 12px;
+}
+
 // Server storage indicator (self-hosted PWA only): the dot carries the
 // connection state, so the icon can stay quiet while online.
 .rail-footer .rail-server {

@@ -6,8 +6,10 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { ParentalLockService } from '@iptvnator/services';
 import {
     ProfilesClient,
+    activePersonalScope,
     type ProfilesError,
 } from '@iptvnator/services/profiles';
 import { verifySourceInstance } from '@iptvnator/services/source-sync/authorization';
@@ -17,8 +19,10 @@ import {
 } from '@iptvnator/services/source-sync/connection';
 import type { SourceServerResponse } from '@iptvnator/shared/interfaces';
 import {
+    DEFAULT_PERSONAL_SCOPE,
     DEFAULT_PROFILE_ID,
     PROFILES_CAPABILITY,
+    type PersonalScope,
     type ServerProfile,
     type ServerProfileList,
 } from '@iptvnator/shared/interfaces/profiles';
@@ -29,14 +33,20 @@ import {
 } from './profiles-preferences';
 import { PROFILES_REQUEST } from './profiles-request.token';
 import { resolveActiveProfileId } from './profiles-start';
-import { PROFILES_UI_ENABLED_TOKEN } from './profiles-ui-enabled';
+
+export type LocalPin = 'unknown' | 'set' | 'none' | 'unreadable';
 
 export const PROFILES_POLL_MS = 30_000;
+/** A server without profiles may be upgraded later: ask again after this long. */
+export const PROFILES_REPROBE_MS = 5 * 60_000;
 
 @Injectable({ providedIn: 'root' })
 export class ProfilesRuntime {
     private readonly destroyRef = inject(DestroyRef);
     private readonly request = inject(PROFILES_REQUEST);
+    private readonly parentalLock = inject(ParentalLockService);
+    private readonly localPinState = signal<LocalPin>('unknown');
+    private localPinRead?: Promise<void>;
     private readonly capableState = signal(false);
     private readonly listState = signal<ServerProfileList | null>(null);
     private readonly stateValue = signal<
@@ -45,21 +55,36 @@ export class ProfilesRuntime {
     private readonly activeIdValue = signal(DEFAULT_PROFILE_ID);
     private currentInstanceId: string | null = null;
     private probedInstanceId: string | null = null;
+    private unsupportedAt = 0;
     private revision: number | undefined;
     /** This session's choice, kept when storage cannot hold it. */
     private sessionChoice: string | null = null;
     /** Start-up gave up waiting: stay on Default for this session. */
-    private heldOnDefault = false;
+    private readonly heldState = signal(false);
     private startupRead = false;
     /** This session's choice came from the picker, so its PIN was asked. */
     private choiceUnlocked = false;
+    /**
+     * Bumped when the active profile changes for a reason other than a choice
+     * in flight (start-up gave up, a profile vanished, profiles were turned
+     * off): a choice that began before it no longer applies.
+     */
+    private activeEpoch = 0;
     private refreshing?: Promise<void>;
     /** Bumped when a deletion is learned: a list requested before it is stale. */
     private deletions = 0;
     private profilesClient?: ProfilesClient;
 
-    readonly uiEnabled = inject(PROFILES_UI_ENABLED_TOKEN);
+    /**
+     * Whether this device has a parental PIN, read from device-local storage.
+     * A kids profile needs one to be restored or locked on: without it nobody
+     * could unlock, switch or leave. `'unknown'` until read; `'unreadable'`
+     * counts as no PIN, like the picker's blocked kids tile.
+     */
+    readonly localPin: Signal<LocalPin> = this.localPinState.asReadonly();
     readonly capable: Signal<boolean> = this.capableState.asReadonly();
+    /** Start-up gave up waiting and stays on Default for this session. */
+    readonly held: Signal<boolean> = this.heldState.asReadonly();
     readonly list: Signal<ServerProfileList | null> =
         this.listState.asReadonly();
     readonly state: Signal<
@@ -74,6 +99,10 @@ export class ProfilesRuntime {
             null
         );
     });
+    /** Whose personal state this device uses; the Default's `'shared'` until a profile is chosen. */
+    readonly scope: Signal<PersonalScope> = computed(
+        () => this.active()?.scope ?? DEFAULT_PERSONAL_SCOPE
+    );
     readonly enabled: Signal<boolean> = computed(
         () => this.listState()?.enabled ?? false
     );
@@ -94,7 +123,9 @@ export class ProfilesRuntime {
             if (
                 !document.hidden &&
                 instanceId &&
-                (this.capableState() || this.probedInstanceId !== instanceId)
+                (this.capableState() ||
+                    this.probedInstanceId !== instanceId ||
+                    this.reprobeDue())
             )
                 refresh();
         }, PROFILES_POLL_MS);
@@ -105,6 +136,15 @@ export class ProfilesRuntime {
             document.removeEventListener('visibilitychange', visibility);
         });
         queueMicrotask(refresh);
+        void this.readLocalPin();
+    }
+
+    /** Reads the local PIN once; start-up decisions about kids profiles wait for it. */
+    readLocalPin(): Promise<void> {
+        return (this.localPinRead ??= this.parentalLock
+            .pinState()
+            .catch((): LocalPin => 'unreadable')
+            .then((state) => this.localPinState.set(state)));
     }
 
     client(): ProfilesClient {
@@ -119,29 +159,87 @@ export class ProfilesRuntime {
         ));
     }
 
+    /**
+     * Resolves once no refresh is running, without joining one: a refresh that
+     * began earlier may predate the change its caller just made.
+     */
+    async idle(): Promise<void> {
+        while (this.refreshing) await this.refreshing.catch(() => undefined);
+    }
+
     /** After a failed call: the next refresh probes the instance again. */
     async recheck(): Promise<void> {
         // An in-flight refresh was not preceded by a fresh identity check:
         // let it finish rather than join it.
-        while (this.refreshing) await this.refreshing.catch(() => undefined);
+        await this.idle();
         this.probedInstanceId = null;
         return this.refresh();
     }
 
-    select(id: string): boolean {
+    /**
+     * Moves this device to profile `id` without ever showing a profile whose
+     * data it is not on. `move` takes the personal state to the profile's
+     * scope and resolves once the device is on it; `moved` is the point where
+     * the scope has changed and the shown profile must follow. The active
+     * profile, the avatar and the saved choice change then, never before, so
+     * until then the old profile stays shown and writes keep reaching it.
+     * Resolves false with nothing changed (the old profile stays active) when
+     * the profile is gone, `move` fails, or the active profile changed for
+     * another reason meanwhile.
+     */
+    async switchTo(
+        id: string,
+        move: (scope: PersonalScope, moved: () => void) => Promise<void>
+    ): Promise<boolean> {
+        const profile = this.listState()?.profiles.find((p) => p.id === id);
+        if (!profile || !this.canSelect(id)) return false;
+        const epoch = this.activeEpoch;
+        let settled = false;
+        let selected = false;
+        const commit = (): void => {
+            if (settled) return;
+            settled = true;
+            selected = this.activeEpoch === epoch && this.select(id);
+        };
+        const restore = () =>
+            move(this.scope(), () => undefined).catch(() => undefined);
+        const scope = profile.scope;
+        try {
+            await move(scope, commit);
+            // No `moved` call means the device was already on the scope, or a
+            // newer switch took over and it is not.
+            if (activePersonalScope() === scope) commit();
+            settled = true;
+        } catch {
+            // Before the scope moved nothing changed; after it, the shown
+            // profile already follows and the choice stands.
+            if (!settled) {
+                settled = true;
+                await restore();
+                return false;
+            }
+        }
+        if (!selected) await restore();
+        return selected;
+    }
+
+    private canSelect(id: string): boolean {
         const list = this.listState();
-        if (
-            !list ||
-            !list.profiles.some((profile) => profile.id === id) ||
-            (id !== DEFAULT_PROFILE_ID && !list.enabled)
-        )
-            return false;
+        return (
+            !!list &&
+            list.profiles.some((profile) => profile.id === id) &&
+            (id === DEFAULT_PROFILE_ID || list.enabled)
+        );
+    }
+
+    select(id: string): boolean {
+        if (!this.canSelect(id)) return false;
         // Blocked storage only costs the next launch's "last profile": the
         // choice still applies to this session.
         writeActiveProfileId(this.currentInstanceId, id);
         this.sessionChoice = id;
         this.choiceUnlocked = true;
-        this.heldOnDefault = false;
+        this.heldState.set(false);
         this.activeIdValue.set(id);
         return true;
     }
@@ -152,8 +250,8 @@ export class ProfilesRuntime {
      * saved choice stays for the next launch.
      */
     holdDefault(): void {
-        this.heldOnDefault = true;
-        this.activeIdValue.set(DEFAULT_PROFILE_ID);
+        this.heldState.set(true);
+        this.setActive(DEFAULT_PROFILE_ID, true);
     }
 
     /**
@@ -176,7 +274,7 @@ export class ProfilesRuntime {
             this.deletions++;
         } else if (code === 'profiles_disabled') this.showDisabled();
         else return;
-        this.activeIdValue.set(DEFAULT_PROFILE_ID);
+        this.setActive(DEFAULT_PROFILE_ID, true);
         void this.refresh();
     }
 
@@ -184,7 +282,13 @@ export class ProfilesRuntime {
         this.listState.update((list) =>
             list ? { ...list, enabled: false } : null
         );
-        this.activeIdValue.set(DEFAULT_PROFILE_ID);
+        this.setActive(DEFAULT_PROFILE_ID);
+    }
+
+    /** Publishes the active profile for any reason other than a choice. */
+    private setActive(id: string, force = false): void {
+        if (force || id !== this.activeIdValue()) this.activeEpoch++;
+        this.activeIdValue.set(id);
     }
 
     private async refreshNow(): Promise<void> {
@@ -197,12 +301,14 @@ export class ProfilesRuntime {
             this.reset();
             this.currentInstanceId = instanceId;
         }
-        if (this.probedInstanceId !== instanceId) {
+        if (this.probedInstanceId !== instanceId || this.reprobeDue()) {
             this.stateValue.set('checking');
             const capable = await this.probe(instanceId);
             if (!this.isCurrent(instanceId) || !capable) return;
         }
         if (!this.capableState() || !this.isCurrent(instanceId)) return;
+        await this.readLocalPin();
+        if (!this.isCurrent(instanceId)) return;
         const deletions = this.deletions;
         const result = await this.client().list(this.revision);
         if (!this.isCurrent(instanceId)) return;
@@ -263,22 +369,27 @@ export class ProfilesRuntime {
             Array.isArray(info.capabilities) &&
             info.capabilities.includes(PROFILES_CAPABILITY);
         this.probedInstanceId = instanceId;
+        this.unsupportedAt = capable ? 0 : Date.now();
         this.capableState.set(capable);
         this.stateValue.set(capable ? 'checking' : 'unsupported');
         return capable;
     }
 
     private reconcile(instanceId: string | null): void {
-        if (this.heldOnDefault) return;
+        if (this.heldState()) return;
         const list = this.listState();
         // The saved id is read once, at start-up; after that each tab keeps
         // its own choice. A saved PIN profile is never adopted without its PIN.
         if (!this.startupRead && list) {
             this.startupRead = true;
             const saved = readActiveProfileId(instanceId);
+            const savedProfile = list.profiles.find(
+                (profile) => profile.id === saved
+            );
             if (
                 !this.sessionChoice &&
-                !list.profiles.find((profile) => profile.id === saved)?.hasPin
+                !savedProfile?.hasPin &&
+                !this.needsParentalPin(savedProfile)
             )
                 this.sessionChoice = saved;
         }
@@ -291,8 +402,18 @@ export class ProfilesRuntime {
                 ?.hasPin
         )
             this.sessionChoice = null;
+        // A kids profile (saved on another device, or made one since) cannot
+        // be restored where no parental PIN exists to unlock it.
+        if (
+            this.sessionChoice &&
+            !this.choiceUnlocked &&
+            this.needsParentalPin(
+                list?.profiles.find((p) => p.id === this.sessionChoice)
+            )
+        )
+            this.sessionChoice = null;
         const id = this.sessionChoice;
-        this.activeIdValue.set(resolveActiveProfileId(list, id));
+        this.setActive(resolveActiveProfileId(list, id));
         if (
             list?.enabled &&
             id &&
@@ -301,6 +422,17 @@ export class ProfilesRuntime {
             this.sessionChoice = null;
             clearActiveProfileId(instanceId);
         }
+    }
+
+    private needsParentalPin(profile: ServerProfile | undefined): boolean {
+        return profile?.kids === true && this.localPinState() !== 'set';
+    }
+
+    private reprobeDue(): boolean {
+        return (
+            this.stateValue() === 'unsupported' &&
+            Date.now() - this.unsupportedAt >= PROFILES_REPROBE_MS
+        );
     }
 
     private isCurrent(instanceId: string): boolean {
@@ -314,10 +446,10 @@ export class ProfilesRuntime {
         this.sessionChoice = null;
         this.choiceUnlocked = false;
         this.startupRead = false;
-        this.heldOnDefault = false;
+        this.heldState.set(false);
         this.capableState.set(false);
         this.listState.set(null);
-        this.activeIdValue.set(DEFAULT_PROFILE_ID);
+        this.setActive(DEFAULT_PROFILE_ID, true);
         this.stateValue.set('idle');
     }
 }

@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "已啟用家長監護",
             "DISABLED_TOAST": "已停用家長監護",
             "PIN_CHANGED_TOAST": "已變更 PIN 碼",
-            "LOCKED_TOAST": "已鎖定"
+            "LOCKED_TOAST": "已鎖定",
+            "FORCED_NOTE": "因為兒童個人檔案正在使用,鎖定已開啟。離開兒童個人檔案後才能變更。"
         },
         "AGE_RATING_COUNTRY_LABEL": "年齡分級國家",
         "AGE_RATING_COUNTRY_DESCRIPTION": "選擇年齡分級使用的國家。缺少當地分級時，可能使用美國或供應商的資料。",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "個人檔案",
             "SUBTITLE": "為家中的每個人在此伺服器上建立專屬的個人檔案。個人檔案 PIN 碼只是針對孩子和同住者的簡易鎖，並非真正的安全機制：任何能存取伺服器的人仍可查看其所有資料。",
+            "SHARED_NOTE_FAVORITES": "在開啟同步之前，我的最愛由所有設定檔共用。",
+            "SHARED_NOTE_HISTORY": "在開啟同步之前，最近觀看由所有設定檔共用。",
+            "SHARED_NOTE_ACTIVITY": "在開啟同步之前，播放位置由所有設定檔共用。",
+            "UNSUPPORTED": "沒有已連線的伺服器支援設定檔，因此設定中沒有「設定檔」區段。請連線或更新伺服器以使用它們。",
             "LOADING": "正在載入個人檔案…",
             "LOAD_ERROR_TITLE": "無法載入個人檔案",
             "LOAD_ERROR_DESCRIPTION": "請重新整理頁面後再試一次。",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "{{name}} 的 PIN 碼",
             "PIN_CHANGE_DESCRIPTION": "變更或移除 {{name}} 的 PIN 碼需要輸入目前的 PIN 碼。",
             "PARENTAL_TITLE": "需要家長 PIN 碼",
-            "PARENTAL_DESCRIPTION": "此兒童個人檔案受家長控制保護。"
+            "PARENTAL_DESCRIPTION": "此兒童個人檔案受家長控制保護。",
+            "SEPARATION_TITLE": "每個個人檔案各自獨立",
+            "CONSENT_TITLE": "將每個個人檔案的資料分開保存?",
+            "CONSENT_BODY": "只有在此裝置上開啟各自的同步時,我的最愛、最近觀看和播放進度才會依個人檔案分別保存。現在全部開啟嗎?",
+            "CONSENT_ACCEPT": "全部開啟",
+            "CONSENT_SKIP": "暫不",
+            "CONSENT_FAILED": "有一項同步無法開啟。請檢查伺服器連線後再試一次。",
+            "PART_FAVORITES": "我的最愛",
+            "PART_HISTORY": "最近觀看",
+            "PART_ACTIVITY": "播放進度",
+            "PART_SEPARATE": "獨立",
+            "PART_SHARED": "共用(同步已關閉)",
+            "HOUSEHOLD_NOTE": "播放清單、來源和設定由所有人共用。",
+            "KIDS_PARENTAL_NOTE": "如果此裝置還沒有 PIN,會在儲存第一個兒童個人檔案時設定家長監護 PIN。"
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "琥珀色",
         "ACCENT_CORAL": "珊瑚色",
         "ACCENT_MAGENTA": "洋紅色",
-        "ACCENT_VIOLET": "紫羅蘭色"
+        "ACCENT_VIOLET": "紫羅蘭色",
+        "ACCENT_RED": "紅色",
+        "ACCENT_CYAN": "青色",
+        "ACCENT_LIME": "萊姆綠",
+        "ACCENT_SLATE": "石板灰",
+        "ACCENT_BROWN": "棕色"
     },
     "AUDIO_PLAYER": {
         "PLAY": "播放",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "PIN 碼為 4 到 8 位數字。",
             "UNAVAILABLE": "此伺服器不支援個人檔案。",
             "OFFLINE": "伺服器沒有回應。請再試一次。",
-            "GENERIC": "發生了一些問題。請再試一次。"
+            "GENERIC": "發生了一些問題。請再試一次。",
+            "KIDS_NEEDS_PARENTAL_PIN": "需要先由家長在此裝置上設定家長監護 PIN。請開啟設定 > 家長監護。",
+            "PARENTAL_PIN_UNREADABLE": "無法讀取此裝置上的家長監護 PIN。不會取代它。請重試,或開啟設定 > 家長監護。"
         },
         "PICKER": {
             "TITLE": "誰在觀看？",
             "MANAGE": "管理個人檔案",
+            "OPEN_PARENTAL_LOCK": "開啟家長監護設定",
             "LOADING": "正在開啟個人檔案…",
             "CONTINUE": "繼續",
             "OFFLINE_TITLE": "伺服器沒有回應",
             "OFFLINE_DESCRIPTION": "你可以繼續使用預設個人檔案。",
             "LEAVE_KIDS_TITLE": "退出兒童個人檔案",
             "LEAVE_KIDS_DESCRIPTION": "輸入家長 PIN 碼以切換至其他個人檔案。"
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "只有開啟同步,此個人檔案的我的最愛、記錄和播放進度才能分開保存。",
+            "ACTION": "開啟同步",
+            "DONE": "同步已開啟。此個人檔案現在擁有自己的資料。",
+            "FAILED": "無法開啟同步。請檢查設定。"
+        },
+        "SWITCHER": {
+            "BUTTON": "個人檔案:{{name}}。切換個人檔案",
+            "MANAGE": "管理個人檔案"
         }
     }
 }

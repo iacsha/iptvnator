@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,6 +19,7 @@ import {
     PIN_ID,
     syntheticProfile,
 } from '../profiles/profiles.stub';
+import { ProfileSeparationService } from '../services/profiles-separation';
 import { ProfilesRuntime } from '../services/profiles-runtime';
 import { SettingsProfilesSectionComponent } from './settings-profiles-section.component';
 
@@ -27,6 +29,11 @@ async function setup(
     options: {
         profiles?: ReturnType<typeof syntheticProfile>[];
         parental?: boolean;
+        hasPin?: boolean;
+        unreadable?: boolean;
+        forced?: boolean;
+        setupPin?: boolean;
+        syncs?: { activity: boolean; favorites: boolean; history: boolean };
     } = {}
 ) {
     localStorage.setItem(
@@ -37,6 +44,21 @@ async function setup(
     const fake = fakeRuntime(options.profiles);
     const dialogOpen = jest.fn();
     const confirmPin = jest.fn(async () => options.parental ?? true);
+    const setupPin = jest.fn(async () => options.setupPin ?? true);
+    const syncs = signal(
+        options.syncs ?? { activity: true, favorites: true, history: true }
+    );
+    const enableAll = jest.fn(async () => {
+        syncs.set({ activity: true, favorites: true, history: true });
+        return true;
+    });
+    const separation = {
+        parts: syncs,
+        allOn: () => Object.values(syncs()).every(Boolean),
+        busy: signal(false),
+        load: jest.fn(async () => null),
+        enableAll,
+    };
     const openConfirmDialog = jest.fn(async (data: { onConfirm: () => void }) =>
         data.onConfirm()
     );
@@ -45,7 +67,24 @@ async function setup(
         providers: [
             { provide: ProfilesRuntime, useValue: fake.runtime },
             { provide: MatDialog, useValue: { open: dialogOpen } },
-            { provide: ParentalLockService, useValue: { confirmPin } },
+            {
+                provide: ParentalLockService,
+                useValue: {
+                    confirmPin,
+                    initialize: async () => undefined,
+                    hasPin: () => options.hasPin ?? true,
+                    pinState: async () =>
+                        options.unreadable
+                            ? 'unreadable'
+                            : (options.hasPin ?? true)
+                              ? 'set'
+                              : 'none',
+                    forced: () => options.forced ?? false,
+                    setupPin,
+                    setForced: jest.fn(),
+                },
+            },
+            { provide: ProfileSeparationService, useValue: separation },
             { provide: DialogService, useValue: { openConfirmDialog } },
         ],
     });
@@ -100,6 +139,9 @@ async function setup(
         dialogOpen,
         confirmPin,
         openConfirmDialog,
+        setupPin,
+        enableAll,
+        syncs,
     };
 }
 
@@ -146,6 +188,46 @@ describe('SettingsProfilesSectionComponent', () => {
         expect(fake.runtime.refresh).toHaveBeenCalled();
     });
 
+    describe('the note on what is still shared', () => {
+        const note = (q: (id: string) => HTMLElement | null) =>
+            ['favorites', 'history', 'activity'].filter((id) =>
+                q(`profiles-shared-note-${id}`)
+            );
+
+        it('lists every part when all syncs are off', async () => {
+            const { q } = await setup({
+                syncs: { activity: false, favorites: false, history: false },
+            });
+            expect(note(q)).toEqual(['favorites', 'history', 'activity']);
+            expect(q('profiles-shared-note-favorites')?.textContent).toContain(
+                'SETTINGS.PROFILES.SHARED_NOTE_FAVORITES'
+            );
+        });
+
+        it('lists only the parts whose sync is off', async () => {
+            const { q } = await setup({
+                syncs: { activity: true, favorites: false, history: true },
+            });
+            expect(note(q)).toEqual(['favorites']);
+        });
+
+        it('is gone when all syncs are on', async () => {
+            const { q } = await setup();
+            expect(q('profiles-shared-note')).toBeNull();
+            expect(note(q)).toEqual([]);
+        });
+    });
+
+    it('offers only the switch while profiles are off', async () => {
+        const { fake, fixture, q } = await setup();
+        expect(q('profiles-start-ask')).toBeTruthy();
+        fake.list.update((list) => list && { ...list, enabled: false });
+        fixture.detectChanges();
+        expect(q('profiles-enabled')).toBeTruthy();
+        expect(q('profiles-start-ask')).toBeNull();
+        expect(q('profiles-consent-offer')).toBeNull();
+    });
+
     it('stores the start-up choice per server instance and device', async () => {
         const { click } = await setup();
         await click('profiles-start-last');
@@ -176,6 +258,163 @@ describe('SettingsProfilesSectionComponent', () => {
             kids: true,
         });
         expect(fake.runtime.refresh).toHaveBeenCalled();
+    });
+
+    describe('turning profiles off', () => {
+        it('asks the parental PIN while the kids lock is forced, and stays on when it is refused', async () => {
+            const { fake, fixture, confirmPin } = await setup({
+                forced: true,
+                parental: false,
+            });
+            fake.client.setEnabled.mockResolvedValue(ok({}));
+            await fixture.componentInstance.facade.setEnabled(false);
+            expect(confirmPin).toHaveBeenCalledTimes(1);
+            expect(fake.client.setEnabled).not.toHaveBeenCalled();
+        });
+
+        it('turns them off once the parental PIN is accepted, and without a prompt when no lock is forced', async () => {
+            const forced = await setup({ forced: true, parental: true });
+            forced.fake.client.setEnabled.mockResolvedValue(ok({}));
+            await forced.fixture.componentInstance.facade.setEnabled(false);
+            expect(forced.fake.client.setEnabled).toHaveBeenCalledWith(false);
+            TestBed.resetTestingModule();
+
+            const plain = await setup();
+            plain.fake.client.setEnabled.mockResolvedValue(ok({}));
+            await plain.fixture.componentInstance.facade.setEnabled(false);
+            expect(plain.confirmPin).not.toHaveBeenCalled();
+            expect(plain.fake.client.setEnabled).toHaveBeenCalledWith(false);
+        });
+    });
+
+    describe('the parental PIN of a kids profile', () => {
+        const kidsForm = {
+            name: 'Kai',
+            colour: '#14b8a6',
+            emoji: null,
+            kids: true,
+            pin: null,
+        };
+
+        it('is set up when the first kids profile is created, and cancel aborts the create', async () => {
+            const { fake, click, answerDialog, setupPin } = await setup({
+                hasPin: false,
+                setupPin: false,
+            });
+            answerDialog(kidsForm);
+            await click('profile-add');
+            expect(setupPin).toHaveBeenCalledTimes(1);
+            expect(fake.client.create).not.toHaveBeenCalled();
+        });
+
+        it('is set up before the create is sent', async () => {
+            const { fake, click, answerDialog, setupPin } = await setup({
+                hasPin: false,
+            });
+            fake.client.create.mockResolvedValue(ok({}));
+            answerDialog(kidsForm);
+            await click('profile-add');
+            expect(setupPin).toHaveBeenCalledTimes(1);
+            expect(fake.client.create).toHaveBeenCalled();
+        });
+
+        it('never replaces a PIN that only failed to read', async () => {
+            const { fake, click, answerDialog, setupPin, q } = await setup({
+                unreadable: true,
+            });
+            answerDialog(kidsForm);
+            await click('profile-add');
+            expect(setupPin).not.toHaveBeenCalled();
+            expect(fake.client.create).not.toHaveBeenCalled();
+            expect(q('profiles-error')?.textContent).toContain(
+                'PROFILES.ERRORS.PARENTAL_PIN_UNREADABLE'
+            );
+        });
+
+        it('is not asked for again when a PIN exists, nor for an adult profile', async () => {
+            const { fake, click, answerDialog, setupPin } = await setup({
+                hasPin: true,
+            });
+            fake.client.create.mockResolvedValue(ok({}));
+            answerDialog(kidsForm);
+            await click('profile-add');
+            answerDialog({ ...kidsForm, kids: false, name: 'Ana' });
+            await click('profile-add');
+            expect(setupPin).not.toHaveBeenCalled();
+        });
+
+        it('is set up when a profile is edited to kids, and cancel aborts the edit', async () => {
+            const { fake, click, answerDialog, setupPin } = await setup({
+                hasPin: false,
+                setupPin: false,
+            });
+            answerDialog({
+                name: 'Synthetic 1',
+                colour: '#3b82f6',
+                emoji: null,
+                kids: true,
+                pin: undefined,
+            });
+            await click(`profile-edit-${ADULT_ID}`);
+            expect(setupPin).toHaveBeenCalledTimes(1);
+            expect(fake.client.update).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('what is separate per profile', () => {
+        it('lists each part with its state given the consent', async () => {
+            const { q } = await setup({
+                syncs: { activity: true, favorites: false, history: true },
+            });
+            expect(q('profiles-part-favorites')!.dataset['separate']).toBe(
+                'false'
+            );
+            expect(q('profiles-part-history')!.dataset['separate']).toBe(
+                'true'
+            );
+            expect(q('profiles-part-activity')!.dataset['separate']).toBe(
+                'true'
+            );
+        });
+
+        it('offers one button to turn the syncs on, never without a click', async () => {
+            const { q, click, enableAll, syncs } = await setup({
+                syncs: { activity: false, favorites: false, history: true },
+            });
+            expect(q('profiles-consent-offer')).toBeTruthy();
+            expect(enableAll).not.toHaveBeenCalled();
+            await click('profiles-consent-accept');
+            expect(enableAll).toHaveBeenCalledTimes(1);
+            expect(syncs()).toEqual({
+                activity: true,
+                favorites: true,
+                history: true,
+            });
+            expect(q('profiles-consent-offer')).toBeNull();
+        });
+
+        it('lets the user skip the offer and says so when a sync cannot be turned on', async () => {
+            const { q, click, enableAll } = await setup({
+                syncs: { activity: false, favorites: false, history: false },
+            });
+            await click('profiles-consent-skip');
+            expect(q('profiles-consent-offer')).toBeNull();
+            expect(enableAll).not.toHaveBeenCalled();
+        });
+
+        it('reports a sync that stays off', async () => {
+            const { q, click, enableAll } = await setup({
+                syncs: { activity: false, favorites: true, history: true },
+            });
+            enableAll.mockResolvedValueOnce(false);
+            await click('profiles-consent-accept');
+            expect(q('profiles-consent-failed')).toBeTruthy();
+        });
+
+        it('shows no offer when every sync is on', async () => {
+            const { q } = await setup();
+            expect(q('profiles-consent-offer')).toBeNull();
+        });
     });
 
     it('sends a PIN only for an adult profile that set one', async () => {
@@ -256,6 +495,51 @@ describe('SettingsProfilesSectionComponent', () => {
             currentPin: '1234',
         });
         expect(el.textContent).not.toContain('1234');
+    });
+
+    it('asks for the current PIN when another device set one since the list loaded', async () => {
+        const { fake, click, answerDialog, dialogOpen } = await setup();
+        fake.client.update
+            .mockResolvedValueOnce(fail({ code: 'pin_required' }))
+            .mockResolvedValue(ok({}));
+        answerDialog({
+            name: 'Renamed',
+            colour: '#3b82f6',
+            emoji: null,
+            kids: false,
+            pin: undefined,
+        });
+        dialogOpen.mockReturnValueOnce({ afterClosed: () => of(true) });
+        await click(`profile-edit-${ADULT_ID}`);
+        expect(fake.client.update).toHaveBeenCalledTimes(1);
+        const pinDialog = dialogOpen.mock.calls[1][1].data;
+        await pinDialog.submit('1234');
+        expect(fake.client.update).toHaveBeenLastCalledWith(ADULT_ID, {
+            name: 'Renamed',
+            currentPin: '1234',
+        });
+        expect(fake.runtime.handleProfileError).not.toHaveBeenCalled();
+    });
+
+    it('waits out a refresh already in flight before it asks afresh', async () => {
+        const { fake, click, answerDialog } = await setup();
+        fake.client.update.mockResolvedValue(ok({}));
+        const order: string[] = [];
+        fake.runtime.idle.mockImplementation(async () => {
+            order.push('idle');
+        });
+        fake.runtime.refresh.mockImplementation(async () => {
+            order.push('refresh');
+        });
+        answerDialog({
+            name: 'Renamed',
+            colour: '#3b82f6',
+            emoji: null,
+            kids: false,
+            pin: undefined,
+        });
+        await click(`profile-edit-${ADULT_ID}`);
+        expect(order.slice(-2)).toEqual(['idle', 'refresh']);
     });
 
     it('asks for the parental PIN before clearing kids, and stops when it is refused', async () => {
@@ -372,6 +656,10 @@ describe('SettingsProfilesSectionComponent', () => {
     });
 
     it('moves through the start-up options with the arrow keys', async () => {
+        localStorage.setItem(
+            `iptvnator-server:${NAS}:profiles-start-v1`,
+            'ask'
+        );
         const { q, fixture } = await setup();
         const ask = q('profiles-start-ask')!;
         const last = q('profiles-start-last')!;

@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Szülői felügyelet bekapcsolva",
             "DISABLED_TOAST": "Szülői felügyelet kikapcsolva",
             "PIN_CHANGED_TOAST": "PIN-kód módosítva",
-            "LOCKED_TOAST": "Zárolva"
+            "LOCKED_TOAST": "Zárolva",
+            "FORCED_NOTE": "A zár be van kapcsolva, mert gyermekprofil az aktív. A módosításhoz lépjen ki a gyermekprofilból."
         },
         "AGE_RATING_COUNTRY_LABEL": "Korhatár-besorolás országa",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Válassza ki, melyik ország korhatár-besorolását szeretné látni. Ha ehhez az országhoz nincs adat, az amerikai vagy a szolgáltató által megadott besorolás jelenhet meg.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "Profilok",
             "SUBTITLE": "Hozzon létre ezen a kiszolgálón külön profilt a háztartás minden tagjának. A profil PIN-kódja egyszerű hozzáférési korlát a gyermekek és a lakótársak számára, nem biztonsági megoldás. Bárki, aki hozzáfér a kiszolgálóhoz, továbbra is elérheti annak összes adatát.",
+            "SHARED_NOTE_FAVORITES": "A kedvencek minden profilban közösek, amíg be nem kapcsolja a szinkronizálásukat.",
+            "SHARED_NOTE_HISTORY": "A legutóbb megnézett elemek minden profilban közösek, amíg be nem kapcsolja a szinkronizálásukat.",
+            "SHARED_NOTE_ACTIVITY": "A lejátszási pozíciók minden profilban közösek, amíg be nem kapcsolja a szinkronizálásukat.",
+            "UNSUPPORTED": "Egyetlen csatlakoztatott kiszolgáló sem támogatja a profilokat, ezért a Beállításokban nincs Profilok szakasz. Csatlakoztasson vagy frissítsen egy kiszolgálót, hogy használhassa őket.",
             "LOADING": "Profilok betöltése…",
             "LOAD_ERROR_TITLE": "A profilokat nem sikerült betölteni",
             "LOAD_ERROR_DESCRIPTION": "Frissítse az oldalt, és próbálja újra.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "{{name}} PIN-kódja",
             "PIN_CHANGE_DESCRIPTION": "{{name}} PIN-kódjának módosításához vagy eltávolításához adja meg a jelenlegi kódot.",
             "PARENTAL_TITLE": "Szülői PIN-kód szükséges",
-            "PARENTAL_DESCRIPTION": "Ezt a gyermekprofilt a szülői felügyelet védi."
+            "PARENTAL_DESCRIPTION": "Ezt a gyermekprofilt a szülői felügyelet védi.",
+            "SEPARATION_TITLE": "Profilonként külön",
+            "CONSENT_TITLE": "Külön tartja az egyes profilok adatait?",
+            "CONSENT_BODY": "A kedvencek, a nemrég megnézettek és a lejátszási haladás csak akkor profilonkénti, ha a szinkronizálásuk be van kapcsolva ezen az eszközön. Bekapcsolja most mind a hármat?",
+            "CONSENT_ACCEPT": "Mindhárom bekapcsolása",
+            "CONSENT_SKIP": "Most nem",
+            "CONSENT_FAILED": "Egy szinkronizálást nem sikerült bekapcsolni. Ellenőrizze a kiszolgálókapcsolatot, és próbálja újra.",
+            "PART_FAVORITES": "Kedvencek",
+            "PART_HISTORY": "Nemrég megnézett",
+            "PART_ACTIVITY": "Lejátszási haladás",
+            "PART_SEPARATE": "Külön",
+            "PART_SHARED": "Közös (a szinkronizálás ki van kapcsolva)",
+            "HOUSEHOLD_NOTE": "A lejátszási listák, a források és a beállítások mindenkinek közösek.",
+            "KIDS_PARENTAL_NOTE": "A szülői felügyelet PIN-kódja az első gyermekprofil mentésekor kerül beállításra, ha az eszközön még nincs."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "Borostyánsárga",
         "ACCENT_CORAL": "Korall",
         "ACCENT_MAGENTA": "Bíbor",
-        "ACCENT_VIOLET": "Ibolyalila"
+        "ACCENT_VIOLET": "Ibolyalila",
+        "ACCENT_RED": "Piros",
+        "ACCENT_CYAN": "Ciánkék",
+        "ACCENT_LIME": "Limezöld",
+        "ACCENT_SLATE": "Pala",
+        "ACCENT_BROWN": "Barna"
     },
     "AUDIO_PLAYER": {
         "PLAY": "Lejátszás",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "A PIN-kódnak 4–8 számjegyből kell állnia.",
             "UNAVAILABLE": "Ez a kiszolgáló nem támogatja a profilokat.",
             "OFFLINE": "A kiszolgáló nem válaszol. Próbálja újra.",
-            "GENERIC": "Hiba történt. Próbálja újra."
+            "GENERIC": "Hiba történt. Próbálja újra.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Először egy szülőnek be kell állítania a szülői felügyelet PIN-kódját ezen az eszközön. Nyissa meg: Beállítások > Szülői felügyelet.",
+            "PARENTAL_PIN_UNREADABLE": "Az eszköz szülői felügyeleti PIN-kódját nem sikerült beolvasni. Nem lesz lecserélve. Próbálja újra, vagy nyissa meg: Beállítások > Szülői felügyelet."
         },
         "PICKER": {
             "TITLE": "Ki használja az alkalmazást?",
             "MANAGE": "Profilok kezelése",
+            "OPEN_PARENTAL_LOCK": "Szülői felügyelet beállításainak megnyitása",
             "LOADING": "Profilok betöltése…",
             "CONTINUE": "Tovább",
             "OFFLINE_TITLE": "A kiszolgáló nem válaszol",
             "OFFLINE_DESCRIPTION": "Folytathatja az alapértelmezett profillal.",
             "LEAVE_KIDS_TITLE": "Kilépés a gyermekprofilból",
             "LEAVE_KIDS_DESCRIPTION": "A profilváltáshoz adja meg a szülői PIN-kódot."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "A profil kedvencei, előzményei és haladása csak bekapcsolt szinkronizálással maradhatnak külön.",
+            "ACTION": "Szinkronizálás bekapcsolása",
+            "DONE": "A szinkronizálás be van kapcsolva. Ennek a profilnak mostantól saját adatai vannak.",
+            "FAILED": "A szinkronizálást nem sikerült bekapcsolni. Ellenőrizze a beállításokat."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil: {{name}}. Profilváltás",
+            "MANAGE": "Profilok kezelése"
         }
     }
 }

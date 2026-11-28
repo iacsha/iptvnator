@@ -1,5 +1,7 @@
 import { EnvironmentInjector } from '@angular/core';
+import { ParentalLockService } from '@iptvnator/services';
 import { TestBed } from '@angular/core/testing';
+import { setActivePersonalScope } from '@iptvnator/services/profiles/active-scope';
 import { prepareSourceConnection } from '@iptvnator/services/source-sync/connection';
 import type {
     SourceServerRequest,
@@ -16,12 +18,12 @@ import {
     writeActiveProfileId,
 } from './profiles-preferences';
 import { PROFILES_REQUEST } from './profiles-request.token';
-import { PROFILES_POLL_MS, ProfilesRuntime } from './profiles-runtime';
-import { loadProfilesRuntime } from './profiles-runtime.providers';
 import {
-    PROFILES_UI_ENABLED,
-    PROFILES_UI_ENABLED_TOKEN,
-} from './profiles-ui-enabled';
+    PROFILES_POLL_MS,
+    PROFILES_REPROBE_MS,
+    ProfilesRuntime,
+} from './profiles-runtime';
+import { loadProfilesRuntime } from './profiles-runtime.providers';
 
 const NAS = 'synthetic-nas';
 const ADULT = '11111111-1111-4111-8111-111111111111';
@@ -96,19 +98,16 @@ async function connect(instanceId = NAS): Promise<void> {
 describe('ProfilesRuntime', () => {
     const originalElectron = window.electron;
     let fake: ReturnType<typeof fakeServer>;
+    let pinState: jest.Mock;
 
-    async function start(uiEnabled?: boolean): Promise<ProfilesRuntime> {
+    async function start(): Promise<ProfilesRuntime> {
         TestBed.configureTestingModule({
             providers: [
                 { provide: PROFILES_REQUEST, useValue: fake.request },
-                ...(uiEnabled === undefined
-                    ? []
-                    : [
-                          {
-                              provide: PROFILES_UI_ENABLED_TOKEN,
-                              useValue: uiEnabled,
-                          },
-                      ]),
+                {
+                    provide: ParentalLockService,
+                    useValue: { setForced: jest.fn(), pinState },
+                },
             ],
         });
         const runtime = TestBed.inject(ProfilesRuntime);
@@ -123,6 +122,7 @@ describe('ProfilesRuntime', () => {
         Reflect.deleteProperty(window, 'electron');
         localStorage.clear();
         fake = fakeServer();
+        pinState = jest.fn(async () => 'set');
         await connect();
     });
 
@@ -134,13 +134,6 @@ describe('ProfilesRuntime', () => {
         localStorage.clear();
         await prepareSourceConnection();
         window.electron = originalElectron;
-    });
-
-    it('keeps the UI hidden by default and lets tests flip the token', async () => {
-        expect(PROFILES_UI_ENABLED).toBe(false);
-        expect((await start()).uiEnabled).toBe(false);
-        TestBed.resetTestingModule();
-        expect((await start(true)).uiEnabled).toBe(true);
     });
 
     it('lazy-loads the root runtime', async () => {
@@ -171,6 +164,29 @@ describe('ProfilesRuntime', () => {
         expect(fake.calls('profiles-list')).toHaveLength(0);
         await runtime.refresh();
         expect(fake.calls('instance')).toHaveLength(1);
+    });
+
+    it('asks an unsupported instance again after a while', async () => {
+        fake.server.capabilities = ['sources-v1'];
+        const runtime = await start();
+        expect(runtime.state()).toBe('unsupported');
+        fake.server.capabilities = ['sources-v1', PROFILES_CAPABILITY];
+        await jest.advanceTimersByTimeAsync(PROFILES_POLL_MS);
+        expect(runtime.capable()).toBe(false);
+        expect(fake.calls('instance')).toHaveLength(1);
+        await jest.advanceTimersByTimeAsync(PROFILES_REPROBE_MS);
+        expect(fake.calls('instance')).toHaveLength(2);
+        expect(runtime.capable()).toBe(true);
+        expect(runtime.state()).toBe('ready');
+    });
+
+    it('lets a running refresh finish without joining it', async () => {
+        const runtime = await start();
+        let finished = false;
+        const running = runtime.refresh().then(() => (finished = true));
+        await runtime.idle();
+        expect(finished).toBe(true);
+        await running;
     });
 
     it('does not trust a probe answered by another instance', async () => {
@@ -204,6 +220,25 @@ describe('ProfilesRuntime', () => {
         expect(runtime.active()?.id).toBe(ADULT);
     });
 
+    it('names the personal scope of the active profile', async () => {
+        writeActiveProfileId(NAS, ADULT);
+        const runtime = await start();
+        expect(runtime.activeId()).toBe(ADULT);
+        expect(runtime.scope()).toBe(`profile:${ADULT}`);
+        expect(runtime.select(DEFAULT_PROFILE_ID)).toBe(true);
+        expect(runtime.scope()).toBe('shared');
+    });
+
+    it('exposes whether start-up holds Default', async () => {
+        writeActiveProfileId(NAS, ADULT);
+        const runtime = await start();
+        expect(runtime.held()).toBe(false);
+        runtime.holdDefault();
+        expect(runtime.held()).toBe(true);
+        expect(runtime.select(ADULT)).toBe(true);
+        expect(runtime.held()).toBe(false);
+    });
+
     it('falls back to Default and forgets a stale stored profile', async () => {
         writeActiveProfileId(NAS, STALE);
         const runtime = await start();
@@ -231,6 +266,130 @@ describe('ProfilesRuntime', () => {
         expect(runtime.select(ADULT)).toBe(true);
         expect(runtime.activeId()).toBe(ADULT);
         expect(readActiveProfileId(NAS)).toBe(ADULT);
+    });
+
+    describe('switchTo', () => {
+        const ADULT_SCOPE = `profile:${ADULT}` as const;
+
+        /** A `move` that stays pending until released; it can announce the scope change. */
+        function deferredMove() {
+            let release!: () => void;
+            let reject!: (error: Error) => void;
+            let announce: (() => void) | undefined;
+            const move = jest.fn(
+                (scope: string, moved: () => void) => {
+                    announce = moved;
+                    if (scope === ADULT_SCOPE) {
+                        return new Promise<void>((resolve, fail) => {
+                            release = resolve;
+                            reject = fail;
+                        });
+                    }
+                    return Promise.resolve();
+                }
+            );
+            return {
+                move,
+                release: () => release(),
+                fail: (error: Error) => reject(error),
+                moved: () => announce?.(),
+            };
+        }
+
+        afterEach(() => setActivePersonalScope('shared'));
+
+        it('keeps the old profile shown and active until the move resolves', async () => {
+            const runtime = await start();
+            const gap = deferredMove();
+            const switching = runtime.switchTo(ADULT, gap.move);
+            await Promise.resolve();
+            expect(gap.move).toHaveBeenCalledWith(
+                ADULT_SCOPE,
+                expect.any(Function)
+            );
+            // What the UI shows, and where a write goes, still match.
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+            expect(runtime.active()?.id).toBe(DEFAULT_PROFILE_ID);
+            expect(runtime.scope()).toBe('shared');
+            expect(readActiveProfileId(NAS)).toBeNull();
+            setActivePersonalScope(ADULT_SCOPE);
+            gap.release();
+            await expect(switching).resolves.toBe(true);
+            expect(runtime.activeId()).toBe(ADULT);
+            expect(runtime.active()?.id).toBe(ADULT);
+            expect(runtime.scope()).toBe(ADULT_SCOPE);
+            expect(readActiveProfileId(NAS)).toBe(ADULT);
+        });
+
+        it('publishes the profile at `moved`, before the move has finished re-listing', async () => {
+            const runtime = await start();
+            const gap = deferredMove();
+            const switching = runtime.switchTo(ADULT, gap.move);
+            await Promise.resolve();
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+            setActivePersonalScope(ADULT_SCOPE);
+            gap.moved();
+            expect(runtime.activeId()).toBe(ADULT);
+            expect(runtime.scope()).toBe(ADULT_SCOPE);
+            gap.release();
+            await expect(switching).resolves.toBe(true);
+        });
+
+        it('leaves the old profile active and the choice unsaved when the move fails', async () => {
+            writeActiveProfileId(NAS, DEFAULT_PROFILE_ID);
+            const runtime = await start();
+            const gap = deferredMove();
+            const switching = runtime.switchTo(ADULT, gap.move);
+            await Promise.resolve();
+            gap.fail(new Error('synthetic'));
+            await expect(switching).resolves.toBe(false);
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+            expect(runtime.scope()).toBe('shared');
+            expect(readActiveProfileId(NAS)).toBe(DEFAULT_PROFILE_ID);
+            // The device is put back on the scope the old profile uses.
+            expect(gap.move).toHaveBeenLastCalledWith(
+                'shared',
+                expect.any(Function)
+            );
+        });
+
+        it('does not switch to a profile that is not listed', async () => {
+            const runtime = await start();
+            const move = jest.fn(async () => undefined);
+            await expect(runtime.switchTo(STALE, move)).resolves.toBe(false);
+            expect(move).not.toHaveBeenCalled();
+        });
+
+        it('drops the choice when the start-up guard falls back to Default during the move', async () => {
+            const runtime = await start();
+            const gap = deferredMove();
+            const switching = runtime.switchTo(ADULT, gap.move);
+            await Promise.resolve();
+            runtime.holdDefault();
+            setActivePersonalScope(ADULT_SCOPE);
+            gap.release();
+            await expect(switching).resolves.toBe(false);
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+            expect(readActiveProfileId(NAS)).toBeNull();
+        });
+
+        it('publishes after the move when it never announced the scope change', async () => {
+            const runtime = await start();
+            // Already on the scope: the switch has nothing to move.
+            await expect(
+                runtime.switchTo(DEFAULT_PROFILE_ID, async () => undefined)
+            ).resolves.toBe(true);
+            expect(readActiveProfileId(NAS)).toBe(DEFAULT_PROFILE_ID);
+        });
+
+        it('does not publish a profile whose scope the device never reached', async () => {
+            const runtime = await start();
+            // The move resolved but a newer switch kept the device on Default.
+            await expect(
+                runtime.switchTo(ADULT, async () => undefined)
+            ).resolves.toBe(false);
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+        });
     });
 
     it('selects only Default while profiles are off', async () => {
@@ -357,6 +516,52 @@ describe('ProfilesRuntime', () => {
         fake.server.revision = 2;
         await runtime.refresh();
         expect(runtime.activeId()).toBe(ADULT);
+    });
+
+    describe('a saved kids profile on a device without a parental PIN', () => {
+        const withKids = () => {
+            fake.server.profiles = [
+                profile(DEFAULT_PROFILE_ID, 0),
+                { ...profile(ADULT, 1), kids: true },
+            ];
+            writeActiveProfileId(NAS, ADULT);
+        };
+
+        it('is not restored, and stays saved', async () => {
+            withKids();
+            pinState.mockResolvedValue('none');
+            const runtime = await start();
+            expect(runtime.localPin()).toBe('none');
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+            expect(readActiveProfileId(NAS)).toBe(ADULT);
+        });
+
+        it('counts an unreadable PIN as none', async () => {
+            withKids();
+            pinState.mockResolvedValue('unreadable');
+            const runtime = await start();
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+        });
+
+        it('is restored when the device has a PIN', async () => {
+            withKids();
+            const runtime = await start();
+            expect(runtime.activeId()).toBe(ADULT);
+        });
+
+        it('is dropped when a restored profile became kids and there is no PIN', async () => {
+            pinState.mockResolvedValue('none');
+            writeActiveProfileId(NAS, ADULT);
+            const runtime = await start();
+            expect(runtime.activeId()).toBe(ADULT);
+            fake.server.profiles = [
+                profile(DEFAULT_PROFILE_ID, 0),
+                { ...profile(ADULT, 1), kids: true },
+            ];
+            fake.server.revision = 2;
+            await runtime.refresh();
+            expect(runtime.activeId()).toBe(DEFAULT_PROFILE_ID);
+        });
     });
 
     it('asks the PIN of a restored profile that gained one after launch', async () => {

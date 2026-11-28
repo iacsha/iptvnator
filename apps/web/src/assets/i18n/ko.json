@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "자녀 보호가 켜졌습니다",
             "DISABLED_TOAST": "자녀 보호가 꺼졌습니다",
             "PIN_CHANGED_TOAST": "PIN이 변경되었습니다",
-            "LOCKED_TOAST": "잠겼습니다"
+            "LOCKED_TOAST": "잠겼습니다",
+            "FORCED_NOTE": "어린이 프로필이 활성화되어 있어 잠금이 켜져 있습니다. 변경하려면 어린이 프로필에서 나가세요."
         },
         "AGE_RATING_COUNTRY_LABEL": "연령 등급 국가",
         "AGE_RATING_COUNTRY_DESCRIPTION": "연령 등급에 사용할 국가를 선택하세요. 현지 정보가 없으면 미국 또는 제공업체 정보를 사용할 수 있습니다.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "프로필",
             "SUBTITLE": "이 서버에서 가구 구성원마다 개별 프로필을 만들 수 있습니다. 프로필 PIN은 자녀나 동거인을 위한 가벼운 잠금일 뿐 보안 기능이 아닙니다. 서버에 접근할 수 있는 사람은 누구나 모든 데이터에 접근할 수 있습니다.",
+            "SHARED_NOTE_FAVORITES": "즐겨찾기는 동기화를 켤 때까지 모든 프로필이 함께 사용합니다.",
+            "SHARED_NOTE_HISTORY": "최근 본 항목은 동기화를 켤 때까지 모든 프로필이 함께 사용합니다.",
+            "SHARED_NOTE_ACTIVITY": "재생 위치는 동기화를 켤 때까지 모든 프로필이 함께 사용합니다.",
+            "UNSUPPORTED": "프로필을 지원하는 연결된 서버가 없어 설정에 프로필 섹션이 없습니다. 사용하려면 서버를 연결하거나 업데이트하세요.",
             "LOADING": "프로필 불러오는 중…",
             "LOAD_ERROR_TITLE": "프로필을 불러오지 못했습니다",
             "LOAD_ERROR_DESCRIPTION": "페이지를 새로고침한 후 다시 시도하세요.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "{{name}}의 PIN",
             "PIN_CHANGE_DESCRIPTION": "{{name}}의 PIN을 변경하거나 삭제하려면 현재 PIN이 필요합니다.",
             "PARENTAL_TITLE": "보호자 PIN 필요",
-            "PARENTAL_DESCRIPTION": "이 어린이 프로필은 보호자 잠금으로 보호되어 있습니다."
+            "PARENTAL_DESCRIPTION": "이 어린이 프로필은 보호자 잠금으로 보호되어 있습니다.",
+            "SEPARATION_TITLE": "프로필별로 분리",
+            "CONSENT_TITLE": "프로필별로 데이터를 분리할까요?",
+            "CONSENT_BODY": "즐겨찾기, 최근 시청, 재생 진행 상황은 이 기기에서 각각의 동기화가 켜져 있을 때만 프로필별로 보관됩니다. 세 가지를 지금 모두 켤까요?",
+            "CONSENT_ACCEPT": "세 가지 모두 켜기",
+            "CONSENT_SKIP": "나중에",
+            "CONSENT_FAILED": "동기화 하나를 켜지 못했습니다. 서버 연결을 확인하고 다시 시도하세요.",
+            "PART_FAVORITES": "즐겨찾기",
+            "PART_HISTORY": "최근 시청",
+            "PART_ACTIVITY": "재생 진행 상황",
+            "PART_SEPARATE": "분리됨",
+            "PART_SHARED": "공유됨(동기화 꺼짐)",
+            "HOUSEHOLD_NOTE": "재생목록, 소스, 설정은 모두가 함께 사용합니다.",
+            "KIDS_PARENTAL_NOTE": "이 기기에 PIN이 없으면 첫 어린이 프로필을 저장할 때 자녀 보호 PIN을 설정합니다."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "호박색",
         "ACCENT_CORAL": "코랄",
         "ACCENT_MAGENTA": "마젠타",
-        "ACCENT_VIOLET": "보라"
+        "ACCENT_VIOLET": "보라",
+        "ACCENT_RED": "레드",
+        "ACCENT_CYAN": "시안",
+        "ACCENT_LIME": "라임",
+        "ACCENT_SLATE": "슬레이트",
+        "ACCENT_BROWN": "브라운"
     },
     "AUDIO_PLAYER": {
         "PLAY": "재생",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "PIN은 4~8자리여야 합니다.",
             "UNAVAILABLE": "이 서버는 프로필을 지원하지 않습니다.",
             "OFFLINE": "서버가 응답하지 않습니다. 다시 시도하세요.",
-            "GENERIC": "문제가 발생했습니다. 다시 시도하세요."
+            "GENERIC": "문제가 발생했습니다. 다시 시도하세요.",
+            "KIDS_NEEDS_PARENTAL_PIN": "먼저 보호자가 이 기기에서 자녀 보호 PIN을 설정해야 합니다. 설정 > 자녀 보호를 여세요.",
+            "PARENTAL_PIN_UNREADABLE": "이 기기의 자녀 보호 PIN을 읽지 못했습니다. PIN은 교체되지 않습니다. 다시 시도하거나 설정 > 자녀 보호를 여세요."
         },
         "PICKER": {
             "TITLE": "누가 시청하나요?",
             "MANAGE": "프로필 관리",
+            "OPEN_PARENTAL_LOCK": "자녀 보호 설정 열기",
             "LOADING": "프로필 여는 중…",
             "CONTINUE": "계속",
             "OFFLINE_TITLE": "서버가 응답하지 않습니다",
             "OFFLINE_DESCRIPTION": "기본 프로필로 계속할 수 있습니다.",
             "LEAVE_KIDS_TITLE": "어린이 프로필 나가기",
             "LEAVE_KIDS_DESCRIPTION": "다른 프로필로 전환하려면 보호자 PIN을 입력하세요."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "이 프로필의 즐겨찾기, 기록, 재생 진행 상황은 동기화를 켜야만 따로 보관됩니다.",
+            "ACTION": "동기화 켜기",
+            "DONE": "동기화가 켜졌습니다. 이제 이 프로필은 자체 데이터를 가집니다.",
+            "FAILED": "동기화를 켜지 못했습니다. 설정을 확인하세요."
+        },
+        "SWITCHER": {
+            "BUTTON": "프로필: {{name}}. 프로필 전환",
+            "MANAGE": "프로필 관리"
         }
     }
 }

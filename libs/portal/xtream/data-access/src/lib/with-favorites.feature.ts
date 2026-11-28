@@ -1,6 +1,7 @@
 import { RuntimeCapabilitiesService } from '@iptvnator/services';
 import { NotificationService } from '@iptvnator/services/notifications';
 import { FavoriteChannelMembershipEvents } from '@iptvnator/services/favorites-events';
+import { ProfileStateUnavailableError } from '@iptvnator/services/profiles/active-scope';
 import { DestroyRef, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -176,7 +177,12 @@ export const withFavorites = function () {
                                 });
                         } catch (error) {
                             nextStatus = currentStatus;
-                            if (activeTarget === targetKey) {
+                            // A refused write already asked to turn sync on: a second
+                            // toast would replace that action.
+                            if (
+                                activeTarget === targetKey &&
+                                !(error instanceof ProfileStateUnavailableError)
+                            ) {
                                 const key =
                                     error instanceof Error &&
                                     error.message ===

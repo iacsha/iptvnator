@@ -18,6 +18,7 @@ export class SettingsParentalLockFacade {
     private readonly snackbar = inject(SettingsSnackbarService);
 
     readonly enabled = this.parentalLock.enabled;
+    readonly forced = this.parentalLock.forced;
     readonly unlocked = this.parentalLock.unlocked;
     readonly hasPin = this.parentalLock.hasPin;
     readonly relockMinutes = this.parentalLock.relockMinutes;

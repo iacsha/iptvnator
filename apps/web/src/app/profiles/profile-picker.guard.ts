@@ -1,13 +1,17 @@
 import { EnvironmentInjector, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { ParentalLockService } from '@iptvnator/services';
 import { sourceConnection } from '@iptvnator/services/source-sync/connection';
 import {
     readActiveProfileId,
+    readKidsLast,
     readProfilesStart,
 } from '../services/profiles-preferences';
-import { loadProfilesRuntime } from '../services/profiles-runtime.providers';
+import {
+    loadProfileSwitch,
+    loadProfilesRuntime,
+} from '../services/profiles-runtime.providers';
 import { needsPicker } from '../services/profiles-start';
-import { PROFILES_UI_ENABLED_TOKEN } from '../services/profiles-ui-enabled';
 import {
     PROFILE_PICKER_PATH,
     profilePickedThisSession,
@@ -21,13 +25,16 @@ export const PROFILES_GUARD_TIMEOUT_MS = 1500;
  * Sends the first workspace entry of a session to "Who's watching?" when the
  * household uses profiles and this device asks. Anything else, an error, an
  * offline server or a slow answer included, lets the user in as Default.
- * Static imports stay tiny: the runtime loads lazily and only when the UI
- * switch is on.
+ * Static imports stay tiny: the runtime loads lazily, and only for a
+ * device with a connected server.
  */
 export const profilePickerGuard: CanActivateFn = async (_route, state) => {
-    if (!inject(PROFILES_UI_ENABLED_TOKEN)) return true;
     const instanceId = sourceConnection()?.instanceId;
-    if (!instanceId || profilePickedThisSession()) return true;
+    if (!instanceId) return true;
+    // The last profile of this device was a kids profile: hold the lock on
+    // from the first moment, until the runtime has answered who is watching.
+    if (readKidsLast(instanceId)) inject(ParentalLockService).setForced(true);
+    if (profilePickedThisSession()) return true;
     const injector = inject(EnvironmentInjector);
     const router = inject(Router);
     const ask = await withTimeout(
@@ -46,11 +53,9 @@ export const profilePickerGuard: CanActivateFn = async (_route, state) => {
         : true;
 };
 
-/** `/profile-picker` exists only while the UI switch is on and a server is connected. */
+/** `/profile-picker` exists only while a server is connected. */
 export const profilePickerRouteGuard: CanActivateFn = () =>
-    inject(PROFILES_UI_ENABLED_TOKEN) && sourceConnection()
-        ? true
-        : inject(Router).parseUrl('/workspace');
+    sourceConnection() ? true : inject(Router).parseUrl('/workspace');
 
 async function shouldAsk(
     injector: EnvironmentInjector,
@@ -59,18 +64,25 @@ async function shouldAsk(
     try {
         const runtime = await loadProfilesRuntime(injector);
         await runtime.refresh();
+        // The saved kids profile is restored only where a PIN can unlock it.
+        await runtime.readLocalPin();
         // No verified answer (offline, refused, checking): stay on Default
         // for the session, so a later poll cannot switch the viewer.
         if (runtime.state() !== 'ready') return null;
-        return needsPicker({
-            uiEnabled: true,
+        const ask = needsPicker({
             connected: true,
             capable: runtime.capable(),
             enabled: runtime.enabled(),
             startPref: readProfilesStart(instanceId),
             lastId: readActiveProfileId(instanceId),
+            hasParentalPin: runtime.localPin() === 'set',
             profiles: runtime.list()?.profiles ?? [],
         });
+        // The restored profile's state loads before the first screen; the
+        // picker's own choice is picked up by the switch's effect.
+        const profileSwitch = await loadProfileSwitch(injector);
+        if (!ask) await profileSwitch.apply(runtime.scope());
+        return ask;
     } catch {
         return null;
     }

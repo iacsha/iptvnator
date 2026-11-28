@@ -832,7 +832,8 @@
             "ENABLED_TOAST": "Kontrola rodzicielska włączona",
             "DISABLED_TOAST": "Kontrola rodzicielska wyłączona",
             "PIN_CHANGED_TOAST": "Kod PIN zmieniony",
-            "LOCKED_TOAST": "Zablokowano"
+            "LOCKED_TOAST": "Zablokowano",
+            "FORCED_NOTE": "Blokada jest włączona, bo aktywny jest profil dziecka. Wyjdź z profilu dziecka, aby ją zmienić."
         },
         "AGE_RATING_COUNTRY_LABEL": "Kraj klasyfikacji wiekowej",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Wybierz kraj klasyfikacji. Jeśli brakuje danych lokalnych, mogą zostać użyte dane z USA lub od dostawcy.",
@@ -855,6 +856,10 @@
         "PROFILES": {
             "TITLE": "Profile",
             "SUBTITLE": "Daj każdej osobie w domu własny profil na tym serwerze. PIN profilu to lekka blokada dla dzieci i współlokatorów, a nie zabezpieczenie: każdy, kto ma dostęp do serwera, nadal może dotrzeć do wszystkich jego danych.",
+            "SHARED_NOTE_FAVORITES": "Ulubione są wspólne dla wszystkich profili, dopóki ich synchronizacja nie zostanie włączona.",
+            "SHARED_NOTE_HISTORY": "Ostatnio oglądane pozycje są wspólne dla wszystkich profili, dopóki ich synchronizacja nie zostanie włączona.",
+            "SHARED_NOTE_ACTIVITY": "Pozycje odtwarzania są wspólne dla wszystkich profili, dopóki ich synchronizacja nie zostanie włączona.",
+            "UNSUPPORTED": "Żaden połączony serwer nie obsługuje profili, dlatego w Ustawieniach nie ma sekcji Profile. Połącz lub zaktualizuj serwer, aby z nich korzystać.",
             "LOADING": "Wczytywanie profili…",
             "LOAD_ERROR_TITLE": "Nie udało się wczytać profili",
             "LOAD_ERROR_DESCRIPTION": "Odśwież stronę i spróbuj ponownie.",
@@ -898,7 +903,20 @@
             "PIN_CHANGE_TITLE": "Kod PIN profilu {{name}}",
             "PIN_CHANGE_DESCRIPTION": "Zmiana lub usunięcie kodu PIN profilu {{name}} wymaga jego obecnego kodu PIN.",
             "PARENTAL_TITLE": "Wymagany rodzicielski kod PIN",
-            "PARENTAL_DESCRIPTION": "Ten profil dziecka jest chroniony blokadą rodzicielską."
+            "PARENTAL_DESCRIPTION": "Ten profil dziecka jest chroniony blokadą rodzicielską.",
+            "SEPARATION_TITLE": "Osobno dla każdego profilu",
+            "CONSENT_TITLE": "Rozdzielić dane każdego profilu?",
+            "CONSENT_BODY": "Ulubione, ostatnio oglądane i postęp odtwarzania są trzymane osobno dla profili tylko wtedy, gdy ich synchronizacja jest włączona na tym urządzeniu. Włączyć wszystkie trzy teraz?",
+            "CONSENT_ACCEPT": "Włącz wszystkie trzy",
+            "CONSENT_SKIP": "Nie teraz",
+            "CONSENT_FAILED": "Nie udało się włączyć jednej synchronizacji. Sprawdź połączenie z serwerem i spróbuj ponownie.",
+            "PART_FAVORITES": "Ulubione",
+            "PART_HISTORY": "Ostatnio oglądane",
+            "PART_ACTIVITY": "Postęp odtwarzania",
+            "PART_SEPARATE": "Osobno",
+            "PART_SHARED": "Wspólne (synchronizacja wyłączona)",
+            "HOUSEHOLD_NOTE": "Playlisty, źródła i ustawienia są wspólne dla wszystkich.",
+            "KIDS_PARENTAL_NOTE": "Kod PIN kontroli rodzicielskiej jest ustawiany przy zapisie pierwszego profilu dziecka, jeśli urządzenie jeszcze go nie ma."
         }
     },
     "SERVER_STORAGE": {
@@ -946,7 +964,12 @@
         "ACCENT_AMBER": "Bursztynowy",
         "ACCENT_CORAL": "Koralowy",
         "ACCENT_MAGENTA": "Purpurowy",
-        "ACCENT_VIOLET": "Fioletowy"
+        "ACCENT_VIOLET": "Fioletowy",
+        "ACCENT_RED": "Czerwony",
+        "ACCENT_CYAN": "Cyjan",
+        "ACCENT_LIME": "Limonkowy",
+        "ACCENT_SLATE": "Łupkowy",
+        "ACCENT_BROWN": "Brązowy"
     },
     "AUDIO_PLAYER": {
         "PLAY": "Odtwórz",
@@ -2898,17 +2921,30 @@
             "INVALID_PIN": "Kod PIN składa się z 4 do 8 cyfr.",
             "UNAVAILABLE": "Ten serwer nie obsługuje profili.",
             "OFFLINE": "Serwer nie odpowiada. Spróbuj ponownie.",
-            "GENERIC": "Coś poszło nie tak. Spróbuj ponownie."
+            "GENERIC": "Coś poszło nie tak. Spróbuj ponownie.",
+            "KIDS_NEEDS_PARENTAL_PIN": "Najpierw rodzic musi ustawić na tym urządzeniu kod PIN kontroli rodzicielskiej. Otwórz Ustawienia > Kontrola rodzicielska.",
+            "PARENTAL_PIN_UNREADABLE": "Nie udało się odczytać kodu PIN kontroli rodzicielskiej na tym urządzeniu. Nie zostanie zastąpiony. Spróbuj ponownie lub otwórz Ustawienia > Kontrola rodzicielska."
         },
         "PICKER": {
             "TITLE": "Kto ogląda?",
             "MANAGE": "Zarządzaj profilami",
+            "OPEN_PARENTAL_LOCK": "Otwórz ustawienia kontroli rodzicielskiej",
             "LOADING": "Otwieranie profili…",
             "CONTINUE": "Dalej",
             "OFFLINE_TITLE": "Serwer nie odpowiada",
             "OFFLINE_DESCRIPTION": "Możesz kontynuować z profilem domyślnym.",
             "LEAVE_KIDS_TITLE": "Wyjdź z profilu dziecka",
             "LEAVE_KIDS_DESCRIPTION": "Wpisz rodzicielski kod PIN, aby przełączyć się na inny profil."
+        },
+        "SYNC_PROMPT": {
+            "MESSAGE": "Ulubione, historia i postęp tego profilu pozostają osobne tylko przy włączonej synchronizacji.",
+            "ACTION": "Włącz synchronizację",
+            "DONE": "Synchronizacja jest włączona. Ten profil ma teraz własne dane.",
+            "FAILED": "Nie udało się włączyć synchronizacji. Sprawdź ustawienia."
+        },
+        "SWITCHER": {
+            "BUTTON": "Profil: {{name}}. Zmień profil",
+            "MANAGE": "Zarządzaj profilami"
         }
     }
 }
