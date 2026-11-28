@@ -833,7 +833,7 @@
             "DISABLED_TOAST": "Szülői felügyelet kikapcsolva",
             "PIN_CHANGED_TOAST": "PIN-kód módosítva",
             "LOCKED_TOAST": "Zárolva",
-            "FORCED_NOTE": "A zár be van kapcsolva, mert gyerekprofil az aktív. Lépj ki a gyerekprofilból a módosításhoz."
+            "FORCED_NOTE": "A zár be van kapcsolva, mert gyermekprofil az aktív. A módosításhoz lépjen ki a gyermekprofilból."
         },
         "AGE_RATING_COUNTRY_LABEL": "Korhatár-besorolás országa",
         "AGE_RATING_COUNTRY_DESCRIPTION": "Válassza ki, melyik ország korhatár-besorolását szeretné látni. Ha ehhez az országhoz nincs adat, az amerikai vagy a szolgáltató által megadott besorolás jelenhet meg.",
@@ -906,18 +906,18 @@
             "PARENTAL_TITLE": "Szülői PIN-kód szükséges",
             "PARENTAL_DESCRIPTION": "Ezt a gyermekprofilt a szülői felügyelet védi.",
             "SEPARATION_TITLE": "Profilonként külön",
-            "CONSENT_TITLE": "Külön tartod az egyes profilok adatait?",
-            "CONSENT_BODY": "A kedvencek, a nemrég megnézettek és a lejátszási haladás csak akkor profilonkénti, ha a szinkronizálásuk be van kapcsolva ezen az eszközön. Bekapcsolod most mind a hármat?",
+            "CONSENT_TITLE": "Külön tartja az egyes profilok adatait?",
+            "CONSENT_BODY": "A kedvencek, a nemrég megnézettek és a lejátszási haladás csak akkor profilonkénti, ha a szinkronizálásuk be van kapcsolva ezen az eszközön. Bekapcsolja most mind a hármat?",
             "CONSENT_ACCEPT": "Mindhárom bekapcsolása",
             "CONSENT_SKIP": "Most nem",
-            "CONSENT_FAILED": "Egy szinkronizálást nem sikerült bekapcsolni. Ellenőrizd a szerverkapcsolatot, és próbáld újra.",
+            "CONSENT_FAILED": "Egy szinkronizálást nem sikerült bekapcsolni. Ellenőrizze a kiszolgálókapcsolatot, és próbálja újra.",
             "PART_FAVORITES": "Kedvencek",
             "PART_HISTORY": "Nemrég megnézett",
             "PART_ACTIVITY": "Lejátszási haladás",
             "PART_SEPARATE": "Külön",
             "PART_SHARED": "Közös (a szinkronizálás ki van kapcsolva)",
             "HOUSEHOLD_NOTE": "A lejátszási listák, a források és a beállítások mindenkinek közösek.",
-            "KIDS_PARENTAL_NOTE": "A szülői felügyelet PIN-kódja az első gyerekprofil mentésekor kerül beállításra, ha az eszközön még nincs."
+            "KIDS_PARENTAL_NOTE": "A szülői felügyelet PIN-kódja az első gyermekprofil mentésekor kerül beállításra, ha az eszközön még nincs."
         }
     },
     "SERVER_STORAGE": {
@@ -2923,8 +2923,8 @@
             "UNAVAILABLE": "Ez a kiszolgáló nem támogatja a profilokat.",
             "OFFLINE": "A kiszolgáló nem válaszol. Próbálja újra.",
             "GENERIC": "Hiba történt. Próbálja újra.",
-            "KIDS_NEEDS_PARENTAL_PIN": "Először egy szülőnek be kell állítania a szülői felügyelet PIN-kódját ezen az eszközön. Nyisd meg: Beállítások > Szülői felügyelet.",
-            "PARENTAL_PIN_UNREADABLE": "Az eszköz szülői felügyeleti PIN-kódját nem sikerült beolvasni. Nem lesz lecserélve. Próbáld újra, vagy nyisd meg: Beállítások > Szülői felügyelet."
+            "KIDS_NEEDS_PARENTAL_PIN": "Először egy szülőnek be kell állítania a szülői felügyelet PIN-kódját ezen az eszközön. Nyissa meg: Beállítások > Szülői felügyelet.",
+            "PARENTAL_PIN_UNREADABLE": "Az eszköz szülői felügyeleti PIN-kódját nem sikerült beolvasni. Nem lesz lecserélve. Próbálja újra, vagy nyissa meg: Beállítások > Szülői felügyelet."
         },
         "PICKER": {
             "TITLE": "Ki használja az alkalmazást?",
@@ -2941,7 +2941,7 @@
             "MESSAGE": "A profil kedvencei, előzményei és haladása csak bekapcsolt szinkronizálással maradhatnak külön.",
             "ACTION": "Szinkronizálás bekapcsolása",
             "DONE": "A szinkronizálás be van kapcsolva. Ennek a profilnak mostantól saját adatai vannak.",
-            "FAILED": "A szinkronizálást nem sikerült bekapcsolni. Ellenőrizd a beállításokat."
+            "FAILED": "A szinkronizálást nem sikerült bekapcsolni. Ellenőrizze a beállításokat."
         },
         "SWITCHER": {
             "BUTTON": "Profil: {{name}}. Profilváltás",

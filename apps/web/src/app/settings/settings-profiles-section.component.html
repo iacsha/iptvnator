@@ -92,7 +92,9 @@
                                 [attr.aria-checked]="startPref() === 'ask'"
                                 [tabIndex]="startPref() === 'ask' ? 0 : -1"
                                 (keydown)="onStartKey($event)"
-                                [class.profiles-choice--on]="startPref() === 'ask'"
+                                [class.profiles-choice--on]="
+                                    startPref() === 'ask'
+                                "
                                 (click)="setStart('ask')"
                             >
                                 {{ 'SETTINGS.PROFILES.START_ASK' | translate }}
@@ -105,7 +107,9 @@
                                 [attr.aria-checked]="startPref() === 'last'"
                                 [tabIndex]="startPref() === 'last' ? 0 : -1"
                                 (keydown)="onStartKey($event)"
-                                [class.profiles-choice--on]="startPref() === 'last'"
+                                [class.profiles-choice--on]="
+                                    startPref() === 'last'
+                                "
                                 (click)="setStart('last')"
                             >
                                 {{ 'SETTINGS.PROFILES.START_LAST' | translate }}
@@ -119,13 +123,17 @@
         @if (enabled()) {
             <section
                 class="settings-section"
+                aria-labelledby="profiles-separation-title"
                 data-test-id="profiles-separation"
             >
                 <div class="settings-section__header">
-                    <h3>
+                    <h3 id="profiles-separation-title">
                         {{ 'SETTINGS.PROFILES.SEPARATION_TITLE' | translate }}
                     </h3>
                 </div>
+                <p class="settings-section__desc">
+                    {{ 'SETTINGS.PROFILES.HOUSEHOLD_NOTE' | translate }}
+                </p>
                 <div class="settings-card">
                     @if (showOffer()) {
                         <div
@@ -187,25 +195,26 @@
                     <ul class="profiles-parts" data-test-id="profiles-parts">
                         @for (part of parts(); track part.id) {
                             <li
-                                class="profiles-part"
+                                class="setting-item profiles-part"
                                 [attr.data-test-id]="'profiles-part-' + part.id"
                                 [attr.data-separate]="part.separate"
                             >
-                                <span class="profiles-part__name">{{
-                                    part.labelKey | translate
-                                }}</span>
-                                <span class="profiles-badge">{{
-                                    (part.separate
-                                        ? 'SETTINGS.PROFILES.PART_SEPARATE'
-                                        : 'SETTINGS.PROFILES.PART_SHARED'
-                                    ) | translate
-                                }}</span>
+                                <div class="setting-item__meta">
+                                    <h4 class="profiles-part__name">
+                                        {{ part.labelKey | translate }}
+                                    </h4>
+                                </div>
+                                <div class="setting-item__control">
+                                    <span class="profiles-badge">{{
+                                        (part.separate
+                                            ? 'SETTINGS.PROFILES.PART_SEPARATE'
+                                            : 'SETTINGS.PROFILES.PART_SHARED'
+                                        ) | translate
+                                    }}</span>
+                                </div>
                             </li>
                         }
                     </ul>
-                    <p class="profiles-note">
-                        {{ 'SETTINGS.PROFILES.HOUSEHOLD_NOTE' | translate }}
-                    </p>
                 </div>
             </section>
         }
